@@ -16,7 +16,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useEsp32Monitor, type NivelSinal } from '../hooks/useEsp32Monitor';
+import { type NivelSinal, type Esp32MonitorState } from '../hooks/useEsp32Monitor';
 import { toggleSom, ativarModoRua, zerarTudo, resetarAlarme } from '../services/esp32Api';
 
 const { width } = Dimensions.get('window');
@@ -81,8 +81,7 @@ function SignalBars({ nivel }: { nivel: NivelSinal }) {
 }
 
 // ---- Componente principal ----
-export default function DashboardScreen() {
-  const monitor = useEsp32Monitor();
+export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState }) {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
   // ---- Handlers ----
@@ -164,20 +163,7 @@ export default function DashboardScreen() {
   const somLabel = monitor.somHabilitado ? '🔊 SOM: ON' : '🔇 SOM: OFF';
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
-
-      {/* ========== HEADER ========== */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Ionicons name="shield-checkmark" size={28} color={COLORS.headerBlue} />
-          <Text style={styles.headerTitle}>ESCOLTA UNITAU</Text>
-        </View>
-        <View style={styles.avatarCircle}>
-          <Ionicons name="person" size={20} color={COLORS.white} />
-        </View>
-      </View>
-
+    <View style={styles.safeArea}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -293,27 +279,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* ========== BOTTOM TAB BAR ========== */}
-      <View style={styles.tabBar}>
-        <View style={styles.tabItem}>
-          <Ionicons name="grid" size={24} color={COLORS.headerBlue} />
-          <Text style={[styles.tabLabel, { color: COLORS.headerBlue }]}>DASHBOARD</Text>
-        </View>
-        <View style={styles.tabItem}>
-          <Ionicons name="shield-outline" size={24} color={COLORS.tabInactive} />
-          <Text style={styles.tabLabel}>PATROL</Text>
-        </View>
-        <View style={styles.tabItem}>
-          <Ionicons name="notifications-outline" size={24} color={COLORS.tabInactive} />
-          <Text style={styles.tabLabel}>ALERTS</Text>
-        </View>
-        <View style={styles.tabItem}>
-          <Ionicons name="settings-outline" size={24} color={COLORS.tabInactive} />
-          <Text style={styles.tabLabel}>SETTINGS</Text>
-        </View>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
