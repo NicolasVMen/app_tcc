@@ -17,7 +17,8 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { type NivelSinal, type Esp32MonitorState } from '../hooks/useEsp32Monitor';
-import { toggleSom, ativarModoRua, zerarTudo, resetarAlarme } from '../services/esp32Api';
+import { toggleSom, ativarModoRua, zerarTudo, resetarAlarme, configurarModoCasa } from '../services/esp32Api';
+import { Modal, TextInput } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -84,6 +85,11 @@ function SignalBars({ nivel }: { nivel: NivelSinal }) {
 export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState }) {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
+  // ---- States do Modal Modo Casa ----
+  const [modalCasaVisible, setModalCasaVisible] = useState(false);
+  const [ssidCasa, setSsidCasa] = useState('');
+  const [passCasa, setPassCasa] = useState('');
+
   // ---- Handlers ----
   const handleToggleSom = async () => {
     setLoadingAction('som');
@@ -143,11 +149,26 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
   };
 
   const handleConectarCasa = () => {
-    Alert.alert(
-      'Conectar Wi-Fi Casa',
-      'Para configurar o Wi-Fi de casa, acesse o painel web da ESP32:\n\nhttp://192.168.4.1/modoCasa\n\nConecte-se à rede "CONFIG_INICIAL_ESCOLTA" e abra o navegador.',
-      [{ text: 'OK' }]
-    );
+    setModalCasaVisible(true);
+  };
+
+  const handleSalvarModoCasaReq = async () => {
+    if (!ssidCasa) {
+      Alert.alert('Aviso', 'Preencha o nome da rede (Wi-Fi).');
+      return;
+    }
+    setModalCasaVisible(false);
+    setLoadingAction('casa');
+    try {
+      await configurarModoCasa(ssidCasa, passCasa);
+      Alert.alert(
+        'Dados Enviados!',
+        'A ESP32 vai reiniciar já configurada! Verifique o Monitor Serial no PC para ver qual IP ela vai receber na sua casa.'
+      );
+    } catch {
+      Alert.alert('Erro', 'Não foi possível gravar na ESP32. Confira se você está conectado na rede dela.');
+    }
+    setLoadingAction(null);
   };
 
   const handleResetPanico = async () => {
@@ -164,6 +185,40 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
 
   return (
     <View style={styles.safeArea}>
+      
+      {/* ========== MODAL MODO CASA ========== */}
+      <Modal visible={modalCasaVisible} transparent={true} animationType="fade">
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', padding: 20 }}>
+          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>Configurar Wi-Fi (Modo Casa)</Text>
+            
+            <Text style={{ marginBottom: 4, fontWeight: '600', color: COLORS.textSecondary }}>Nome do Roteador (exato):</Text>
+            <TextInput 
+              style={{ backgroundColor: '#EDF2F7', padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 16 }} 
+              placeholder="Minha_Casa_5G"
+              value={ssidCasa} onChangeText={setSsidCasa} 
+            />
+
+            <Text style={{ marginBottom: 4, fontWeight: '600', color: COLORS.textSecondary }}>Senha do Wi-Fi:</Text>
+            <TextInput 
+              style={{ backgroundColor: '#EDF2F7', padding: 12, borderRadius: 8, marginBottom: 24, fontSize: 16 }} 
+              placeholder="*******"
+              value={passCasa} onChangeText={setPassCasa} 
+              secureTextEntry={true} 
+            />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 12 }}>
+              <TouchableOpacity onPress={() => setModalCasaVisible(false)} style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
+                <Text style={{ color: COLORS.textSecondary, fontWeight: 'bold' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleSalvarModoCasaReq} style={{ backgroundColor: COLORS.blueButton, paddingVertical: 12, paddingHorizontal: 20, borderRadius: 8 }}>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>Salvar na Placa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}

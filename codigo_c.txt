@@ -121,12 +121,29 @@ void setup() {
 
   MDNS.begin("escolta");
   server.on("/", handleRoot);
+  
+  // Rota 1: Abre a página instataneamente e depois busca as redes
   server.on("/modoCasa", [](){
-    int n = WiFi.scanNetworks();
-    String h = "<html><body style='text-align:center; font-family:sans-serif;'><h2>Escolha seu Wi-Fi:</h2><form action='/salvar' method='POST'><select name='ssid' style='width:80%; height:40px;'>";
-    for (int i = 0; i < n; ++i) h += "<option value='" + WiFi.SSID(i) + "'>" + WiFi.SSID(i) + "</option>";
-    h += "</select><br><br>Senha: <input type='password' name='pass' style='width:80%; height:40px;'><br><br><button type='submit' style='background:#3498db; color:white; width:80%; height:50px; border-radius:10px;'>SALVAR E REINICIAR</button></form></body></html>";
+    String h = "<html><body style='text-align:center; font-family:sans-serif;'><h2>Escolha seu Wi-Fi:</h2>";
+    h += "<p id='msg'>Procurando redes ao redor, aguarde...</p>";
+    h += "<form action='/salvar' method='POST' id='form' style='display:none;'>";
+    h += "<select id='redes' name='ssid' style='width:90%; height:40px; margin-bottom:15px;'></select><br>";
+    h += "Senha do Wi-Fi: <input type='password' name='pass' style='width:90%; height:40px; margin-bottom:15px;'><br>";
+    h += "<button type='submit' style='background:#3498db; color:white; width:90%; height:50px; border-radius:10px;'>SALVAR E CONECTAR</button></form>";
+    h += "<script>fetch('/api/redes').then(r=>r.json()).then(data=>{ let s=''; data.forEach(net=>s+='<option value=\"'+net+'\">'+net+'</option>'); document.getElementById('redes').innerHTML=s; document.getElementById('msg').style.display='none'; document.getElementById('form').style.display='block'; }).catch(()=> document.getElementById('msg').innerText = 'Erro ao buscar. Tente de novo.');</script></body></html>";
     enviarPagina(h);
+  });
+
+  // Rota 2: Faz a busca pesada "escondida" sem travar a navegação
+  server.on("/api/redes", [](){
+    int n = WiFi.scanNetworks();
+    String json = "[";
+    for (int i = 0; i < n; ++i) {
+      if(i>0) json += ",";
+      json += "\"" + WiFi.SSID(i) + "\"";
+    }
+    json += "]";
+    enviarJSON(json);
   });
 
   server.on("/modoRua", [](){

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Switch, Alert, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { zerarTudo } from '../services/esp32Api';
+import { zerarTudo, getEsp32Ip, saveEsp32Ip } from '../services/esp32Api';
 
 const COLORS = {
   background: '#f0f4f8',
@@ -14,6 +14,17 @@ const COLORS = {
 
 export default function SettingsScreen() {
   const [pushEnabled, setPushEnabled] = useState(true);
+  const [ipAddress, setIpAddress] = useState('');
+
+  useEffect(() => {
+    // Carrega o IP atual ao abrir a tela
+    getEsp32Ip().then(setIpAddress);
+  }, []);
+
+  const handleSaveIp = () => {
+    saveEsp32Ip(ipAddress);
+    Alert.alert('Salvo', 'Endereço IP configurado com sucesso! O App agora se comunicará com este IP.');
+  };
 
   const handleResetPlaca = () => {
     Alert.alert(
@@ -28,8 +39,36 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>PREFERÊNCIAS</Text>
+      
+      <Text style={styles.sectionTitle}>CONEXÃO COM A PLACA</Text>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <View style={styles.rowContent}>
+            <Ionicons name="wifi" size={22} color={COLORS.textPrimary} />
+            <Text style={styles.rowText}>Endereço IP do ESP32</Text>
+          </View>
+        </View>
+        <Text style={{ paddingHorizontal: 18, color: COLORS.textSecondary, fontSize: 13, marginBottom: 10 }}>Padrão Rua: 192.168.4.1 | Padrão Casa: Ex: 192.168.0.15</Text>
+        <View style={{ paddingHorizontal: 18, paddingBottom: 18, flexDirection: 'row', gap: 10 }}>
+          <TextInput
+            style={{ flex: 1, backgroundColor: '#EDF2F7', padding: 12, borderRadius: 10, fontSize: 16 }}
+            value={ipAddress}
+            onChangeText={setIpAddress}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="url"
+            placeholder="Ex: escolta.local"
+          />
+          <TouchableOpacity 
+            style={{ backgroundColor: COLORS.headerBlue, paddingHorizontal: 20, justifyContent: 'center', borderRadius: 10 }}
+            onPress={handleSaveIp}
+          >
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>Salvar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
+      <Text style={styles.sectionTitle}>PREFERÊNCIAS</Text>
       <View style={styles.card}>
         <View style={styles.row}>
           <View style={styles.rowContent}>

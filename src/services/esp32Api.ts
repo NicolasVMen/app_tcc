@@ -2,9 +2,10 @@
 // ESP32 API Service — Comunicação com a placa via JSON endpoints
 // ============================================================
 
-const ESP32_IP = '192.168.4.1';
-const BASE_URL = `http://${ESP32_IP}`;
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const TIMEOUT_MS = 3000;
+const IP_STORAGE_KEY = '@esp32_ip_address';
 
 export interface Esp32Status {
   rssi: number;
@@ -12,6 +13,21 @@ export interface Esp32Status {
   som_on: boolean;
   panico_ativo: boolean;
   configurado: boolean;
+}
+
+/** Obtém o IP salvo do ESP32 (Padrão de fábrica: 192.168.4.1) */
+export async function getEsp32Ip(): Promise<string> {
+  try {
+    const ip = await AsyncStorage.getItem(IP_STORAGE_KEY);
+    return ip ? ip : '192.168.4.1';
+  } catch (e) {
+    return '192.168.4.1';
+  }
+}
+
+/** Salva um novo IP para o ESP32 */
+export async function saveEsp32Ip(ip: string): Promise<void> {
+  await AsyncStorage.setItem(IP_STORAGE_KEY, ip);
 }
 
 async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise<Response> {
@@ -31,14 +47,16 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise
 
 /** GET /api/status — Busca o status atual da ESP32 */
 export async function fetchStatus(): Promise<Esp32Status> {
-  const response = await fetchWithTimeout(`${BASE_URL}/api/status`);
+  const ip = await getEsp32Ip();
+  const response = await fetchWithTimeout(`http://${ip}/api/status`);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
 }
 
 /** POST /api/toggleSom — Liga/desliga o buzzer */
 export async function toggleSom(): Promise<{ ok: boolean; som_on: boolean }> {
-  const response = await fetchWithTimeout(`${BASE_URL}/api/toggleSom`, {
+  const ip = await getEsp32Ip();
+  const response = await fetchWithTimeout(`http://${ip}/api/toggleSom`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -47,7 +65,8 @@ export async function toggleSom(): Promise<{ ok: boolean; som_on: boolean }> {
 
 /** POST /api/modoRua — Ativa modo rua (reinicia a ESP32) */
 export async function ativarModoRua(): Promise<{ ok: boolean; msg: string }> {
-  const response = await fetchWithTimeout(`${BASE_URL}/api/modoRua`, {
+  const ip = await getEsp32Ip();
+  const response = await fetchWithTimeout(`http://${ip}/api/modoRua`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -56,7 +75,8 @@ export async function ativarModoRua(): Promise<{ ok: boolean; msg: string }> {
 
 /** POST /api/zerar — Limpa a memória da placa (reinicia a ESP32) */
 export async function zerarTudo(): Promise<{ ok: boolean; msg: string }> {
-  const response = await fetchWithTimeout(`${BASE_URL}/api/zerar`, {
+  const ip = await getEsp32Ip();
+  const response = await fetchWithTimeout(`http://${ip}/api/zerar`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -65,9 +85,24 @@ export async function zerarTudo(): Promise<{ ok: boolean; msg: string }> {
 
 /** POST /api/reset — Reseta o alarme de pânico */
 export async function resetarAlarme(): Promise<{ ok: boolean; panico_ativo: boolean }> {
-  const response = await fetchWithTimeout(`${BASE_URL}/api/reset`, {
+  const ip = await getEsp32Ip();
+  const response = await fetchWithTimeout(`http://${ip}/api/reset`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
+}
+
+/** POST /salvar — Envia credenciais Wi-Fi para o ESP32 */
+export async function configurarModoCasa(ssid: string, pass: string): Promise<boolean> {
+  const ip = await getEsp32Ip();
+  const bodyParams = `ssid=${encodeURIComponent(ssid)}&pass=${encodeURIComponent(pass)}`;
+
+  const response = await fetchWithTimeout(`http://${ip}/salvar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: bodyParams,
+  });
+  
+  return response.ok;
 }
