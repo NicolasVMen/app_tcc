@@ -67,7 +67,7 @@ export function useEsp32Monitor() {
     async function loadSound() {
       try {
         const { sound } = await Audio.Sound.createAsync(
-          { uri: 'https://cdn.freesound.org/previews/383/383049_6470876-lq.mp3' } 
+          require('../../../assets/alert_tone.wav')
         );
         await sound.setIsLoopingAsync(true);
         if (!unmounted) soundRef.current = sound;
