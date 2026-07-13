@@ -5,7 +5,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Vibration } from 'react-native';
 import { Audio } from 'expo-av';
-import { fetchStatus, type Esp32Status } from '../services/esp32Api';
+import { fetchStatus, type Esp32Status, type EstadoEsp32 } from '../services/esp32Api';
 
 export type NivelSinal = 'seguro' | 'aviso' | 'panico' | 'desconectado';
 
@@ -23,6 +23,7 @@ export interface Esp32MonitorState {
   modoEstacao: boolean;
   somHabilitado: boolean;
   rssiAtual: number;
+  distanciaEstimada: number | null;
   modoPanico: boolean;
   nivelSinal: NivelSinal;
   conectado: boolean;
@@ -32,10 +33,20 @@ export interface Esp32MonitorState {
 
 const POLLING_INTERVAL = 2000; // 2 segundos
 
-function calcularNivelSinal(rssi: number): NivelSinal {
-  if (rssi > -65) return 'seguro';
-  if (rssi > -80) return 'aviso';
-  return 'panico';
+// A placa já faz a filtragem (EMA + histerese + debounce) e manda o "estado".
+// Aqui só traduzimos esse estado para o nível visual do app. Caímos no cálculo
+// por RSSI apenas se um firmware antigo (sem o campo "estado") estiver rodando.
+function nivelDoEstado(estado: EstadoEsp32 | undefined, rssi: number): NivelSinal {
+  switch (estado) {
+    case 'seguro': return 'seguro';
+    case 'atencao': return 'aviso';
+    case 'perigo':
+    case 'panico': return 'panico';
+    default:
+      if (rssi > -65) return 'seguro';
+      if (rssi > -80) return 'aviso';
+      return 'panico';
+  }
 }
 
 export function useEsp32Monitor() {
@@ -45,6 +56,7 @@ export function useEsp32Monitor() {
     modoEstacao: false,
     somHabilitado: true,
     rssiAtual: 0,
+    distanciaEstimada: null,
     modoPanico: false,
     nivelSinal: 'desconectado',
     conectado: false,
@@ -67,7 +79,7 @@ export function useEsp32Monitor() {
     async function loadSound() {
       try {
         const { sound } = await Audio.Sound.createAsync(
-          require('../../../assets/alert_tone.wav')
+          require('../../assets/alert_tone.wav')
         );
         await sound.setIsLoopingAsync(true);
         if (!unmounted) soundRef.current = sound;
@@ -84,8 +96,10 @@ export function useEsp32Monitor() {
   const atualizarStatus = useCallback(async () => {
     try {
       const data: Esp32Status = await fetchStatus();
-      const nivel = calcularNivelSinal(data.rssi);
-      const panico = data.panico_ativo || nivel === 'panico';
+      // A decisão de pânico agora é da PLACA (filtrada e com debounce).
+      // O app apenas reflete, sem recalcular por leitura instantânea.
+      const panico = data.panico_ativo;
+      const nivel = nivelDoEstado(data.estado, data.rssi);
 
       if (panico && !jaAlertouRef.current) {
         Vibration.vibrate([0, 500, 200, 500, 200, 500]);
@@ -119,6 +133,7 @@ export function useEsp32Monitor() {
         modoEstacao: data.modo_casa,
         somHabilitado: data.som_on,
         rssiAtual: data.rssi,
+        distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
         modoPanico: panico,
         nivelSinal: nivel,
         conectado: true,

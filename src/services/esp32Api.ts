@@ -7,12 +7,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const TIMEOUT_MS = 3000;
 const IP_STORAGE_KEY = '@esp32_ip_address';
 
+export type EstadoEsp32 = 'seguro' | 'atencao' | 'perigo' | 'panico';
+
 export interface Esp32Status {
-  rssi: number;
+  rssi: number;             // RSSI já filtrado (EMA) pela placa
   modo_casa: boolean;
   som_on: boolean;
   panico_ativo: boolean;
   configurado: boolean;
+  // ---- Campos novos (firmware com filtragem) ----
+  rssi_raw?: number;        // RSSI cru, sem filtro (debug/gráfico)
+  rssi_filtrado?: number;   // RSSI filtrado com casa decimal
+  distancia_m?: number;     // distância estimada (metros)
+  estado?: EstadoEsp32;     // decisão de estado feita na própria placa
+  // ---- Preparado para GPS (evolução futura) ----
+  gps_fix?: boolean;
+  lat?: number;
+  lng?: number;
 }
 
 /** Obtém o IP salvo do ESP32 (Padrão de fábrica: 192.168.4.1) */

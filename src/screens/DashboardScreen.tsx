@@ -180,6 +180,10 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
   };
 
   const rssiDisplay = monitor.conectado ? `${monitor.rssiAtual} dBm` : '-- dBm';
+  const distanciaDisplay =
+    monitor.conectado && monitor.distanciaEstimada != null
+      ? `~ ${monitor.distanciaEstimada.toFixed(1)} m`
+      : null;
   const modoLabel = monitor.modoEstacao ? 'CASA 🏠' : 'RUA 🏢';
   const somLabel = monitor.somHabilitado ? '🔊 SOM: ON' : '🔇 SOM: OFF';
 
@@ -266,6 +270,14 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
               Sinal: {rssiDisplay}
             </Text>
           </View>
+
+          {/* Distância estimada (modelo log-distance na placa) */}
+          {distanciaDisplay && (
+            <View style={styles.distanceRow}>
+              <Ionicons name="walk-outline" size={16} color={COLORS.textSecondary} />
+              <Text style={styles.distanceText}>Distância estimada: {distanciaDisplay}</Text>
+            </View>
+          )}
 
           {/* Indicador de conexão */}
           {!monitor.conectado && (
@@ -455,6 +467,17 @@ const styles = StyleSheet.create({
   signalText: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  distanceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 10,
+  },
+  distanceText: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    fontWeight: '500',
   },
 
   // ---- Desconectado ----
