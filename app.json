@@ -29,7 +29,8 @@
           ],
           "bluetoothAlwaysPermission": "O app precisa de Bluetooth para conectar ao Escolta UNITAU"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "android": {
       "adaptiveIcon": {
