@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, Alert, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { zerarTudo, getEsp32Ip, saveEsp32Ip } from '../services/esp32Api';
 
 const COLORS = {
   background: '#f0f4f8',
@@ -14,28 +13,6 @@ const COLORS = {
 
 export default function SettingsScreen() {
   const [pushEnabled, setPushEnabled] = useState(true);
-  const [ipAddress, setIpAddress] = useState('');
-
-  useEffect(() => {
-    // Carrega o IP atual ao abrir a tela
-    getEsp32Ip().then(setIpAddress);
-  }, []);
-
-  const handleSaveIp = () => {
-    saveEsp32Ip(ipAddress);
-    Alert.alert('Salvo', 'Endereço IP configurado com sucesso! O App agora se comunicará com este IP.');
-  };
-
-  const handleResetPlaca = () => {
-    Alert.alert(
-      'Zerar Placa', 
-      'Tem certeza que deseja apagar a memória do ESP32?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Zerar', style: 'destructive', onPress: () => zerarTudo().catch(() => {}) }
-      ]
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -44,28 +21,13 @@ export default function SettingsScreen() {
       <View style={styles.card}>
         <View style={styles.row}>
           <View style={styles.rowContent}>
-            <Ionicons name="wifi" size={22} color={COLORS.textPrimary} />
-            <Text style={styles.rowText}>Endereço IP do ESP32</Text>
+            <Ionicons name="bluetooth" size={22} color={COLORS.headerBlue} />
+            <Text style={styles.rowText}>Bluetooth Low Energy</Text>
           </View>
         </View>
-        <Text style={{ paddingHorizontal: 18, color: COLORS.textSecondary, fontSize: 13, marginBottom: 10 }}>Padrão Rua: 192.168.4.1 | Padrão Casa: Ex: 192.168.0.15</Text>
-        <View style={{ paddingHorizontal: 18, paddingBottom: 18, flexDirection: 'row', gap: 10 }}>
-          <TextInput
-            style={{ flex: 1, backgroundColor: '#EDF2F7', padding: 12, borderRadius: 10, fontSize: 16 }}
-            value={ipAddress}
-            onChangeText={setIpAddress}
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="url"
-            placeholder="Ex: escolta.local"
-          />
-          <TouchableOpacity 
-            style={{ backgroundColor: COLORS.headerBlue, paddingHorizontal: 20, justifyContent: 'center', borderRadius: 10 }}
-            onPress={handleSaveIp}
-          >
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>Salvar</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={{ paddingHorizontal: 18, paddingBottom: 18, color: COLORS.textSecondary, fontSize: 13 }}>
+          O aplicativo agora se conecta automaticamente ao dispositivo Escolta usando Bluetooth (BLE). O Wi-Fi não é mais necessário e você não perde sua conexão com a internet.
+        </Text>
       </View>
 
       <Text style={styles.sectionTitle}>PREFERÊNCIAS</Text>
@@ -91,14 +53,10 @@ export default function SettingsScreen() {
       <View style={styles.card}>
         <Text style={styles.aboutText}>
           <Text style={{fontWeight: 'bold', fontSize: 16}}>Escolta UNITAU</Text>{"\n\n"}
-          Projeto de TCC. Um sistema Dedo-Duro que monitora a proximidade física.
+          Projeto de TCC. Monitoramento de segurança e proximidade física para crianças usando tecnologia BLE (Bluetooth Low Energy).
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.dangerBtn} onPress={handleResetPlaca} activeOpacity={0.8}>
-        <Ionicons name="trash-outline" size={20} color={COLORS.dangerRed} style={{ marginRight: 8 }} />
-        <Text style={styles.dangerText}>Apagar Memória do ESP32</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -112,6 +70,4 @@ const styles = StyleSheet.create({
   rowText: { fontSize: 16, fontWeight: '500', color: COLORS.textPrimary },
   divider: { height: 1, backgroundColor: '#EDF2F7', marginLeft: 50 },
   aboutText: { padding: 18, fontSize: 14, color: COLORS.textSecondary, lineHeight: 22 },
-  dangerBtn: { flexDirection: 'row', marginTop: 10, padding: 16, backgroundColor: '#FEE2E2', borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  dangerText: { color: COLORS.dangerRed, fontWeight: '700', fontSize: 16 }
 });

@@ -1,5 +1,5 @@
 // ============================================================
-// DashboardScreen — Tela principal do Escolta UNITAU
+// DashboardScreen — Tela principal do Escolta UNITAU (BLE)
 // ============================================================
 
 import React, { useState } from 'react';
@@ -9,16 +9,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
-  StatusBar,
   Alert,
-  Animated,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { type NivelSinal, type Esp32MonitorState } from '../hooks/useEsp32Monitor';
-import { toggleSom, ativarModoRua, zerarTudo, resetarAlarme, configurarModoCasa } from '../services/esp32Api';
-import { Modal, TextInput } from 'react-native';
+import { toggleSomBle, resetarAlarmeBle } from '../services/bleApi';
 
 const { width } = Dimensions.get('window');
 
@@ -30,7 +27,6 @@ const COLORS = {
   darkButton: '#2c3e50',
   blueButton: '#4A9EF7',
   greenButton: '#34D399',
-  grayButton: '#A0AEC0',
   dangerRed: '#EF4444',
   warningYellow: '#F59E0B',
   safeGreen: '#10B981',
@@ -82,98 +78,23 @@ function SignalBars({ nivel }: { nivel: NivelSinal }) {
 }
 
 // ---- Componente principal ----
-export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState }) {
+export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState & { conectar: () => Promise<void> } }) {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
-
-  // ---- States do Modal Modo Casa ----
-  const [modalCasaVisible, setModalCasaVisible] = useState(false);
-  const [ssidCasa, setSsidCasa] = useState('');
-  const [passCasa, setPassCasa] = useState('');
 
   // ---- Handlers ----
   const handleToggleSom = async () => {
     setLoadingAction('som');
     try {
-      await toggleSom();
+      await toggleSomBle(!monitor.somHabilitado);
     } catch {
-      Alert.alert('Erro', 'Não foi possível comunicar com a ESP32.');
-    }
-    setLoadingAction(null);
-  };
-
-  const handleModoRua = async () => {
-    Alert.alert(
-      'Ativar Modo Rua',
-      'A placa será reiniciada em Modo Rua. Deseja continuar?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Ativar',
-          onPress: async () => {
-            setLoadingAction('rua');
-            try {
-              await ativarModoRua();
-              Alert.alert('Sucesso', 'ESP32 reiniciando em Modo Rua...');
-            } catch {
-              Alert.alert('Erro', 'Não foi possível comunicar com a ESP32.');
-            }
-            setLoadingAction(null);
-          },
-        },
-      ]
-    );
-  };
-
-  const handleZerar = async () => {
-    Alert.alert(
-      'Zerar Tudo',
-      'Todas as configurações serão apagadas. Deseja continuar?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Zerar',
-          style: 'destructive',
-          onPress: async () => {
-            setLoadingAction('zerar');
-            try {
-              await zerarTudo();
-              Alert.alert('Sucesso', 'Memória da ESP32 limpa. Reiniciando...');
-            } catch {
-              Alert.alert('Erro', 'Não foi possível comunicar com a ESP32.');
-            }
-            setLoadingAction(null);
-          },
-        },
-      ]
-    );
-  };
-
-  const handleConectarCasa = () => {
-    setModalCasaVisible(true);
-  };
-
-  const handleSalvarModoCasaReq = async () => {
-    if (!ssidCasa) {
-      Alert.alert('Aviso', 'Preencha o nome da rede (Wi-Fi).');
-      return;
-    }
-    setModalCasaVisible(false);
-    setLoadingAction('casa');
-    try {
-      await configurarModoCasa(ssidCasa, passCasa);
-      Alert.alert(
-        'Dados Enviados!',
-        'A ESP32 vai reiniciar já configurada! Verifique o Monitor Serial no PC para ver qual IP ela vai receber na sua casa.'
-      );
-    } catch {
-      Alert.alert('Erro', 'Não foi possível gravar na ESP32. Confira se você está conectado na rede dela.');
+      Alert.alert('Erro', 'Não foi possível comunicar via Bluetooth.');
     }
     setLoadingAction(null);
   };
 
   const handleResetPanico = async () => {
     try {
-      await resetarAlarme();
+      await resetarAlarmeBle();
     } catch {
       Alert.alert('Erro', 'Não foi possível resetar o alarme.');
     }
@@ -184,45 +105,10 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
     monitor.conectado && monitor.distanciaEstimada != null
       ? `~ ${monitor.distanciaEstimada.toFixed(1)} m`
       : null;
-  const modoLabel = monitor.modoEstacao ? 'CASA 🏠' : 'RUA 🏢';
   const somLabel = monitor.somHabilitado ? '🔊 SOM: ON' : '🔇 SOM: OFF';
 
   return (
     <View style={styles.safeArea}>
-      
-      {/* ========== MODAL MODO CASA ========== */}
-      <Modal visible={modalCasaVisible} transparent={true} animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', padding: 20 }}>
-          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>Configurar Wi-Fi (Modo Casa)</Text>
-            
-            <Text style={{ marginBottom: 4, fontWeight: '600', color: COLORS.textSecondary }}>Nome do Roteador (exato):</Text>
-            <TextInput 
-              style={{ backgroundColor: '#EDF2F7', padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 16 }} 
-              placeholder="Minha_Casa_5G"
-              value={ssidCasa} onChangeText={setSsidCasa} 
-            />
-
-            <Text style={{ marginBottom: 4, fontWeight: '600', color: COLORS.textSecondary }}>Senha do Wi-Fi:</Text>
-            <TextInput 
-              style={{ backgroundColor: '#EDF2F7', padding: 12, borderRadius: 8, marginBottom: 24, fontSize: 16 }} 
-              placeholder="*******"
-              value={passCasa} onChangeText={setPassCasa} 
-              secureTextEntry={true} 
-            />
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 12 }}>
-              <TouchableOpacity onPress={() => setModalCasaVisible(false)} style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
-                <Text style={{ color: COLORS.textSecondary, fontWeight: 'bold' }}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleSalvarModoCasaReq} style={{ backgroundColor: COLORS.blueButton, paddingVertical: 12, paddingHorizontal: 20, borderRadius: 8 }}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>Salvar na Placa</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -232,21 +118,51 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
         <View style={[styles.card, styles.statusCard]}>
           <View style={styles.statusHeader}>
             <MaterialCommunityIcons
-              name="office-building"
+              name="bluetooth"
               size={28}
-              color={COLORS.textPrimary}
+              color={monitor.conectado ? COLORS.headerBlue : COLORS.textPrimary}
             />
-            <Text style={styles.statusTitle}>SISTEMA: {modoLabel}</Text>
+            <Text style={styles.statusTitle}>
+              {monitor.conectado ? 'CONECTADO' : 'DESCONECTADO'}
+            </Text>
           </View>
+
+          {/* Botão de Conectar (se desconectado) */}
+          {!monitor.conectado && (
+            <TouchableOpacity
+              style={[styles.configButton, { backgroundColor: COLORS.blueButton, marginBottom: 20 }]}
+              onPress={() => monitor.conectar()}
+              disabled={monitor.isScanning}
+              activeOpacity={0.8}
+            >
+              {monitor.isScanning ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <View style={styles.configIconCircle}>
+                  <Ionicons name="bluetooth" size={22} color={COLORS.white} />
+                </View>
+              )}
+              <Text style={styles.configButtonText}>
+                {monitor.isScanning ? 'PROCURANDO ESCOLTA...' : 'CONECTAR BLUETOOTH'}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {monitor.scanError && (
+            <Text style={{ color: COLORS.dangerRed, marginBottom: 16, textAlign: 'center' }}>
+              Erro: {monitor.scanError}
+            </Text>
+          )}
 
           {/* Botão SOM */}
           <TouchableOpacity
             style={[
               styles.somButton,
               !monitor.somHabilitado && styles.somButtonOff,
+              !monitor.conectado && { opacity: 0.5 }
             ]}
             onPress={handleToggleSom}
-            disabled={loadingAction === 'som'}
+            disabled={loadingAction === 'som' || !monitor.conectado}
             activeOpacity={0.8}
           >
             <Ionicons
@@ -267,23 +183,15 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
                 { color: getSignalColor(monitor.nivelSinal) },
               ]}
             >
-              Sinal: {rssiDisplay}
+              Sinal BLE: {rssiDisplay}
             </Text>
           </View>
 
-          {/* Distância estimada (modelo log-distance na placa) */}
+          {/* Distância estimada */}
           {distanciaDisplay && (
             <View style={styles.distanceRow}>
               <Ionicons name="walk-outline" size={16} color={COLORS.textSecondary} />
               <Text style={styles.distanceText}>Distância estimada: {distanciaDisplay}</Text>
-            </View>
-          )}
-
-          {/* Indicador de conexão */}
-          {!monitor.conectado && (
-            <View style={styles.disconnectedBadge}>
-              <Ionicons name="cloud-offline-outline" size={14} color={COLORS.textMuted} />
-              <Text style={styles.disconnectedText}>Sem conexão com ESP32</Text>
             </View>
           )}
         </View>
@@ -302,49 +210,6 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
             </View>
           </TouchableOpacity>
         )}
-
-        {/* ========== CONFIGURAR MODO ========== */}
-        <Text style={styles.sectionTitle}>CONFIGURAR MODO</Text>
-
-        <View style={styles.configButtonsContainer}>
-          {/* Conectar Wi-Fi Casa */}
-          <TouchableOpacity
-            style={[styles.configButton, { backgroundColor: COLORS.blueButton }]}
-            onPress={handleConectarCasa}
-            activeOpacity={0.8}
-          >
-            <View style={styles.configIconCircle}>
-              <Ionicons name="home" size={22} color={COLORS.white} />
-            </View>
-            <Text style={styles.configButtonText}>CONECTAR WI-FI CASA</Text>
-          </TouchableOpacity>
-
-          {/* Ativar Modo Rua */}
-          <TouchableOpacity
-            style={[styles.configButton, { backgroundColor: COLORS.greenButton }]}
-            onPress={handleModoRua}
-            disabled={loadingAction === 'rua'}
-            activeOpacity={0.8}
-          >
-            <View style={styles.configIconCircle}>
-              <MaterialCommunityIcons name="office-building" size={22} color={COLORS.white} />
-            </View>
-            <Text style={styles.configButtonText}>ATIVAR MODO RUA</Text>
-          </TouchableOpacity>
-
-          {/* Zerar Tudo */}
-          <TouchableOpacity
-            style={[styles.configButton, { backgroundColor: COLORS.grayButton }]}
-            onPress={handleZerar}
-            disabled={loadingAction === 'zerar'}
-            activeOpacity={0.8}
-          >
-            <View style={styles.configIconCircle}>
-              <Ionicons name="refresh" size={22} color={COLORS.white} />
-            </View>
-            <Text style={styles.configButtonText}>ZERAR TUDO</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     </View>
   );
@@ -358,52 +223,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-
-  // ---- Header ----
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-    backgroundColor: COLORS.background,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-    letterSpacing: 0.5,
-  },
-  avatarCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.headerBlue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // ---- ScrollView ----
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    paddingTop: 16,
   },
-
-  // ---- Card ----
   card: {
     backgroundColor: COLORS.cardBg,
     borderRadius: 20,
     padding: 24,
-    marginTop: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -413,8 +244,6 @@ const styles = StyleSheet.create({
   statusCard: {
     alignItems: 'center',
   },
-
-  // ---- Status ----
   statusHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -426,8 +255,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.textPrimary,
   },
-
-  // ---- Botão SOM ----
   somButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -448,8 +275,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5,
   },
-
-  // ---- Sinal ----
   signalRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -479,25 +304,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontWeight: '500',
   },
-
-  // ---- Desconectado ----
-  disconnectedBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 10,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#F7FAFC',
-    borderRadius: 20,
-  },
-  disconnectedText: {
-    fontSize: 12,
-    color: COLORS.textMuted,
-    fontWeight: '500',
-  },
-
-  // ---- Pânico ----
   panicBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -525,69 +331,28 @@ const styles = StyleSheet.create({
     color: '#B91C1C',
     marginTop: 2,
   },
-
-  // ---- Seção Configurar ----
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.textSecondary,
-    letterSpacing: 1,
-    marginTop: 28,
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-
-  configButtonsContainer: {
-    gap: 12,
-  },
-
   configButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 18,
+    paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 16,
     gap: 14,
+    width: '100%',
+    justifyContent: 'center',
   },
   configIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 36,
+    height: 36,
+    borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.25)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   configButtonText: {
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-
-  // ---- Tab Bar ----
-  tabBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: COLORS.cardBg,
-    paddingVertical: 10,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#EDF2F7',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  tabItem: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.tabInactive,
     letterSpacing: 0.5,
   },
 });
