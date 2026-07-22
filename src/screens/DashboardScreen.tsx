@@ -2,7 +2,7 @@
 // DashboardScreen — Tela principal do Escolta UNITAU (BLE)
 // ============================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,31 +10,30 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  Dimensions,
   ActivityIndicator,
+  Animated,
+  Easing,
+  RefreshControl,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { type NivelSinal, type Esp32MonitorState } from '../hooks/useEsp32Monitor';
 import { toggleSomBle, resetarAlarmeBle } from '../services/bleApi';
 
-const { width } = Dimensions.get('window');
-
-// ---- Cores do tema ----
+// ---- Cores Premium (Dark Mode Sofisticado) ----
 const COLORS = {
-  background: '#f0f4f8',
-  cardBg: '#ffffff',
-  headerBlue: '#3478F6',
-  darkButton: '#2c3e50',
-  blueButton: '#4A9EF7',
-  greenButton: '#34D399',
-  dangerRed: '#EF4444',
-  warningYellow: '#F59E0B',
-  safeGreen: '#10B981',
-  textPrimary: '#1a202c',
-  textSecondary: '#718096',
-  textMuted: '#a0aec0',
-  white: '#ffffff',
-  tabInactive: '#CBD5E0',
+  background: '#0F172A',   // Fundo geral bem escuro
+  cardBg: '#1E293B',       // Cartões levemente mais claros
+  cardBorder: '#334155',   // Borda sutil
+  primaryBlue: '#3B82F6',  // Azul principal
+  buttonDark: '#334155',
+  dangerRed: '#EF4444',    // Vermelho pânico
+  warningYellow: '#F59E0B',// Amarelo atenção
+  safeGreen: '#10B981',    // Verde seguro
+  textPrimary: '#F8FAFC',
+  textSecondary: '#94A3B8',
+  textMuted: '#64748B',
+  white: '#FFFFFF',
 };
 
 function getSignalColor(nivel: NivelSinal): string {
@@ -46,40 +45,88 @@ function getSignalColor(nivel: NivelSinal): string {
   }
 }
 
-function getSignalBars(nivel: NivelSinal): number {
-  switch (nivel) {
-    case 'seguro': return 4;
-    case 'aviso': return 2;
-    case 'panico': return 1;
-    default: return 0;
-  }
-}
-
-// ---- Componente de barras de sinal ----
-function SignalBars({ nivel }: { nivel: NivelSinal }) {
-  const bars = getSignalBars(nivel);
-  const color = getSignalColor(nivel);
-  return (
-    <View style={styles.signalBarsContainer}>
-      {[1, 2, 3, 4].map((i) => (
-        <View
-          key={i}
-          style={[
-            styles.signalBar,
-            {
-              height: 6 + i * 4,
-              backgroundColor: i <= bars ? color : '#E2E8F0',
-            },
-          ]}
-        />
-      ))}
-    </View>
-  );
-}
-
-// ---- Componente principal ----
 export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState & { conectar: () => Promise<void> } }) {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [timeSinceUpdate, setTimeSinceUpdate] = useState<string>('--');
+
+  const loadProfile = async () => {
+    try {
+      const raw = await AsyncStorage.getItem('@escolta_user_profile');
+      if (raw) setProfile(JSON.parse(raw));
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    loadProfile();
+  }, [monitor.modoPanico]); 
+
+  const ultimaRef = useRef(monitor.ultimaAtualizacao);
+  const conectadoRef = useRef(monitor.conectado);
+
+  useEffect(() => {
+    ultimaRef.current = monitor.ultimaAtualizacao;
+    conectadoRef.current = monitor.conectado;
+  }, [monitor.ultimaAtualizacao, monitor.conectado]);
+
+  useEffect(() => {
+    const updateTimer = () => {
+      if (!conectadoRef.current || !ultimaRef.current) {
+        setTimeSinceUpdate('--');
+        return;
+      }
+
+      // Format as HH:mm:ss (e.g. 22:05:12)
+      const date = new Date(ultimaRef.current);
+      const formatted = date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      
+      setTimeSinceUpdate(formatted);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 500); // Check faster to always show the exact second it arrived
+
+    return () => clearInterval(interval);
+  }, []);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    loadProfile();
+    setTimeout(() => setRefreshing(false), 800);
+  }, []);
+
+  // ---- Animações ----
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Inicia a pulsação se o nível não for seguro e estiver conectado
+    if (monitor.conectado && (monitor.nivelSinal === 'aviso' || monitor.nivelSinal === 'panico')) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.2,
+            duration: monitor.nivelSinal === 'panico' ? 400 : 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: monitor.nivelSinal === 'panico' ? 400 : 800,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          })
+        ])
+      ).start();
+    } else {
+      pulseAnim.stopAnimation();
+      pulseAnim.setValue(1);
+    }
+  }, [monitor.nivelSinal, monitor.conectado]);
 
   // ---- Handlers ----
   const handleToggleSom = async () => {
@@ -87,7 +134,7 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
     try {
       await toggleSomBle(!monitor.somHabilitado);
     } catch {
-      Alert.alert('Erro', 'Não foi possível comunicar via Bluetooth.');
+      Alert.alert('Aviso', 'Não foi possível alterar o som (talvez a placa esteja em pânico).');
     }
     setLoadingAction(null);
   };
@@ -101,258 +148,383 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
   };
 
   const rssiDisplay = monitor.conectado ? `${monitor.rssiAtual} dBm` : '-- dBm';
-  const distanciaDisplay =
-    monitor.conectado && monitor.distanciaEstimada != null
-      ? `~ ${monitor.distanciaEstimada.toFixed(1)} m`
-      : null;
-  const somLabel = monitor.somHabilitado ? '🔊 SOM: ON' : '🔇 SOM: OFF';
+  const distanciaDisplay = monitor.conectado && monitor.distanciaEstimada != null
+    ? `${monitor.distanciaEstimada.toFixed(1)}m`
+    : '--';
+  const statusColor = monitor.conectado ? getSignalColor(monitor.nivelSinal) : COLORS.textMuted;
 
   return (
     <View style={styles.safeArea}>
       <ScrollView
-        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primaryBlue} colors={[COLORS.primaryBlue]} />}
       >
-        {/* ========== STATUS CARD ========== */}
-        <View style={[styles.card, styles.statusCard]}>
-          <View style={styles.statusHeader}>
-            <MaterialCommunityIcons
-              name="bluetooth"
-              size={28}
-              color={monitor.conectado ? COLORS.headerBlue : COLORS.textPrimary}
-            />
-            <Text style={styles.statusTitle}>
-              {monitor.conectado ? 'CONECTADO' : 'DESCONECTADO'}
+
+        {/* ========== CARD PRINCIPAL (RADAR) ========== */}
+        <View style={styles.radarCard}>
+          <View style={styles.connectionStatus}>
+            <View style={[styles.dot, { backgroundColor: monitor.conectado ? COLORS.safeGreen : COLORS.dangerRed }]} />
+            <Text style={styles.connectionText}>
+              {monitor.conectado ? 'DISPOSITIVO PAREADO' : 'DESCONECTADO'}
             </Text>
           </View>
 
-          {/* Botão de Conectar (se desconectado) */}
+          {/* Círculo Animado de Status */}
+          <View style={styles.circleContainer}>
+            <Animated.View 
+              style={[
+                styles.pulseCircle, 
+                { 
+                  borderColor: statusColor, 
+                  backgroundColor: statusColor + '20', // 20% opacity
+                  transform: [{ scale: pulseAnim }]
+                }
+              ]} 
+            />
+            <View style={[styles.innerCircle, { backgroundColor: statusColor }]}>
+              <MaterialCommunityIcons 
+                name={monitor.conectado ? (monitor.modoPanico ? "alert-octagram" : "shield-check") : "bluetooth-off"} 
+                size={48} 
+                color={COLORS.white} 
+              />
+            </View>
+          </View>
+
+          <Text style={[styles.statusMainText, { color: statusColor }]}>
+            {!monitor.conectado ? 'OFFLINE' : monitor.nivelSinal.toUpperCase()}
+          </Text>
+
+          {/* Botão Conectar (Se Desconectado) */}
           {!monitor.conectado && (
-            <TouchableOpacity
-              style={[styles.configButton, { backgroundColor: COLORS.blueButton, marginBottom: 20 }]}
+            <TouchableOpacity 
+              style={styles.connectButton}
               onPress={() => monitor.conectar()}
               disabled={monitor.isScanning}
               activeOpacity={0.8}
             >
               {monitor.isScanning ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={COLORS.white} />
               ) : (
-                <View style={styles.configIconCircle}>
-                  <Ionicons name="bluetooth" size={22} color={COLORS.white} />
-                </View>
+                <Text style={styles.connectButtonText}>CONECTAR BLUETOOTH</Text>
               )}
-              <Text style={styles.configButtonText}>
-                {monitor.isScanning ? 'PROCURANDO ESCOLTA...' : 'CONECTAR BLUETOOTH'}
-              </Text>
             </TouchableOpacity>
-          )}
-
-          {monitor.scanError && (
-            <Text style={{ color: COLORS.dangerRed, marginBottom: 16, textAlign: 'center' }}>
-              Erro: {monitor.scanError}
-            </Text>
-          )}
-
-          {/* Botão SOM */}
-          <TouchableOpacity
-            style={[
-              styles.somButton,
-              !monitor.somHabilitado && styles.somButtonOff,
-              !monitor.conectado && { opacity: 0.5 }
-            ]}
-            onPress={handleToggleSom}
-            disabled={loadingAction === 'som' || !monitor.conectado}
-            activeOpacity={0.8}
-          >
-            <Ionicons
-              name={monitor.somHabilitado ? 'volume-high' : 'volume-mute'}
-              size={22}
-              color={COLORS.white}
-              style={{ marginRight: 8 }}
-            />
-            <Text style={styles.somButtonText}>{somLabel}</Text>
-          </TouchableOpacity>
-
-          {/* Sinal RSSI */}
-          <View style={styles.signalRow}>
-            <SignalBars nivel={monitor.nivelSinal} />
-            <Text
-              style={[
-                styles.signalText,
-                { color: getSignalColor(monitor.nivelSinal) },
-              ]}
-            >
-              Sinal BLE: {rssiDisplay}
-            </Text>
-          </View>
-
-          {/* Distância estimada */}
-          {distanciaDisplay && (
-            <View style={styles.distanceRow}>
-              <Ionicons name="walk-outline" size={16} color={COLORS.textSecondary} />
-              <Text style={styles.distanceText}>Distância estimada: {distanciaDisplay}</Text>
-            </View>
           )}
         </View>
 
         {/* ========== ALERTA DE PÂNICO ========== */}
         {monitor.modoPanico && (
-          <TouchableOpacity
-            style={styles.panicBanner}
-            onPress={handleResetPanico}
-            activeOpacity={0.9}
-          >
-            <Text style={styles.panicEmoji}>🚨</Text>
-            <View style={styles.panicTextContainer}>
-              <Text style={styles.panicTitle}>PERIGO! Aproxime-se.</Text>
-              <Text style={styles.panicSubtitle}>Toque para resetar o alarme</Text>
+          <TouchableOpacity style={styles.panicBanner} onPress={handleResetPanico} activeOpacity={0.9}>
+            <View style={styles.panicIconBox}>
+              <Ionicons name="warning" size={24} color={COLORS.white} />
             </View>
+            <View style={styles.panicTextContainer}>
+              <Text style={styles.panicTitle}>DESATIVAR ALARME</Text>
+              <Text style={styles.panicSubtitle}>A criança foi encontrada?</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={COLORS.white} />
           </TouchableOpacity>
         )}
+
+        {/* ========== MÉTRICAS (GRID) ========== */}
+        <View style={styles.metricsGrid}>
+          {/* Distância */}
+          <View style={styles.metricCard}>
+            <Ionicons name="map-outline" size={24} color={COLORS.primaryBlue} />
+            <Text style={styles.metricValue}>{distanciaDisplay}</Text>
+            <Text style={styles.metricLabel}>Distância Alvo</Text>
+          </View>
+          
+          {/* RSSI */}
+          <View style={styles.metricCard}>
+            <Ionicons name="wifi-outline" size={24} color={COLORS.primaryBlue} />
+            <Text style={styles.metricValue}>{rssiDisplay}</Text>
+            <Text style={styles.metricLabel}>Força do Sinal</Text>
+          </View>
+        </View>
+
+        <View style={styles.metricsGrid}>
+          {/* Última Leitura */}
+          <View style={styles.metricCard}>
+            <Ionicons name="time-outline" size={24} color={COLORS.primaryBlue} />
+            <Text style={styles.metricValue}>{timeSinceUpdate}</Text>
+            <Text style={styles.metricLabel}>Última Leitura</Text>
+          </View>
+
+          {/* Cão de Guarda */}
+          <View style={styles.metricCard}>
+            <Ionicons name="pulse-outline" size={24} color={COLORS.primaryBlue} />
+            <Text style={[styles.metricValue, { color: monitor.conectado ? COLORS.safeGreen : COLORS.dangerRed }]}>
+              {monitor.conectado ? 'Ativo' : 'Inativo'}
+            </Text>
+            <Text style={styles.metricLabel}>Cão de Guarda</Text>
+          </View>
+        </View>
+
+        {/* ========== AÇÕES INFERIORES ========== */}
+        <View style={styles.controlCard}>
+          <Text style={styles.controlTitle}>Configurações da Placa</Text>
+          
+          <TouchableOpacity
+            style={[
+              styles.somButton, 
+              (!monitor.somHabilitado && !monitor.modoPanico) && styles.somButtonOff,
+              monitor.modoPanico && { backgroundColor: COLORS.dangerRed }
+            ]}
+            onPress={handleToggleSom}
+            disabled={loadingAction === 'som' || !monitor.conectado || monitor.modoPanico}
+            activeOpacity={0.8}
+          >
+            <View style={styles.somButtonLeft}>
+              <Ionicons
+                name={(monitor.somHabilitado || monitor.modoPanico) ? 'volume-high' : 'volume-mute'}
+                size={22}
+                color={COLORS.white}
+              />
+              <Text style={styles.somButtonText}>
+                {monitor.modoPanico 
+                  ? 'ALARME FORÇADO (PÂNICO)' 
+                  : (monitor.somHabilitado ? 'Alarme Sonoro ATIVADO' : 'Alarme Sonoro MUTADO')}
+              </Text>
+            </View>
+            {loadingAction === 'som' ? (
+              <ActivityIndicator color={COLORS.white} size="small" />
+            ) : (
+              <View style={[
+                styles.toggleDot, 
+                (!monitor.somHabilitado && !monitor.modoPanico) && styles.toggleDotOff
+              ]} />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.controlHint}>
+            Aviso: O som não pode ser mutado enquanto estiver em estado de Pânico real.
+          </Text>
+        </View>
+
       </ScrollView>
     </View>
   );
 }
 
 // ============================================================
-// Estilos
+// Estilos (Tema Dark Moderno)
 // ============================================================
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  scrollView: {
-    flex: 1,
-  },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
-    paddingTop: 16,
+    paddingTop: 40,
+    paddingBottom: 40,
   },
-  card: {
-    backgroundColor: COLORS.cardBg,
-    borderRadius: 20,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 3,
+  header: {
+    marginBottom: 24,
   },
-  statusCard: {
-    alignItems: 'center',
-  },
-  statusHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 20,
-  },
-  statusTitle: {
-    fontSize: 22,
-    fontWeight: '700',
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '800',
     color: COLORS.textPrimary,
+    letterSpacing: -0.5,
   },
-  somButton: {
+  headerSubtitle: {
+    fontSize: 15,
+    color: COLORS.textSecondary,
+    marginTop: 4,
+  },
+  radarCard: {
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: COLORS.cardBorder,
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  connectionStatus: {
     flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginBottom: 30,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 8,
+  },
+  connectionText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: COLORS.textSecondary,
+    letterSpacing: 1,
+  },
+  circleContainer: {
+    width: 160,
+    height: 160,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.darkButton,
+    marginBottom: 20,
+  },
+  pulseCircle: {
+    position: 'absolute',
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    borderWidth: 2,
+  },
+  innerCircle: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  statusMainText: {
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
+  connectButton: {
+    marginTop: 24,
+    backgroundColor: COLORS.primaryBlue,
     paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
     width: '100%',
-    marginBottom: 16,
+    alignItems: 'center',
   },
-  somButtonOff: {
-    backgroundColor: '#64748b',
-  },
-  somButtonText: {
+  connectButtonText: {
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 1,
   },
-  signalRow: {
+  metricsGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    gap: 16,
   },
-  signalBarsContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 3,
+  metricCard: {
+    flex: 1,
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: COLORS.cardBorder,
+    alignItems: 'flex-start',
   },
-  signalBar: {
-    width: 5,
-    borderRadius: 2,
+  metricValue: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: COLORS.textPrimary,
+    marginTop: 12,
   },
-  signalText: {
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  distanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 10,
-  },
-  distanceText: {
+  metricLabel: {
     fontSize: 13,
     color: COLORS.textSecondary,
-    fontWeight: '500',
+    marginTop: 4,
   },
   panicBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEE2E2',
-    borderColor: COLORS.dangerRed,
-    borderWidth: 1.5,
-    borderRadius: 16,
+    backgroundColor: COLORS.dangerRed,
+    borderRadius: 20,
     padding: 16,
-    marginTop: 16,
-    gap: 12,
+    marginBottom: 20,
+    shadowColor: COLORS.dangerRed,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  panicEmoji: {
-    fontSize: 32,
+  panicIconBox: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   panicTextContainer: {
     flex: 1,
+    marginLeft: 16,
   },
   panicTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '800',
-    color: COLORS.dangerRed,
+    color: COLORS.white,
+    letterSpacing: 0.5,
   },
   panicSubtitle: {
     fontSize: 13,
-    color: '#B91C1C',
+    color: 'rgba(255,255,255,0.8)',
     marginTop: 2,
   },
-  configButton: {
+  controlCard: {
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: COLORS.cardBorder,
+  },
+  controlTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    marginBottom: 16,
+  },
+  somButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.primaryBlue,
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 16,
-    gap: 14,
-    width: '100%',
-    justifyContent: 'center',
   },
-  configIconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.25)',
+  somButtonOff: {
+    backgroundColor: COLORS.buttonDark,
+  },
+  somButtonLeft: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 12,
   },
-  configButtonText: {
+  somButtonText: {
     color: COLORS.white,
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  toggleDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.white,
+  },
+  toggleDotOff: {
+    backgroundColor: COLORS.textMuted,
+  },
+  controlHint: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginTop: 12,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 });

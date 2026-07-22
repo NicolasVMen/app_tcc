@@ -71,15 +71,15 @@ const float    EMA_ALFA          = 0.30f;  // 0 = lento/estavel, 1 = rapido/ruid
 const uint32_t INTERVALO_AMOSTRA = 250;    // ms entre leituras de RSSI
 const uint8_t  DEBOUNCE_AMOSTRAS = 6;      // ~1,5s de tendencia p/ trocar estado
 
-// Limiares COM HISTERESE (dBm, aplicados sobre o sinal JA FILTRADO)
-const int LIMIAR_ATENCAO_ENTRA = -70;  // seguro  -> atencao
-const int LIMIAR_ATENCAO_SAI   = -65;  // atencao -> seguro
-const int LIMIAR_PERIGO_ENTRA  = -82;  // atencao -> perigo
-const int LIMIAR_PERIGO_SAI    = -78;  // perigo  -> atencao
+// Limiares COM HISTERESE (dBm) - Calibrados para o TCC
+const int LIMIAR_ATENCAO_ENTRA = -75;
+const int LIMIAR_ATENCAO_SAI   = -70;
+const int LIMIAR_PERIGO_ENTRA  = -86;
+const int LIMIAR_PERIGO_SAI    = -82;
 
-// Modelo log-distance pra ESTIMAR a metragem (calibravel)
-const int   RSSI_REF_1M  = -45;   // RSSI medido a 1 metro de distancia
-const float N_PROPAGACAO = 2.7f;  // 2.0 = campo livre | 2.7-3.5 = ambiente interno
+// Modelo log-distance (calibravel para BLE)
+const int   RSSI_REF_1M  = -71;   // Calibrado pelo Experimento
+const float N_PROPAGACAO = 2.5f;  // 2.0 = campo livre | 2.7-3.5 = ambiente interno
 
 float   rssiFiltrado = -50.0f;
 bool    filtroIniciado = false;
@@ -177,7 +177,8 @@ void atualizarBuzzer() {
   static unsigned long ultimo = 0;
   static bool ligado = false;
 
-  if (!somHabilitado) { digitalWrite(PINO_BUZZER, LOW); ligado = false; return; }
+  // Regra de Ouro: O som pode estar mutado, MAS SE ENTRAR EM PANICO, ELE APITA!
+  if (!somHabilitado && !modoPanico) { digitalWrite(PINO_BUZZER, LOW); ligado = false; return; }
 
   int periodo;
   if (modoPanico)                 periodo = 150;  // panico: bip rapido e continuo

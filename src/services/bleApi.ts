@@ -3,6 +3,7 @@
 // ============================================================
 
 import { BleManager, Device, Characteristic, BleError } from 'react-native-ble-plx';
+import { Platform, PermissionsAndroid } from 'react-native';
 import { Esp32Status } from './esp32Api';
 import { Buffer } from 'buffer';
 
@@ -36,6 +37,27 @@ export function setBleCallbacks(statusCb: StatusCallback, connCb: ConnectionCall
 
 /** Inicia escaneamento e conecta ao ESCOLTA_BLE */
 export async function connectBle(): Promise<void> {
+  if (Platform.OS === 'android' && Platform.Version >= 31) {
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    ]);
+    if (
+      granted['android.permission.BLUETOOTH_SCAN'] !== PermissionsAndroid.RESULTS.GRANTED ||
+      granted['android.permission.BLUETOOTH_CONNECT'] !== PermissionsAndroid.RESULTS.GRANTED
+    ) {
+      throw new Error('Permissões de Bluetooth negadas.');
+    }
+  } else if (Platform.OS === 'android' && Platform.Version >= 23) {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      throw new Error('Permissão de Localização negada.');
+    }
+  }
+
   const state = await bleManager.state();
   if (state !== 'PoweredOn') {
     throw new Error('Bluetooth não está ativado no celular.');
@@ -56,6 +78,14 @@ export async function connectBle(): Promise<void> {
         try {
           // Conecta e descobre serviços
           const connected = await device.connect();
+          // Aumenta o MTU para não cortar o JSON (default é 23 bytes)
+          if (Platform.OS === 'android') {
+            try {
+              await connected.requestMTU(512);
+            } catch (e) {
+              console.warn('Erro ao solicitar MTU maior', e);
+            }
+          }
           await connected.discoverAllServicesAndCharacteristics();
           connectedDevice = connected;
 

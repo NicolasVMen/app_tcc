@@ -5,13 +5,6 @@
 //  Toda a logica de filtragem (EMA, histerese, debounce) do Dedini
 //  foi PRESERVADA. So a camada de comunicacao mudou.
 //
-//  O celular agora conecta via Bluetooth, NAO precisa mais se
-//  desconectar do Wi-Fi da casa. Internet funciona normalmente.
-//
-//  RSSI: O APP le o RSSI da conexao BLE e envia para a placa
-//  via characteristic. A placa aplica filtro EMA + histerese +
-//  debounce e devolve o estado filtrado via Notify.
-//
 //  Placa: ESP32 DevKit V1 (funciona em qualquer ESP32 com BLE)
 // ============================================================
 
@@ -87,14 +80,15 @@ const uint32_t INTERVALO_AMOSTRA = 500;    // ms entre processamentos
 const uint8_t  DEBOUNCE_AMOSTRAS = 6;
 const uint32_t INTERVALO_NOTIFY  = 1000;   // ms entre envios BLE
 
-// Limiares COM HISTERESE (dBm)
+// ============================================================
+// !!! LIMIARES CALIBRADOS PELO EXPERIMENTO DO TCC !!!
+// ============================================================
 const int LIMIAR_ATENCAO_ENTRA = -70;
-const int LIMIAR_ATENCAO_SAI   = -65;
-const int LIMIAR_PERIGO_ENTRA  = -82;
-const int LIMIAR_PERIGO_SAI    = -78;
+const int LIMIAR_ATENCAO_SAI   = -66;
+const int LIMIAR_PERIGO_ENTRA  = -86;
+const int LIMIAR_PERIGO_SAI    = -82;
 
-// Modelo log-distance (calibravel para BLE)
-const int   RSSI_REF_1M  = -59;   // RSSI BLE tipico a 1 metro
+const int   RSSI_REF_1M  = -71;   // RSSI BLE tipico a 1 metro
 const float N_PROPAGACAO = 2.5f;
 
 float   rssiFiltrado = -50.0f;
@@ -108,7 +102,7 @@ volatile int8_t rssiRecebidoDoApp = -100;
 volatile bool   rssiAtualizado = false;
 
 // ============================================================
-//   FUNCOES DE FILTRAGEM (identicas ao firmware Wi-Fi)
+//   FUNCOES DE FILTRAGEM
 // ============================================================
 
 float estimarDistancia(float rssi) {
@@ -149,14 +143,11 @@ void processarSinal(int8_t rssiCru, bool conectado) {
     Serial.println("\n[SISTEMA] MONITORAMENTO ARMADO!");
   }
 
-  // 1) Filtro EMA
   if (!filtroIniciado) { rssiFiltrado = (float)rssiCru; filtroIniciado = true; }
   else rssiFiltrado = EMA_ALFA * (float)rssiCru + (1.0f - EMA_ALFA) * rssiFiltrado;
 
-  // 2) Estado-alvo com histerese
   Estado alvo = proximoEstadoHisterese(estadoAtual, rssiFiltrado);
 
-  // 3) Debounce
   if (alvo == estadoAtual) {
     contadorEstado = 0;
   } else {
@@ -188,7 +179,9 @@ void atualizarBuzzer() {
   static unsigned long ultimo = 0;
   static bool ligado = false;
 
-  if (!somHabilitado) { digitalWrite(PINO_BUZZER, LOW); ligado = false; return; }
+  // !!! REGRA DE OURO INSERIDA AQUI !!!
+  // O som pode estar mutado, MAS SE ENTRAR EM PANICO, ELE APITA!
+  if (!somHabilitado && !modoPanico) { digitalWrite(PINO_BUZZER, LOW); ligado = false; return; }
 
   int periodo;
   if (modoPanico)                  periodo = 150;
@@ -233,7 +226,6 @@ class ServerCallbacks: public BLEServerCallbacks {
   }
 };
 
-// App escreve "1" ou "0" para ligar/desligar som
 class SomCallback: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic* pChar) {
     String valor = pChar->getValue().c_str();
@@ -246,7 +238,6 @@ class SomCallback: public BLECharacteristicCallbacks {
   }
 };
 
-// App escreve qualquer valor para resetar panico
 class ResetCallback: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic* pChar) {
     modoPanico = false;
@@ -258,7 +249,6 @@ class ResetCallback: public BLECharacteristicCallbacks {
   }
 };
 
-// App envia o RSSI que ele leu da conexao BLE (ex: "-67")
 class RssiCallback: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic* pChar) {
     String valor = pChar->getValue().c_str();
@@ -285,23 +275,20 @@ void setup() {
 
   Serial.println("\n========= ESCOLTA UNITAU - BLE =========");
 
-  // ---- Inicializa BLE ----
   BLEDevice::init(CHAR_NOME_DISPOSITIVO);
-  BLEDevice::setPower(ESP_PWR_LVL_P9);  // Potencia maxima
+  BLEDevice::setPower(ESP_PWR_LVL_P9);  
 
   pServer = BLEDevice::createServer();
   pServer->setCallbacks(new ServerCallbacks());
 
   BLEService* pService = pServer->createService(SERVICE_UUID);
 
-  // STATUS (Notify) - envia JSON com dados filtrados
   pStatusChar = pService->createCharacteristic(
     CHAR_STATUS_UUID,
     BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
   );
   pStatusChar->addDescriptor(new BLE2902());
 
-  // SOM (Read/Write)
   pSomChar = pService->createCharacteristic(
     CHAR_SOM_UUID,
     BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
@@ -309,14 +296,12 @@ void setup() {
   pSomChar->setCallbacks(new SomCallback());
   pSomChar->setValue(somHabilitado ? "1" : "0");
 
-  // RESET PANICO (Write)
   pResetChar = pService->createCharacteristic(
     CHAR_RESET_UUID,
     BLECharacteristic::PROPERTY_WRITE
   );
   pResetChar->setCallbacks(new ResetCallback());
 
-  // RSSI DO APP (Write) - app envia o RSSI que ele le da conexao
   pRssiChar = pService->createCharacteristic(
     CHAR_RSSI_UUID,
     BLECharacteristic::PROPERTY_WRITE
@@ -344,25 +329,19 @@ void loop() {
     lerGPS();
   #endif
 
-  // ---- Amostragem em intervalo fixo ----
   static unsigned long ultimaAmostra = 0;
   if (millis() - ultimaAmostra >= INTERVALO_AMOSTRA) {
     ultimaAmostra = millis();
 
     bool conectado = clienteConectado;
-
-    // Usa o RSSI que o app enviou
     int8_t rssiCru = conectado ? rssiRecebidoDoApp : -100;
     ultimoRssiCru = rssiCru;
 
-    // --- LED AZUL INTELIGENTE ---
     if (conectado) digitalWrite(LED_INTERNO, HIGH);
     else           digitalWrite(LED_INTERNO, !digitalRead(LED_INTERNO));
 
-    // Processa sinal (filtragem + decisao de estado)
     processarSinal(rssiCru, conectado);
 
-    // LOG SERIAL
     if (conectado && rssiAtualizado) {
       Serial.print("RSSI App: "); Serial.print(rssiCru);
       Serial.print(" | Filt: ");  Serial.print(rssiFiltrado, 1);
@@ -371,7 +350,6 @@ void loop() {
     }
   }
 
-  // ---- Envia status via BLE Notify ----
   static unsigned long ultimoNotify = 0;
   if (clienteConectado && millis() - ultimoNotify >= INTERVALO_NOTIFY) {
     ultimoNotify = millis();
@@ -379,7 +357,6 @@ void loop() {
     int   rssiMostrar = (int)round(rssiFiltrado);
     float distancia   = estimarDistancia(rssiFiltrado);
 
-    // JSON compacto
     String json = "{";
     json += "\"rssi\":" + String(rssiMostrar) + ",";
     json += "\"rssi_raw\":" + String(ultimoRssiCru) + ",";
@@ -397,7 +374,6 @@ void loop() {
     pSomChar->setValue(somHabilitado ? "1" : "0");
   }
 
-  // ---- Detecta reconexao ----
   if (clienteConectado && !clienteAnterior) {
     Serial.println("[BLE] Nova conexao!");
     prefs.begin("escolta", false);
