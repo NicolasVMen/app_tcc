@@ -11,6 +11,7 @@ export const COLORS = {
   
   primaryBlue: '#3B82F6',
   headerBlue: '#3B82F6',
+  infoBlue: '#3B82F6',
   dangerRed: '#EF4444',
   warningYellow: '#F59E0B',
   safeGreen: '#10B981',

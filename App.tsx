@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Dimensions, Platform, ActivityIndicator, Alert, PanResponder, Animated, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Platform, ActivityIndicator, Alert, PanResponder, Animated, Image } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';

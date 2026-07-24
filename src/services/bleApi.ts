@@ -2,10 +2,28 @@
 // BLE API Service — Comunicação com a placa via Bluetooth
 // ============================================================
 
-import { BleManager, Device, Characteristic, BleError } from 'react-native-ble-plx';
+import { BleManager, Device, BleError } from 'react-native-ble-plx';
 import { Platform, PermissionsAndroid } from 'react-native';
-import { Esp32Status } from './esp32Api';
 import { Buffer } from 'buffer';
+
+export type EstadoEsp32 = 'seguro' | 'atencao' | 'perigo' | 'panico';
+
+export interface Esp32Status {
+  rssi: number;             // RSSI já filtrado (EMA) pela placa
+  modo_casa: boolean;
+  som_on: boolean;
+  panico_ativo: boolean;
+  configurado: boolean;
+  // ---- Campos novos (firmware com filtragem) ----
+  rssi_raw?: number;        // RSSI cru, sem filtro (debug/gráfico)
+  rssi_filtrado?: number;   // RSSI filtrado com casa decimal
+  distancia_m?: number;     // distância estimada (metros)
+  estado?: EstadoEsp32;     // decisão de estado feita na própria placa
+  // ---- Preparado para GPS (evolução futura) ----
+  gps_fix?: boolean;
+  lat?: number;
+  lng?: number;
+}
 
 export const SERVICE_UUID = "e5c1f4a0-1234-4b5c-9abc-def012345678";
 export const CHAR_STATUS_UUID = "e5c1f4a1-1234-4b5c-9abc-def012345678";

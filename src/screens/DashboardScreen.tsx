@@ -15,26 +15,10 @@ import {
   Easing,
   RefreshControl,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { type NivelSinal, type Esp32MonitorState } from '../hooks/useEsp32Monitor';
 import { toggleSomBle, resetarAlarmeBle } from '../services/bleApi';
-
-// ---- Cores Premium (Dark Mode Sofisticado) ----
-const COLORS = {
-  background: '#0F172A',   // Fundo geral bem escuro
-  cardBg: '#1E293B',       // Cartões levemente mais claros
-  cardBorder: '#334155',   // Borda sutil
-  primaryBlue: '#3B82F6',  // Azul principal
-  buttonDark: '#334155',
-  dangerRed: '#EF4444',    // Vermelho pânico
-  warningYellow: '#F59E0B',// Amarelo atenção
-  safeGreen: '#10B981',    // Verde seguro
-  textPrimary: '#F8FAFC',
-  textSecondary: '#94A3B8',
-  textMuted: '#64748B',
-  white: '#FFFFFF',
-};
+import { COLORS } from '../theme';
 
 function getSignalColor(nivel: NivelSinal): string {
   switch (nivel) {
@@ -48,19 +32,7 @@ function getSignalColor(nivel: NivelSinal): string {
 export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorState & { conectar: () => Promise<void> } }) {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
   const [timeSinceUpdate, setTimeSinceUpdate] = useState<string>('--');
-
-  const loadProfile = async () => {
-    try {
-      const raw = await AsyncStorage.getItem('@escolta_user_profile');
-      if (raw) setProfile(JSON.parse(raw));
-    } catch (e) {}
-  };
-
-  useEffect(() => {
-    loadProfile();
-  }, [monitor.modoPanico]); 
 
   const ultimaRef = useRef(monitor.ultimaAtualizacao);
   const conectadoRef = useRef(monitor.conectado);
@@ -96,7 +68,6 @@ export default function DashboardScreen({ monitor }: { monitor: Esp32MonitorStat
   }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    loadProfile();
     setTimeout(() => setRefreshing(false), 800);
   }, []);
 
@@ -528,3 +499,4 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
+

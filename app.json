@@ -30,7 +30,14 @@
           "bluetoothAlwaysPermission": "O app precisa de Bluetooth para conectar ao Escolta UNITAU"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "O app precisa da localização para enviar sua posição nos alertas de emergência.",
+          "locationWhenInUsePermission": "O app precisa da localização para enviar sua posição nos alertas de emergência."
+        }
+      ]
     ],
     "android": {
       "adaptiveIcon": {

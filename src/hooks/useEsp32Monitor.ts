@@ -6,8 +6,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Vibration } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connectBle, disconnectBle, isBleConnected, setBleCallbacks } from '../services/bleApi';
-import { Esp32Status, EstadoEsp32 } from '../services/esp32Api';
+import * as Location from 'expo-location';
+import { connectBle, disconnectBle, isBleConnected, setBleCallbacks, Esp32Status, EstadoEsp32 } from '../services/bleApi';
 
 const ALERTS_STORAGE_KEY = '@escolta_alerts_history';
 const MAX_SAVED_ALERTS = 200; // Limite para não encher o storage
@@ -57,6 +57,21 @@ async function persistAlerts(alertas: AlertItem[]) {
   } catch (e) {}
 }
 
+// Captura a localização GPS atual e retorna um link do Google Maps
+async function getLocationLink(): Promise<string> {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') return '(Permissão de localização negada)';
+    const loc = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High,
+    });
+    const { latitude, longitude } = loc.coords;
+    return `https://maps.google.com/?q=${latitude},${longitude}`;
+  } catch (e) {
+    return '(Localização indisponível)';
+  }
+}
+
 // Carrega alertas do storage
 async function loadAlerts(): Promise<AlertItem[]> {
   try {
@@ -92,7 +107,7 @@ export function useEsp32Monitor() {
   const soundRef = useRef<Audio.Sound | null>(null);
   const previousNivelRef = useRef<NivelSinal>('desconectado');
   const previousPanicoRef = useRef<boolean>(false);
-  const autoReconnectRef = useRef<NodeJS.Timeout | null>(null);
+  const autoReconnectRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isConnectedRef = useRef(false);
   const childNameRef = useRef<string>('');
 
@@ -198,31 +213,37 @@ export function useEsp32Monitor() {
           desc: `${nome} se afastou além do limite seguro! RSSI: ${data.rssi} dBm`
         });
 
-        // 3. LÓGICA DE DISPARO INVISÍVEL NA NUVEM (Telegram/Email)
-        AsyncStorage.getItem('@escolta_user_profile').then(raw => {
-          if (raw) {
-            const prof = JSON.parse(raw);
-            const msg = `🚨 ALERTA DE PÂNICO (Escolta UNITAU) 🚨\n\nO colar de segurança de ${nome} ativou o modo pânico. Possível afastamento! Tente contato imediato.`;
-            
-            if (prof.telefoneEmergencia) {
-              fetch(`https://api.telegram.org/bot8936092894:AAFCgwcQ523iMO1Lxe55bgsxv_hIEOGXQyc/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: prof.telefoneEmergencia, text: msg })
-              }).catch(() => {});
+        // 3. LÓGICA DE DISPARO INVISÍVEL NA NUVEM (Telegram/Email) + GPS
+        (async () => {
+          try {
+            const [raw, locationLink] = await Promise.all([
+              AsyncStorage.getItem('@escolta_user_profile'),
+              getLocationLink(),
+            ]);
+            if (raw) {
+              const prof = JSON.parse(raw);
+              const msg = `🚨 ALERTA DE PÂNICO (Escolta UNITAU) 🚨\n\nO colar de segurança de ${nome} ativou o modo pânico. Possível afastamento!\n\n📍 Localização no momento do alerta:\n${locationLink}\n\nTente contato imediato.`;
+              
+              if (prof.telefoneEmergencia) {
+                fetch(`https://api.telegram.org/bot8936092894:AAFCgwcQ523iMO1Lxe55bgsxv_hIEOGXQyc/sendMessage`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ chat_id: prof.telefoneEmergencia, text: msg })
+                }).catch(() => {});
+              }
+              if (prof.emailEmergencia) {
+                fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    service_id: 'service_oepr28p', template_id: 'template_4wi1j79', user_id: 'o4hSlYAVWUIATAbWp',
+                    template_params: { to_email: prof.emailEmergencia, message: msg, child_name: nome }
+                  })
+                }).catch(() => {});
+              }
             }
-            if (prof.emailEmergencia) {
-              fetch('https://api.emailjs.com/api/v1.0/email/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  service_id: 'service_oepr28p', template_id: 'template_4wi1j79', user_id: 'o4hSlYAVWUIATAbWp',
-                  template_params: { to_email: prof.emailEmergencia, message: msg, child_name: nome }
-                })
-              }).catch(() => {});
-            }
-          }
-        }).catch(() => {});
+          } catch (e) {}
+        })();
 
       } else if (!isPanico && nivel === 'aviso' && previousNivelRef.current === 'seguro') {
         newAlerts.push({

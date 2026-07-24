@@ -3,18 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Share, Refre
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const COLORS = {
-  background: '#0F172A',
-  cardBg: '#1E293B',
-  cardBorder: '#334155',
-  dangerRed: '#EF4444',
-  warningYellow: '#F59E0B',
-  infoBlue: '#3B82F6',
-  textPrimary: '#F8FAFC',
-  textSecondary: '#94A3B8',
-  textMuted: '#64748B',
-  white: '#FFFFFF',
-};
+import { COLORS } from '../theme';
 
 export default function AlertsScreen({ alertas, limparAlertas }: { alertas: any[], limparAlertas: () => void }) {
   const [refreshing, setRefreshing] = useState(false);

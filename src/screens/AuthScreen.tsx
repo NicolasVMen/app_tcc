@@ -16,18 +16,7 @@ import { auth } from '../services/firebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const COLORS = {
-  background: '#0F172A',
-  cardBg: '#1E293B',
-  inputBg: '#0F172A',
-  cardBorder: '#334155',
-  primaryBlue: '#3B82F6',
-  dangerRed: '#EF4444',
-  textPrimary: '#F8FAFC',
-  textSecondary: '#94A3B8',
-  textMuted: '#64748B',
-  white: '#FFFFFF',
-};
+import { COLORS } from '../theme';
 
 export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
   const [isLoginMode, setIsLoginMode] = useState(true);

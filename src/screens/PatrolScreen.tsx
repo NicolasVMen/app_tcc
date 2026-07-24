@@ -3,16 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator
 import { Ionicons } from '@expo/vector-icons';
 import { type Esp32MonitorState } from '../hooks/useEsp32Monitor';
 
-const COLORS = {
-  background: '#0F172A',
-  cardBg: '#1E293B',
-  cardBorder: '#334155',
-  primaryBlue: '#3B82F6',
-  safeGreen: '#10B981',
-  textPrimary: '#F8FAFC',
-  textSecondary: '#94A3B8',
-  white: '#FFFFFF',
-};
+import { COLORS } from '../theme';
 
 const DISTANCES = ['1m', '2m', '5m', '8m', '10m'];
 const TOTAL_SAMPLES = 30;
@@ -204,8 +195,6 @@ const styles = StyleSheet.create({
   resultRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   resultLabel: { color: '#D1FAE5', fontSize: 15 },
   resultValue: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
-  rawTitle: { color: '#A7F3D0', fontSize: 12, marginBottom: 6 },
-  rawText: { color: COLORS.white, fontSize: 13, fontFamily: 'monospace', lineHeight: 20 },
   shareBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#047857', padding: 14, borderRadius: 10, marginTop: 20, gap: 8 },
   shareBtnText: { color: COLORS.white, fontWeight: '700', fontSize: 13 },
   offlineBanner: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#EF4444', padding: 16, borderRadius: 12, marginBottom: 20 },
