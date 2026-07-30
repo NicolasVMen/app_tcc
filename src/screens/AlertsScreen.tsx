@@ -1,161 +1,136 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Share, RefreshControl } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Alert, FlatList, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { COLORS } from '../theme';
+import { AlertItem } from '../hooks/useEsp32Monitor';
+import { useAppPreferences } from '../context/AppPreferencesContext';
+import { AppColors, colorWithAlpha } from '../theme';
 
-export default function AlertsScreen({ alertas, limparAlertas }: { alertas: any[], limparAlertas: () => void }) {
-  const [refreshing, setRefreshing] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
+export default function AlertsScreen({ alertas, limparAlertas }: { alertas: AlertItem[]; limparAlertas: () => void }) {
+  const { colors } = useAppPreferences();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const [profile, setProfile] = useState<{ nomeResponsavel?: string; nomeCrianca?: string } | null>(null);
 
   useEffect(() => {
     AsyncStorage.getItem('@escolta_user_profile').then(raw => {
       if (raw) setProfile(JSON.parse(raw));
-    });
-  }, []);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 600);
+    }).catch(() => {});
   }, []);
 
   const handleClear = () => {
     Alert.alert(
-      "Limpar Histórico",
-      "Tem certeza que deseja apagar todos os registros de alerta?",
+      'Limpar todos os registros?',
+      'As ocorrências serão removidas deste celular e não poderão ser recuperadas.',
       [
-        { text: "Cancelar", style: "cancel" },
-        { text: "Apagar", style: "destructive", onPress: limparAlertas }
+        { text: 'Manter registros', style: 'cancel' },
+        { text: 'Limpar', style: 'destructive', onPress: limparAlertas },
       ]
     );
   };
 
-  const exportText = async () => {
-    if (!alertas || alertas.length === 0) {
-      Alert.alert('Vazio', 'Não há alertas para exportar.');
+  const handleShare = async () => {
+    if (alertas.length === 0) {
+      Alert.alert('Nenhum registro', 'Ainda não existem ocorrências para compartilhar.');
       return;
     }
-
-    const now = new Date();
-    const dataHora = `${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-
-    let report = `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    report += `🛡️ *RELATÓRIO DE SEGURANÇA*\n`;
-    report += `*ESCOLTA UNITAU*\n`;
-    report += `━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-    report += `📅 Gerado em: ${dataHora}\n\n`;
-
-    if (profile) {
-      report += `👤 *RESPONSÁVEL*\n`;
-      if (profile.nomeResponsavel) report += `Nome: ${profile.nomeResponsavel}\n`;
-      if (profile.cpfResponsavel) report += `CPF: ${profile.cpfResponsavel}\n`;
-      if (profile.telefoneResponsavel) report += `Tel: ${profile.telefoneResponsavel}\n`;
-      report += `\n`;
-
-      if (profile.nomeCrianca) {
-        report += `👶 *CRIANÇA MONITORADA*\n`;
-        report += `Nome: ${profile.nomeCrianca}\n`;
-        if (profile.cpfCrianca) report += `CPF: ${profile.cpfCrianca}\n`;
-        report += `\n`;
-      }
-    }
-
-    report += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    report += `📋 *HISTÓRICO DE EVENTOS* (${alertas.length})\n`;
-    report += `━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-
-    alertas.forEach((a, i) => {
-      const icon = a.type === 'panico' ? '🔴' : a.type === 'aviso' ? '🟡' : '🟢';
-      report += `${icon} [${a.time}] ${a.title}\n`;
-      report += `   ${a.desc}\n\n`;
-    });
-
-    report += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    report += `Escolta UNITAU · TCC Eng. Computação\n`;
-    report += `Relatório gerado automaticamente pelo app.\n`;
-
+    const lines = [
+      'ESCOLTA UNITAU — REGISTRO DE OCORRÊNCIAS',
+      'Protótipo acadêmico funcional',
+      '',
+      profile?.nomeResponsavel ? `Responsável: ${profile.nomeResponsavel}` : '',
+      profile?.nomeCrianca ? `Criança monitorada: ${profile.nomeCrianca}` : '',
+      `Gerado em: ${new Date().toLocaleString('pt-BR')}`,
+      '',
+      ...alertas.map(item => `[${item.time}] ${item.title}\n${item.desc}`),
+    ].filter(Boolean);
     try {
-      await Share.share({
-        message: report,
-        title: 'Relatório Escolta UNITAU'
-      });
-    } catch (error) {
-      Alert.alert('Erro', 'Não foi possível compartilhar o relatório.');
+      await Share.share({ title: 'Registros Escolta UNITAU', message: lines.join('\n') });
+    } catch {
+      Alert.alert('Falha ao compartilhar', 'O relatório não pôde ser aberto em outro aplicativo.');
     }
-  };
-
-  const renderItem = ({ item }: any) => {
-    let icon = "information-circle";
-    let color = COLORS.infoBlue;
-
-    if (item.type === 'panico') { icon = "alert-circle"; color = COLORS.dangerRed; }
-    else if (item.type === 'aviso') { icon = "warning"; color = COLORS.warningYellow; }
-
-    return (
-      <View style={styles.card}>
-        <Ionicons name={icon as any} size={36} color={color} style={styles.icon} />
-        <View style={styles.content}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.desc}>{item.desc}</Text>
-        </View>
-        <Text style={styles.time}>{item.time}</Text>
-      </View>
-    );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Histórico de Alertas</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity onPress={handleClear} style={styles.actionBtn}>
-            <Ionicons name="trash-outline" size={22} color={COLORS.dangerRed} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={exportText} style={[styles.actionBtn, styles.shareBtn]}>
-            <Ionicons name="share-social-outline" size={22} color={COLORS.white} />
-          </TouchableOpacity>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.eyebrow}>LINHA DO TEMPO</Text>
+          <Text style={styles.title}>Registros</Text>
+          <Text style={styles.subtitle}>{alertas.length} {alertas.length === 1 ? 'ocorrência registrada' : 'ocorrências registradas'}</Text>
         </View>
+        <TouchableOpacity style={styles.iconButton} onPress={handleShare} accessibilityLabel="Compartilhar registros">
+          <Ionicons name="share-outline" size={21} color={colors.primaryBlue} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton} onPress={handleClear} accessibilityLabel="Limpar registros">
+          <Ionicons name="trash-outline" size={21} color={colors.dangerRed} />
+        </TouchableOpacity>
       </View>
 
-      {alertas && alertas.length > 0 ? (
-        <FlatList
-          data={alertas}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 20 }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.infoBlue} colors={[COLORS.infoBlue]} />}
-        />
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Ionicons name="checkmark-circle-outline" size={60} color={COLORS.textMuted} />
-          <Text style={styles.emptyText}>Nenhum alerta ainda.</Text>
-        </View>
-      )}
+      <FlatList
+        data={alertas}
+        keyExtractor={item => item.id}
+        contentContainerStyle={alertas.length === 0 ? styles.emptyContainer : styles.listContent}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item, index }) => (
+          <TimelineItem item={item} colors={colors} styles={styles} last={index === alertas.length - 1} />
+        )}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <View style={styles.emptyIcon}><Ionicons name="document-text-outline" size={34} color={colors.textMuted} /></View>
+            <Text style={styles.emptyTitle}>Nenhuma ocorrência</Text>
+            <Text style={styles.emptyText}>Mudanças importantes da Sentinela aparecerão aqui com horário e contexto.</Text>
+          </View>
+        }
+      />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background, paddingHorizontal: 20 },
-  header: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    marginTop: 20, marginBottom: 15,
-  },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: COLORS.textSecondary, letterSpacing: 0.5 },
-  headerButtons: { flexDirection: 'row', gap: 10 },
-  actionBtn: {
-    width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.cardBg,
-    alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: COLORS.cardBorder
-  },
-  shareBtn: { backgroundColor: COLORS.infoBlue, borderColor: COLORS.infoBlue },
-  card: { flexDirection: 'row', backgroundColor: COLORS.cardBg, padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: COLORS.cardBorder },
-  icon: { marginRight: 16 },
-  content: { flex: 1 },
-  title: { fontSize: 16, fontWeight: 'bold', color: COLORS.textPrimary, marginBottom: 4 },
-  desc: { fontSize: 13, color: COLORS.textSecondary, lineHeight: 18 },
-  time: { fontSize: 12, fontWeight: '600', color: COLORS.textSecondary, alignSelf: 'flex-start' },
-  emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', opacity: 0.6, marginTop: -50 },
-  emptyText: { fontSize: 16, color: COLORS.textSecondary, marginTop: 10, fontWeight: '500' }
-});
+function TimelineItem({ item, colors, styles, last }: { item: AlertItem; colors: AppColors; styles: ReturnType<typeof createStyles>; last: boolean }) {
+  const color = item.type === 'panico' ? colors.dangerRed : item.type === 'aviso' ? colors.warningYellow : colors.safeGreen;
+  const icon: keyof typeof Ionicons.glyphMap = item.type === 'panico' ? 'alert-circle' : item.type === 'aviso' ? 'warning' : 'checkmark-circle';
+  return (
+    <View style={styles.timelineRow}>
+      <View style={styles.timelineTrack}>
+        <View style={[styles.timelineDot, { backgroundColor: colorWithAlpha(color, 0.15), borderColor: color }]}>
+          <Ionicons name={icon} size={16} color={color} />
+        </View>
+        {!last && <View style={styles.timelineLine} />}
+      </View>
+      <View style={styles.eventCard}>
+        <View style={styles.eventHeader}>
+          <Text style={styles.eventTitle}>{item.title.replace(/[🚨✅]/g, '').trim()}</Text>
+          <Text style={styles.eventTime}>{item.time}</Text>
+        </View>
+        <Text style={styles.eventDescription}>{item.desc}</Text>
+      </View>
+    </View>
+  );
+}
+
+function createStyles(colors: AppColors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: 18 },
+    header: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingTop: 18, paddingBottom: 14 },
+    eyebrow: { color: colors.primaryBlue, fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
+    title: { color: colors.textPrimary, fontSize: 27, fontWeight: '800', marginTop: 2 },
+    subtitle: { color: colors.textSecondary, fontSize: 12, marginTop: 2 },
+    iconButton: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.cardBg, borderWidth: 1, borderColor: colors.cardBorder },
+    listContent: { paddingTop: 5, paddingBottom: 38 },
+    timelineRow: { flexDirection: 'row', alignItems: 'stretch' },
+    timelineTrack: { width: 40, alignItems: 'center' },
+    timelineDot: { width: 31, height: 31, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1.2, zIndex: 2 },
+    timelineLine: { flex: 1, width: 1, backgroundColor: colors.cardBorder, marginVertical: 3 },
+    eventCard: { flex: 1, backgroundColor: colors.cardBg, borderRadius: 15, borderWidth: 1, borderColor: colors.cardBorder, padding: 14, marginLeft: 7, marginBottom: 13 },
+    eventHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+    eventTitle: { flex: 1, color: colors.textPrimary, fontSize: 14, fontWeight: '800' },
+    eventTime: { color: colors.textMuted, fontSize: 11, fontWeight: '700' },
+    eventDescription: { color: colors.textSecondary, fontSize: 13, lineHeight: 19, marginTop: 7 },
+    emptyContainer: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 60 },
+    empty: { alignItems: 'center', maxWidth: 290 },
+    emptyIcon: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.cardBg, marginBottom: 15 },
+    emptyTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: '800' },
+    emptyText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, textAlign: 'center', marginTop: 6 },
+  });
+}

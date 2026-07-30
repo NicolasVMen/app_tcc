@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "splash": {
       "image": "./assets/icon.png",
@@ -34,8 +34,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "O app precisa da localização para enviar sua posição nos alertas de emergência.",
-          "locationWhenInUsePermission": "O app precisa da localização para enviar sua posição nos alertas de emergência."
+          "locationWhenInUsePermission": "Se você ativar essa opção, o protótipo poderá incluir a localização deste celular no início de uma emergência."
         }
       ]
     ],

@@ -35,6 +35,7 @@ export const CHAR_RSSI_UUID = "e5c1f4a4-1234-4b5c-9abc-def012345678";
 const bleManager = new BleManager();
 let connectedDevice: Device | null = null;
 let rssiInterval: NodeJS.Timeout | null = null;
+let connectionPromise: Promise<void> | null = null;
 
 // Callbacks que a interface pode registrar
 type StatusCallback = (status: Esp32Status) => void;
@@ -54,7 +55,7 @@ export function setBleCallbacks(statusCb: StatusCallback, connCb: ConnectionCall
 }
 
 /** Inicia escaneamento e conecta ao ESCOLTA_BLE */
-export async function connectBle(): Promise<void> {
+async function startConnection(): Promise<void> {
   if (Platform.OS === 'android' && Platform.Version >= 31) {
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -82,11 +83,21 @@ export async function connectBle(): Promise<void> {
   }
 
   return new Promise((resolve, reject) => {
+    let settled = false;
+    let scanTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const finish = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      bleManager.stopDeviceScan();
+      if (scanTimeout) clearTimeout(scanTimeout);
+      callback();
+    };
+
     // Escaneia por dispositivos
     bleManager.startDeviceScan(null, null, async (error: BleError | null, device: Device | null) => {
       if (error) {
-        bleManager.stopDeviceScan();
-        reject(error);
+        finish(() => reject(error));
         return;
       }
 
@@ -157,27 +168,43 @@ export async function connectBle(): Promise<void> {
             if (onConnectionChange) onConnectionChange(false);
           });
 
-          resolve();
+          finish(resolve);
         } catch (connError) {
-          reject(connError);
+          finish(() => reject(connError));
         }
       }
     });
 
     // Timeout se não encontrar
-    setTimeout(() => {
-      bleManager.stopDeviceScan();
-      reject(new Error('Dispositivo não encontrado após 10 segundos'));
+    scanTimeout = setTimeout(() => {
+      finish(() => reject(new Error('Dispositivo não encontrado após 10 segundos')));
     }, 10000);
   });
 }
 
+/** Inicia escaneamento e conecta ao ESCOLTA_BLE sem duplicar tentativas concorrentes. */
+export async function connectBle(): Promise<void> {
+  if (connectedDevice) return;
+  if (connectionPromise) return connectionPromise;
+
+  connectionPromise = startConnection().finally(() => {
+    connectionPromise = null;
+  });
+
+  return connectionPromise;
+}
+
 /** Desconecta do dispositivo atual */
 export async function disconnectBle(): Promise<void> {
+  bleManager.stopDeviceScan();
   if (connectedDevice) {
-    await connectedDevice.cancelConnection();
+    const device = connectedDevice;
     connectedDevice = null;
-    if (onConnectionChange) onConnectionChange(false);
+    if (rssiInterval) {
+      clearInterval(rssiInterval);
+      rssiInterval = null;
+    }
+    await device.cancelConnection();
   }
 }
 

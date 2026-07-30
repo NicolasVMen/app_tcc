@@ -19,7 +19,6 @@ if (getApps().length === 0) {
   app = getApp();
 }
 
-// Configura o Auth padrão (em memória para o TCC para garantir estabilidade máxima)
 const auth = getAuth(app);
 
 export { auth };

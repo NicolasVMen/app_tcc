@@ -1,521 +1,396 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
-  Alert, ScrollView, TextInput, ActivityIndicator,
-  Linking, RefreshControl
+  ActivityIndicator,
+  Alert,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { auth } from '../services/firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { COLORS } from '../theme';
+
+import { auth } from '../services/firebaseConfig';
+import { AppPreferences, useAppPreferences } from '../context/AppPreferencesContext';
+import { AppColors, colorWithAlpha, ThemeMode } from '../theme';
 
 interface UserProfile {
   nomeResponsavel: string;
-  cpfResponsavel: string;
-  telefoneResponsavel: string;
   nomeCrianca: string;
-  cpfCrianca: string;
-  telefoneEmergencia?: string;
   emailEmergencia?: string;
+  [key: string]: unknown;
 }
 
-function getInitials(name: string): string {
-  if (!name || name.trim() === '') return '?';
-  const parts = name.trim().split(' ').filter(Boolean);
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
+const EMPTY_PROFILE: UserProfile = {
+  nomeResponsavel: '',
+  nomeCrianca: '',
+  emailEmergencia: '',
+};
 
-export default function SettingsScreen({ onOpenLab }: { onOpenLab: () => void }) {
-  const [profile, setProfile] = useState<UserProfile>({
-    nomeResponsavel: '', cpfResponsavel: '', telefoneResponsavel: '', nomeCrianca: '', cpfCrianca: '',
-    telefoneEmergencia: '', emailEmergencia: ''
-  });
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [editingChild, setEditingChild] = useState(false);
-  const [editingEmergency, setEditingEmergency] = useState(false);
-  const [editName, setEditName] = useState('');
-  const [editCpf, setEditCpf] = useState('');
-  const [editPhone, setEditPhone] = useState('');
-  const [childNameInput, setChildNameInput] = useState('');
-  const [childCpfInput, setChildCpfInput] = useState('');
-  const [emergPhoneInput, setEmergPhoneInput] = useState('');
-  const [emergEmailInput, setEmergEmailInput] = useState('');
+export default function SettingsScreen() {
+  const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const [profile, setProfile] = useState<UserProfile>(EMPTY_PROFILE);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [editingChild, setEditingChild] = useState(false);
+  const [editingContact, setEditingContact] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [childInput, setChildInput] = useState('');
+  const [emailInput, setEmailInput] = useState('');
+  const [versionTaps, setVersionTaps] = useState(0);
+  const [showAcademic, setShowAcademic] = useState(false);
 
   const loadProfile = useCallback(async () => {
     try {
       const raw = await AsyncStorage.getItem('@escolta_user_profile');
       if (raw) {
-        const parsed = JSON.parse(raw);
-        setProfile(parsed);
-        setEditName(parsed.nomeResponsavel || '');
-        setEditCpf(parsed.cpfResponsavel || '');
-        setEditPhone(parsed.telefoneResponsavel || '');
-        setChildNameInput(parsed.nomeCrianca || '');
-        setChildCpfInput(parsed.cpfCrianca || '');
-        setEmergPhoneInput(parsed.telefoneEmergencia || '');
-        setEmergEmailInput(parsed.emailEmergencia || '');
+        const parsed = JSON.parse(raw) as UserProfile;
+        const normalized = { ...EMPTY_PROFILE, ...parsed };
+        setProfile(normalized);
+        setNameInput(normalized.nomeResponsavel || '');
+        setChildInput(normalized.nomeCrianca || '');
+        setEmailInput(normalized.emailEmergencia || '');
       }
-    } catch (e) {}
+    } catch {}
     setLoading(false);
-    setRefreshing(false);
   }, []);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    loadProfile();
-  }, [loadProfile]);
+  const persistProfile = async (changes: Partial<UserProfile>) => {
+    setSaving(true);
+    try {
+      const next = { ...profile, ...changes };
+      await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify(next));
+      setProfile(next);
+      return true;
+    } catch {
+      Alert.alert('Não foi possível salvar', 'Tente novamente em alguns instantes.');
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
 
-  const saveProfile = async () => {
-    if (!editName.trim()) {
-      Alert.alert('Atenção', 'O nome do responsável é obrigatório.');
+  const saveName = async () => {
+    if (!nameInput.trim()) {
+      Alert.alert('Nome necessário', 'Informe como o responsável deve ser identificado.');
       return;
     }
-    setSaving(true);
-    try {
-      const updated = {
-        ...profile,
-        nomeResponsavel: editName.trim(),
-        cpfResponsavel: editCpf.trim(),
-        telefoneResponsavel: editPhone.trim(),
-      };
-      await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify(updated));
-      setProfile(updated);
-      setEditingProfile(false);
-      Alert.alert('✅ Salvo!', 'Dados do responsável atualizados.');
-    } catch (e) {
-      Alert.alert('Erro', 'Não foi possível salvar.');
-    }
-    setSaving(false);
+    if (await persistProfile({ nomeResponsavel: nameInput.trim() })) setEditingProfile(false);
   };
 
-  const saveChildName = async () => {
-    setSaving(true);
-    try {
-      const updated = { ...profile, nomeCrianca: childNameInput.trim(), cpfCrianca: childCpfInput.trim() };
-      await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify(updated));
-      setProfile(updated);
-      setEditingChild(false);
-      Alert.alert('✅ Salvo!', 'Nome da criança atualizado.');
-    } catch (e) {
-      Alert.alert('Erro', 'Não foi possível salvar.');
+  const saveChild = async () => {
+    if (!childInput.trim()) {
+      Alert.alert('Nome necessário', 'Informe o nome da criança monitorada.');
+      return;
     }
-    setSaving(false);
+    if (await persistProfile({ nomeCrianca: childInput.trim() })) setEditingChild(false);
   };
 
-  const saveEmergencyContact = async () => {
-    setSaving(true);
-    try {
-      const updated = { 
-        ...profile, 
-        telefoneEmergencia: emergPhoneInput.trim(), 
-        emailEmergencia: emergEmailInput.trim() 
-      };
-      await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify(updated));
-      setProfile(updated);
-      setEditingEmergency(false);
-      Alert.alert('✅ Salvo!', 'Contato de emergência atualizado.');
-    } catch (e) {
-      Alert.alert('Erro', 'Não foi possível salvar.');
-    }
-    setSaving(false);
+  const saveContact = async () => {
+    if (await persistProfile({ emailEmergencia: emailInput.trim() })) setEditingContact(false);
   };
 
-  const handleLogout = () => {
-    Alert.alert('Sair da Conta', 'Tem certeza que deseja sair?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', style: 'destructive', onPress: async () => {
-        try { await signOut(auth); } catch { Alert.alert('Erro', 'Não foi possível fazer logout.'); }
-      }},
+  const confirmCriticalToggle = <K extends keyof AppPreferences>(
+    key: K,
+    value: AppPreferences[K],
+    title: string,
+    message: string
+  ) => {
+    if (value !== false) {
+      setPreference(key, value);
+      return;
+    }
+    Alert.alert(title, message, [
+      { text: 'Manter ativa', style: 'cancel' },
+      { text: 'Desativar', style: 'destructive', onPress: () => setPreference(key, value) },
     ]);
   };
 
-  const callEmergency = (number: string, label: string) => {
+  const handleLocationToggle = (value: boolean) => {
+    if (!value) {
+      setPreference('shareLocation', false);
+      return;
+    }
     Alert.alert(
-      `📞 Ligar para ${label}?`,
-      `O app vai abrir o discador com o número ${number}. Confirme para ligar.`,
+      'Compartilhar localização deste celular?',
+      'Somente durante uma emergência, os contatos autorizados poderão receber a posição deste celular. Essa não é a localização exata da criança.',
       [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: `Ligar ${number}`, style: 'destructive', onPress: () => Linking.openURL(`tel:${number}`) }
+        { text: 'Agora não', style: 'cancel' },
+        { text: 'Ativar', onPress: () => setPreference('shareLocation', true) },
       ]
     );
   };
 
+  const handleLogout = () => {
+    Alert.alert('Sair da conta?', 'A Sentinela deixará de monitorar enquanto não houver uma conta ativa.', [
+      { text: 'Permanecer', style: 'cancel' },
+      { text: 'Sair', style: 'destructive', onPress: () => signOut(auth).catch(() => Alert.alert('Falha ao sair')) },
+    ]);
+  };
+
+  const handleReset = () => {
+    Alert.alert('Restaurar preferências?', 'Tema, notificações e opções da Sentinela voltarão aos valores recomendados.', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Restaurar', style: 'destructive', onPress: resetPreferences },
+    ]);
+  };
+
+  const handleVersionTap = () => {
+    const next = versionTaps + 1;
+    if (next >= 5) {
+      setShowAcademic(true);
+      setVersionTaps(0);
+      Alert.alert('Área acadêmica habilitada', 'As informações técnicas do protótipo estão disponíveis abaixo.');
+    } else setVersionTaps(next);
+  };
+
+  const callEmergency = (number: string, label: string) => {
+    Alert.alert(`Ligar para ${label}?`, `O discador será aberto com o número ${number}.`, [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: `Ligar ${number}`, style: 'destructive', onPress: () => Linking.openURL(`tel:${number}`) },
+    ]);
+  };
+
   if (loading) {
-    return (
-      <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator color={COLORS.primaryBlue} />
-      </View>
-    );
+    return <View style={styles.loading}><ActivityIndicator color={colors.primaryBlue} /></View>;
   }
 
   const initials = getInitials(profile.nomeResponsavel);
-  const email = auth.currentUser?.email || '';
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primaryBlue} colors={[COLORS.primaryBlue]} />}
-      >
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+        <View style={styles.heading}>
+          <Text style={styles.eyebrow}>CONFIGURAÇÃO E COBERTURA</Text>
+          <Text style={styles.title}>Sistema</Text>
+          <Text style={styles.subtitle}>Personalize a experiência sem perder de vista o impacto de cada escolha.</Text>
+        </View>
 
-        {/* ===== PERFIL DO RESPONSÁVEL ===== */}
-        {editingProfile ? (
-          <View style={styles.editProfileCard}>
-            <Text style={styles.editProfileTitle}>Editar Perfil</Text>
+        <SectionTitle colors={colors} title="Perfil" />
+        <View style={styles.card}>
+          {editingProfile ? (
+            <InlineEditor
+              colors={colors} styles={styles} label="Nome do responsável" value={nameInput} onChange={setNameInput}
+              onCancel={() => { setNameInput(profile.nomeResponsavel); setEditingProfile(false); }} onSave={saveName} saving={saving}
+            />
+          ) : (
+            <SettingsRow colors={colors} styles={styles} icon="person" title={profile.nomeResponsavel || 'Responsável não identificado'} detail={auth.currentUser?.email || ''} onPress={() => setEditingProfile(true)} leadingText={initials} />
+          )}
+          <View style={styles.separator} />
+          {editingChild ? (
+            <InlineEditor
+              colors={colors} styles={styles} label="Nome da criança" value={childInput} onChange={setChildInput}
+              onCancel={() => { setChildInput(profile.nomeCrianca); setEditingChild(false); }} onSave={saveChild} saving={saving}
+            />
+          ) : (
+            <SettingsRow colors={colors} styles={styles} icon="happy" title={profile.nomeCrianca || 'Adicionar criança'} detail="Uma criança monitorada por conta" onPress={() => setEditingChild(true)} />
+          )}
+        </View>
 
-            <Text style={styles.fieldLabel}>Nome do Responsável</Text>
-            <View style={styles.inputRow}>
-              <Ionicons name="person-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-              <TextInput
-                style={styles.input}
-                value={editName}
-                onChangeText={setEditName}
-                placeholder="Seu nome completo"
-                placeholderTextColor={COLORS.textMuted}
-                autoFocus
-              />
-            </View>
-
-            <Text style={styles.fieldLabel}>Telefone (com DDD)</Text>
-            <View style={styles.inputRow}>
-              <Ionicons name="call-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-              <TextInput
-                style={styles.input}
-                value={editPhone}
-                onChangeText={setEditPhone}
-                placeholder="(12) 99999-0000"
-                placeholderTextColor={COLORS.textMuted}
-                keyboardType="phone-pad"
-              />
-            </View>
-
-            <Text style={styles.fieldLabel}>CPF</Text>
-            <View style={styles.inputRow}>
-              <Ionicons name="card-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-              <TextInput
-                style={styles.input}
-                value={editCpf}
-                onChangeText={setEditCpf}
-                placeholder="000.000.000-00"
-                placeholderTextColor={COLORS.textMuted}
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View style={styles.editButtons}>
-              <TouchableOpacity style={styles.cancelBtn} onPress={() => {
-                setEditingProfile(false);
-                setEditName(profile.nomeResponsavel);
-                setEditPhone(profile.telefoneResponsavel);
-                setEditCpf(profile.cpfResponsavel);
-              }}>
-                <Text style={styles.cancelBtnText}>Cancelar</Text>
+        <SectionTitle colors={colors} title="Aparência" />
+        <View style={styles.cardPadded}>
+          <Text style={styles.settingTitle}>Tema do aplicativo</Text>
+          <Text style={styles.settingDescription}>O tema escuro é a identidade padrão do Escolta UNITAU.</Text>
+          <View style={styles.themeOptions}>
+            {(['dark', 'light', 'system'] as ThemeMode[]).map(mode => (
+              <TouchableOpacity key={mode} style={[styles.themeButton, preferences.themeMode === mode && styles.themeButtonSelected]} onPress={() => setPreference('themeMode', mode)}>
+                <Ionicons name={mode === 'dark' ? 'moon' : mode === 'light' ? 'sunny' : 'phone-portrait'} size={18} color={preferences.themeMode === mode ? colors.primaryBlue : colors.textSecondary} />
+                <Text style={[styles.themeButtonText, preferences.themeMode === mode && { color: colors.primaryBlue }]}>{mode === 'dark' ? 'Escuro' : mode === 'light' ? 'Claro' : 'Sistema'}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveBtn} onPress={saveProfile} disabled={saving}>
-                {saving ? <ActivityIndicator color={COLORS.white} size="small" /> : <Text style={styles.saveBtnText}>Salvar</Text>}
-              </TouchableOpacity>
-            </View>
+            ))}
           </View>
-        ) : (
-          <TouchableOpacity style={styles.profileCard} onPress={() => setEditingProfile(true)} activeOpacity={0.7}>
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>{initials}</Text>
+        </View>
+
+        <SectionTitle colors={colors} title="Preferências" />
+        <View style={styles.card}>
+          <PreferenceSwitch colors={colors} styles={styles} icon="radio" title="Conexão automática" description="A Sentinela procura e reconecta o dispositivo automaticamente." value={preferences.autoConnect} onChange={value => confirmCriticalToggle('autoConnect', value, 'Desativar conexão automática?', 'Será necessário iniciar a conexão manualmente, o que pode reduzir a proteção.')} />
+          <View style={styles.separator} />
+          <PreferenceSwitch colors={colors} styles={styles} icon="notifications" title="Avisos no celular" description="Permite apresentar avisos e emergências fora da Central." value={preferences.notificationsEnabled} onChange={value => confirmCriticalToggle('notificationsEnabled', value, 'Desativar avisos?', 'Alertas fora da tela poderão ser limitados. O alarme crítico dentro do aplicativo permanece independente.')} />
+          <View style={styles.separator} />
+          <PreferenceSwitch colors={colors} styles={styles} icon="phone-portrait" title="Vibração" description="Usa padrões diferentes para atenção e emergência." value={preferences.vibrationEnabled} onChange={value => setPreference('vibrationEnabled', value)} />
+          <View style={styles.separator} />
+          <PreferenceSwitch colors={colors} styles={styles} icon="volume-medium" title="Sons informativos" description="Controla sons não críticos. Não silencia emergências." value={preferences.informationalSounds} onChange={value => setPreference('informationalSounds', value)} />
+          <View style={styles.separator} />
+          <PreferenceSwitch colors={colors} styles={styles} icon="accessibility" title="Reduzir animações" description="Mantém cores e estados, com movimentos mais discretos." value={preferences.reduceMotion} onChange={value => setPreference('reduceMotion', value)} />
+        </View>
+
+        <SectionTitle colors={colors} title="Privacidade e localização" />
+        <View style={styles.card}>
+          <PreferenceSwitch colors={colors} styles={styles} icon="location" title="Compartilhar localização deste celular" description="Usada somente no início de uma emergência. Não representa a posição exata da criança." value={preferences.shareLocation} onChange={handleLocationToggle} />
+        </View>
+
+        <SectionTitle colors={colors} title="Contatos de confiança" />
+        <View style={styles.card}>
+          <View style={styles.experimentalBanner}>
+            <Ionicons name="flask-outline" size={19} color={colors.warningYellow} />
+            <Text style={styles.experimentalText}>Canal experimental do protótipo. A futura Rede de Proteção exigirá notificações push e um backend autenticado.</Text>
+          </View>
+          <View style={styles.separator} />
+          {editingContact ? (
+            <View style={styles.editor}>
+              <Text style={styles.fieldLabel}>E-mail de emergência</Text>
+              <TextInput style={styles.input} value={emailInput} onChangeText={setEmailInput} autoCapitalize="none" keyboardType="email-address" placeholder="contato@exemplo.com" placeholderTextColor={colors.textMuted} />
+              <Text style={styles.editorHelp}>O envio por e-mail é experimental e não substitui o alarme local do protótipo.</Text>
+              <EditorActions styles={styles} onCancel={() => setEditingContact(false)} onSave={saveContact} saving={saving} />
             </View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>{profile.nomeResponsavel || 'Responsável'}</Text>
-              <Text style={styles.profileEmail}>{email}</Text>
-              {profile.telefoneResponsavel ? (
-                <View style={styles.phoneTag}>
-                  <Ionicons name="call-outline" size={12} color={COLORS.primaryBlue} />
-                  <Text style={styles.phoneTagText}>{profile.telefoneResponsavel}</Text>
-                </View>
-              ) : null}
-            </View>
-            <Ionicons name="create-outline" size={20} color={COLORS.primaryBlue} />
+          ) : (
+            <SettingsRow colors={colors} styles={styles} icon="people" title={profile.emailEmergencia ? 'Canal experimental configurado' : 'Configurar canal experimental'} detail={profile.emailEmergencia || 'E-mail para ensaios controlados'} onPress={() => setEditingContact(true)} />
+          )}
+        </View>
+
+        <SectionTitle colors={colors} title="Emergência" />
+        <View style={styles.emergencyRow}>
+          <TouchableOpacity style={[styles.emergencyButton, { backgroundColor: colors.primaryBlue }]} onPress={() => callEmergency('190', 'Polícia Militar')}>
+            <Ionicons name="shield" size={22} color={colors.white} /><Text style={styles.emergencyLabel}>POLÍCIA</Text><Text style={styles.emergencyNumber}>190</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={[styles.emergencyButton, { backgroundColor: colors.dangerRed }]} onPress={() => callEmergency('192', 'SAMU')}>
+            <Ionicons name="medkit" size={22} color={colors.white} /><Text style={styles.emergencyLabel}>SAMU</Text><Text style={styles.emergencyNumber}>192</Text>
+          </TouchableOpacity>
+        </View>
+
+        {showAcademic && (
+          <>
+            <SectionTitle colors={colors} title="Área acadêmica" />
+            <View style={styles.cardPadded}>
+              <View style={styles.academicHeader}><Ionicons name="school" size={22} color={colors.primaryBlue} /><Text style={styles.academicTitle}>Protótipo Escolta UNITAU</Text></View>
+              <Text style={styles.academicText}>TCC de Engenharia da Computação — Universidade de Taubaté.</Text>
+              <Text style={styles.academicText}>Nicolas Venciguerra Men e Rafael Gonçalves Dedini.</Text>
+              <Text style={styles.academicText}>A Telemetria permanece preservada no código e fora da navegação comum.</Text>
+            </View>
+          </>
         )}
 
-        {/* ===== CRIANÇA ===== */}
-        <Text style={styles.sectionTitle}>CRIANÇA MONITORADA</Text>
+        <SectionTitle colors={colors} title="Conta e aplicativo" />
         <View style={styles.card}>
-          {editingChild ? (
-            <View style={styles.editContainer}>
-              <View style={styles.inputRow}>
-                <Ionicons name="person-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-                <TextInput
-                  style={styles.input}
-                  value={childNameInput}
-                  onChangeText={setChildNameInput}
-                  placeholder="Nome da Criança"
-                  placeholderTextColor={COLORS.textMuted}
-                  autoFocus
-                />
-              </View>
-              <View style={styles.inputRow}>
-                <Ionicons name="card-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-                <TextInput
-                  style={styles.input}
-                  value={childCpfInput}
-                  onChangeText={setChildCpfInput}
-                  placeholder="CPF da Criança"
-                  placeholderTextColor={COLORS.textMuted}
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={styles.editButtons}>
-                <TouchableOpacity style={styles.cancelBtn} onPress={() => { setEditingChild(false); setChildNameInput(profile.nomeCrianca); }}>
-                  <Text style={styles.cancelBtnText}>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.saveBtn} onPress={saveChildName} disabled={saving}>
-                  {saving ? <ActivityIndicator color={COLORS.white} size="small" /> : <Text style={styles.saveBtnText}>Salvar</Text>}
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.row} onPress={() => setEditingChild(true)} activeOpacity={0.7}>
-              <View style={styles.rowContent}>
-                <View style={[styles.avatarSmall, { backgroundColor: profile.nomeCrianca ? COLORS.safeGreen + '30' : COLORS.cardBorder }]}>
-                  <Ionicons name="person" size={18} color={profile.nomeCrianca ? COLORS.safeGreen : COLORS.textMuted} />
-                </View>
-                <View>
-                  <Text style={styles.rowText}>{profile.nomeCrianca || 'Toque para adicionar'}</Text>
-                  <Text style={styles.rowSubtext}>Nome que aparece nos alertas</Text>
-                </View>
-              </View>
-              <Ionicons name="create-outline" size={20} color={COLORS.primaryBlue} />
-            </TouchableOpacity>
-          )}
+          <SettingsRow colors={colors} styles={styles} icon="refresh" title="Restaurar preferências" detail="Retorna às opções recomendadas" onPress={handleReset} />
+          <View style={styles.separator} />
+          <SettingsRow colors={colors} styles={styles} icon="log-out" title="Sair da conta" detail="Interrompe a sessão atual" onPress={handleLogout} danger />
         </View>
 
-        {/* ===== CONTATO DE EMERGÊNCIA (SMS/EMAIL) ===== */}
-        <Text style={styles.sectionTitle}>CONTATO DE EMERGÊNCIA (ALERTA AUTOMÁTICO)</Text>
-        <View style={styles.card}>
-          {editingEmergency ? (
-            <View style={styles.editContainer}>
-              <View style={styles.inputRow}>
-                <Ionicons name="call-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-                <TextInput
-                  style={styles.input}
-                  value={emergPhoneInput}
-                  onChangeText={setEmergPhoneInput}
-                  placeholder="Tel para SMS (Ex: 12999990000)"
-                  placeholderTextColor={COLORS.textMuted}
-                  keyboardType="phone-pad"
-                  autoFocus
-                />
-              </View>
-              <View style={styles.inputRow}>
-                <Ionicons name="mail-outline" size={20} color={COLORS.textSecondary} style={{ marginRight: 10 }} />
-                <TextInput
-                  style={styles.input}
-                  value={emergEmailInput}
-                  onChangeText={setEmergEmailInput}
-                  placeholder="Email de emergência"
-                  placeholderTextColor={COLORS.textMuted}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-              <View style={styles.editButtons}>
-                <TouchableOpacity style={styles.cancelBtn} onPress={() => { setEditingEmergency(false); setEmergPhoneInput(profile.telefoneEmergencia || ''); setEmergEmailInput(profile.emailEmergencia || ''); }}>
-                  <Text style={styles.cancelBtnText}>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.saveBtn} onPress={saveEmergencyContact} disabled={saving}>
-                  {saving ? <ActivityIndicator color={COLORS.white} size="small" /> : <Text style={styles.saveBtnText}>Salvar</Text>}
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.row} onPress={() => setEditingEmergency(true)} activeOpacity={0.7}>
-              <View style={styles.rowContent}>
-                <View style={[styles.avatarSmall, { backgroundColor: (profile.telefoneEmergencia || profile.emailEmergencia) ? COLORS.warningYellow + '30' : COLORS.cardBorder }]}>
-                  <Ionicons name="warning" size={18} color={(profile.telefoneEmergencia || profile.emailEmergencia) ? COLORS.warningYellow : COLORS.textMuted} />
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={styles.rowText}>{profile.telefoneEmergencia || profile.emailEmergencia ? 'Contato configurado' : 'Toque para adicionar'}</Text>
-                  <Text style={styles.rowSubtext} numberOfLines={1}>
-                    {profile.telefoneEmergencia ? `SMS: ${profile.telefoneEmergencia} ` : ''}
-                    {profile.emailEmergencia ? `Email: ${profile.emailEmergencia}` : ''}
-                    {!profile.telefoneEmergencia && !profile.emailEmergencia && 'Usado para o botão SOS no Pânico'}
-                  </Text>
-                </View>
-              </View>
-              <Ionicons name="create-outline" size={20} color={COLORS.primaryBlue} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* ===== EMERGÊNCIA ===== */}
-        <Text style={styles.sectionTitle}>LIGAÇÃO RÁPIDA</Text>
-        <View style={styles.emergencyRow}>
-          <TouchableOpacity style={styles.policeBtn} onPress={() => callEmergency('190', 'Polícia Militar')} activeOpacity={0.8}>
-            <Ionicons name="shield" size={22} color={COLORS.white} />
-            <Text style={styles.emergencyLabel}>POLÍCIA</Text>
-            <Text style={styles.emergencyNumber}>190</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.samuBtn} onPress={() => callEmergency('192', 'SAMU')} activeOpacity={0.8}>
-            <Ionicons name="medkit" size={22} color={COLORS.white} />
-            <Text style={styles.emergencyLabel}>SAMU</Text>
-            <Text style={styles.emergencyNumber}>192</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* ===== SOBRE ===== */}
-        <Text style={styles.sectionTitle}>SOBRE O PROJETO</Text>
-        <View style={styles.card}>
-          <View style={styles.aboutHeader}>
-            <Text style={styles.aboutTitle}>Escolta UNITAU</Text>
-            <Text style={styles.aboutSubtitle}>TCC — Engenharia da Computação</Text>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.infoContainer}>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Universidade</Text>
-              <Text style={styles.infoValue}>UNITAU</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Alunos</Text>
-              <Text style={styles.infoValue}>Nicolas Men e Rafael Dedini</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Orientador</Text>
-              <Text style={styles.infoValue}>Prof. Luis Fernando</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Versão</Text>
-              <Text style={styles.infoValue}>1.0.0</Text>
-            </View>
-          </View>
-
-          <View style={styles.divider} />
-
-          <Text style={styles.aboutFooter}>
-            Sistema de segurança infantil baseado em Bluetooth Low Energy (BLE) com monitoramento em tempo real.
-          </Text>
-
-          <View style={styles.divider} />
-
-          <TouchableOpacity style={styles.row} onPress={onOpenLab} activeOpacity={0.7}>
-            <View style={styles.rowContent}>
-              <Ionicons name="flask-outline" size={20} color={COLORS.primaryBlue} />
-              <Text style={styles.rowText}>Laboratório de Dados (TCC)</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
-          </TouchableOpacity>
-        </View>
-
-        {/* ===== LOGOUT ===== */}
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={20} color={COLORS.dangerRed} />
-          <Text style={styles.logoutText}>SAIR DA CONTA</Text>
+        <TouchableOpacity style={styles.versionArea} onPress={handleVersionTap} activeOpacity={0.65}>
+          <Text style={styles.version}>Escolta UNITAU v1.0.0</Text>
+          <Text style={styles.prototype}>PROTÓTIPO ACADÊMICO FUNCIONAL</Text>
         </TouchableOpacity>
-
-        <Text style={styles.versionText}>Escolta UNITAU v1.0 · TCC Eng. Computação</Text>
-
       </ScrollView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { padding: 20, paddingBottom: 60 },
+function getInitials(name: string) {
+  const parts = name.trim().split(' ').filter(Boolean);
+  if (parts.length === 0) return '?';
+  return parts.length === 1 ? parts[0][0].toUpperCase() : `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
 
-  // Perfil
-  profileCard: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: COLORS.cardBg, borderRadius: 20, padding: 20,
-    borderWidth: 1, borderColor: COLORS.cardBorder, marginBottom: 28, gap: 14,
-  },
-  avatarCircle: {
-    width: 60, height: 60, borderRadius: 30, backgroundColor: COLORS.primaryBlue,
-    alignItems: 'center', justifyContent: 'center',
-    shadowColor: COLORS.primaryBlue, shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4, shadowRadius: 8, elevation: 6,
-  },
-  avatarText: { fontSize: 24, fontWeight: '800', color: COLORS.white },
-  profileInfo: { flex: 1 },
-  profileName: { fontSize: 18, fontWeight: '800', color: COLORS.textPrimary, marginBottom: 2 },
-  profileEmail: { fontSize: 13, color: COLORS.textSecondary, marginBottom: 6 },
-  phoneTag: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: COLORS.primaryBlue + '20',
-    paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, alignSelf: 'flex-start',
-  },
-  phoneTagText: { fontSize: 12, color: COLORS.primaryBlue, fontWeight: '600' },
+function SectionTitle({ colors, title }: { colors: AppColors; title: string }) {
+  return <Text style={{ color: colors.textSecondary, fontSize: 11, fontWeight: '800', letterSpacing: 1.1, marginTop: 23, marginBottom: 9 }}>{title.toUpperCase()}</Text>;
+}
 
-  // Edição do perfil
-  editProfileCard: {
-    backgroundColor: COLORS.cardBg, borderRadius: 20, padding: 20,
-    borderWidth: 1, borderColor: COLORS.primaryBlue, marginBottom: 28,
-  },
-  editProfileTitle: { fontSize: 18, fontWeight: '800', color: COLORS.textPrimary, marginBottom: 16 },
-  fieldLabel: { fontSize: 13, fontWeight: '600', color: COLORS.textSecondary, marginBottom: 6, marginLeft: 2 },
+function SettingsRow({ colors, styles, icon, title, detail, onPress, leadingText, danger }: {
+  colors: AppColors; styles: ReturnType<typeof createStyles>; icon: keyof typeof Ionicons.glyphMap;
+  title: string; detail: string; onPress: () => void; leadingText?: string; danger?: boolean;
+}) {
+  const color = danger ? colors.dangerRed : colors.primaryBlue;
+  return (
+    <TouchableOpacity style={styles.settingsRow} onPress={onPress} activeOpacity={0.72}>
+      <View style={[styles.rowIcon, { backgroundColor: colorWithAlpha(color, 0.12) }]}>
+        {leadingText ? <Text style={[styles.rowInitials, { color }]}>{leadingText}</Text> : <Ionicons name={icon} size={19} color={color} />}
+      </View>
+      <View style={{ flex: 1 }}><Text style={[styles.rowTitle, danger && { color }]}>{title}</Text><Text style={styles.rowDetail} numberOfLines={2}>{detail}</Text></View>
+      <Ionicons name="chevron-forward" size={19} color={colors.textMuted} />
+    </TouchableOpacity>
+  );
+}
 
-  // Seções
-  sectionTitle: { fontSize: 12, fontWeight: '700', color: COLORS.textSecondary, letterSpacing: 1, marginTop: 4, marginBottom: 10 },
-  card: {
-    backgroundColor: COLORS.cardBg, borderRadius: 16, overflow: 'hidden',
-    marginBottom: 20, borderWidth: 1, borderColor: COLORS.cardBorder,
-  },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16 },
-  rowContent: { flexDirection: 'row', alignItems: 'center', gap: 14, flex: 1 },
-  rowText: { fontSize: 15, fontWeight: '600', color: COLORS.textPrimary },
-  rowSubtext: { fontSize: 12, color: COLORS.textMuted, marginTop: 1 },
-  avatarSmall: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+function PreferenceSwitch({ colors, styles, icon, title, description, value, onChange }: {
+  colors: AppColors; styles: ReturnType<typeof createStyles>; icon: keyof typeof Ionicons.glyphMap;
+  title: string; description: string; value: boolean; onChange: (value: boolean) => void;
+}) {
+  return (
+    <View style={styles.preferenceRow}>
+      <View style={[styles.rowIcon, { backgroundColor: colors.primarySoft }]}><Ionicons name={icon} size={19} color={colors.primaryBlue} /></View>
+      <View style={{ flex: 1 }}><Text style={styles.settingTitle}>{title}</Text><Text style={styles.settingDescription}>{description}</Text></View>
+      <Switch value={value} onValueChange={onChange} trackColor={{ false: colors.buttonDark, true: colorWithAlpha(colors.primaryBlue, 0.55) }} thumbColor={value ? colors.primaryBlue : colors.textMuted} />
+    </View>
+  );
+}
 
-  editContainer: { padding: 16 },
-  inputRow: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: COLORS.inputBg, borderRadius: 12,
-    paddingHorizontal: 14, height: 50, marginBottom: 12,
-    borderWidth: 1, borderColor: COLORS.cardBorder,
-  },
-  input: { flex: 1, color: COLORS.textPrimary, fontSize: 16 },
-  editButtons: { flexDirection: 'row', gap: 12, marginTop: 4 },
-  cancelBtn: { flex: 1, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: COLORS.cardBorder, alignItems: 'center' },
-  cancelBtnText: { color: COLORS.textSecondary, fontWeight: '600' },
-  saveBtn: { flex: 1, padding: 12, borderRadius: 10, backgroundColor: COLORS.primaryBlue, alignItems: 'center' },
-  saveBtnText: { color: COLORS.white, fontWeight: '700' },
+function InlineEditor({ colors, styles, label, value, onChange, onCancel, onSave, saving }: {
+  colors: AppColors; styles: ReturnType<typeof createStyles>; label: string; value: string; onChange: (value: string) => void;
+  onCancel: () => void; onSave: () => void; saving: boolean;
+}) {
+  return (
+    <View style={styles.editor}>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <TextInput style={styles.input} value={value} onChangeText={onChange} placeholderTextColor={colors.textMuted} />
+      <EditorActions styles={styles} onCancel={onCancel} onSave={onSave} saving={saving} />
+    </View>
+  );
+}
 
-  // Emergência
-  emergencyRow: { flexDirection: 'row', gap: 12, marginBottom: 20 },
-  policeBtn: {
-    flex: 1, backgroundColor: '#1D4ED8', borderRadius: 16, padding: 16, alignItems: 'center', gap: 4,
-    shadowColor: '#1D4ED8', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 5,
-  },
-  samuBtn: {
-    flex: 1, backgroundColor: '#DC2626', borderRadius: 16, padding: 16, alignItems: 'center', gap: 4,
-    shadowColor: '#DC2626', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 5,
-  },
-  emergencyLabel: { color: COLORS.white, fontWeight: '800', fontSize: 11, letterSpacing: 1 },
-  emergencyNumber: { color: 'rgba(255,255,255,0.85)', fontSize: 26, fontWeight: '900' },
+function EditorActions({ styles, onCancel, onSave, saving }: { styles: ReturnType<typeof createStyles>; onCancel: () => void; onSave: () => void; saving: boolean }) {
+  return (
+    <View style={styles.editorActions}>
+      <TouchableOpacity style={styles.cancelButton} onPress={onCancel}><Text style={styles.cancelButtonText}>Cancelar</Text></TouchableOpacity>
+      <TouchableOpacity style={styles.saveButton} onPress={onSave} disabled={saving}>{saving ? <ActivityIndicator color="#FFFFFF" size="small" /> : <Text style={styles.saveButtonText}>Salvar</Text>}</TouchableOpacity>
+    </View>
+  );
+}
 
-  divider: { height: 1, backgroundColor: COLORS.cardBorder },
-  aboutHeader: { padding: 16, paddingBottom: 12 },
-  aboutTitle: { fontSize: 18, fontWeight: '800', color: COLORS.textPrimary },
-  aboutSubtitle: { fontSize: 13, fontWeight: '600', color: COLORS.primaryBlue, marginTop: 2 },
-  infoContainer: { paddingVertical: 6, paddingHorizontal: 16 },
-  infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8 },
-  infoLabel: { fontSize: 14, color: COLORS.textSecondary },
-  infoValue: { fontSize: 14, fontWeight: '600', color: COLORS.textPrimary },
-  aboutFooter: { padding: 16, fontSize: 12, color: COLORS.textMuted, lineHeight: 18 },
-  logoutBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)', padding: 16,
-    borderRadius: 16, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.3)',
-    marginTop: 8, gap: 8,
-  },
-  logoutText: { color: COLORS.dangerRed, fontWeight: '800', fontSize: 14, letterSpacing: 1 },
-  versionText: { textAlign: 'center', color: COLORS.textMuted, fontSize: 11, marginTop: 16, marginBottom: 8 },
-});
+function createStyles(colors: AppColors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
+    content: { paddingHorizontal: 18, paddingTop: 18, paddingBottom: 45 },
+    heading: { marginBottom: 2 },
+    eyebrow: { color: colors.primaryBlue, fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
+    title: { color: colors.textPrimary, fontSize: 27, fontWeight: '800', marginTop: 3 },
+    subtitle: { color: colors.textSecondary, fontSize: 13, lineHeight: 19, marginTop: 5, maxWidth: 340 },
+    card: { backgroundColor: colors.cardBg, borderRadius: 17, borderWidth: 1, borderColor: colors.cardBorder, overflow: 'hidden' },
+    cardPadded: { backgroundColor: colors.cardBg, borderRadius: 17, borderWidth: 1, borderColor: colors.cardBorder, padding: 16 },
+    separator: { height: 1, backgroundColor: colors.cardBorder, marginLeft: 64 },
+    settingsRow: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 68, paddingHorizontal: 15, paddingVertical: 10 },
+    rowIcon: { width: 37, height: 37, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+    rowInitials: { fontSize: 13, fontWeight: '900' },
+    rowTitle: { color: colors.textPrimary, fontSize: 14, fontWeight: '700' },
+    rowDetail: { color: colors.textSecondary, fontSize: 12, lineHeight: 17, marginTop: 2 },
+    cardPaddedText: { color: colors.textSecondary, fontSize: 13 },
+    settingTitle: { color: colors.textPrimary, fontSize: 14, fontWeight: '700' },
+    settingDescription: { color: colors.textSecondary, fontSize: 12, lineHeight: 17, marginTop: 3 },
+    preferenceRow: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 78, paddingHorizontal: 15, paddingVertical: 11 },
+    themeOptions: { flexDirection: 'row', gap: 8, marginTop: 14 },
+    themeButton: { flex: 1, minHeight: 58, borderRadius: 13, borderWidth: 1, borderColor: colors.cardBorder, alignItems: 'center', justifyContent: 'center', gap: 5, backgroundColor: colors.inputBg },
+    themeButtonSelected: { borderColor: colors.primaryBlue, backgroundColor: colors.primarySoft },
+    themeButtonText: { color: colors.textSecondary, fontSize: 11, fontWeight: '800' },
+    editor: { padding: 16 },
+    fieldLabel: { color: colors.textSecondary, fontSize: 12, fontWeight: '700', marginBottom: 7, marginTop: 2 },
+    input: { minHeight: 49, borderRadius: 12, borderWidth: 1, borderColor: colors.cardBorder, backgroundColor: colors.inputBg, color: colors.textPrimary, paddingHorizontal: 13, fontSize: 15, marginBottom: 12 },
+    editorHelp: { color: colors.textMuted, fontSize: 11, lineHeight: 16, marginTop: -5, marginBottom: 10 },
+    editorActions: { flexDirection: 'row', gap: 9, marginTop: 3 },
+    cancelButton: { flex: 1, minHeight: 44, borderRadius: 11, borderWidth: 1, borderColor: colors.cardBorder, alignItems: 'center', justifyContent: 'center' },
+    cancelButtonText: { color: colors.textSecondary, fontWeight: '800' },
+    saveButton: { flex: 1, minHeight: 44, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryBlue },
+    saveButtonText: { color: colors.white, fontWeight: '900' },
+    experimentalBanner: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 15, backgroundColor: colors.warningSoft },
+    experimentalText: { flex: 1, color: colors.textSecondary, fontSize: 12, lineHeight: 18 },
+    emergencyRow: { flexDirection: 'row', gap: 11 },
+    emergencyButton: { flex: 1, borderRadius: 16, paddingVertical: 15, alignItems: 'center', gap: 3 },
+    emergencyLabel: { color: colors.white, fontSize: 10, fontWeight: '900', letterSpacing: 1 },
+    emergencyNumber: { color: colors.white, fontSize: 24, fontWeight: '800' },
+    academicHeader: { flexDirection: 'row', alignItems: 'center', gap: 9, marginBottom: 10 },
+    academicTitle: { color: colors.textPrimary, fontSize: 15, fontWeight: '800' },
+    academicText: { color: colors.textSecondary, fontSize: 12, lineHeight: 18, marginTop: 4 },
+    versionArea: { alignItems: 'center', padding: 20, marginTop: 7 },
+    version: { color: colors.textMuted, fontSize: 11, fontWeight: '700' },
+    prototype: { color: colors.textMuted, fontSize: 9, fontWeight: '800', letterSpacing: 1.05, marginTop: 4 },
+  });
+}

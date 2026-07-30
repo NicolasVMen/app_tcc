@@ -1,140 +1,94 @@
-# 🛡️ Escolta UNITAU
-**Sistema de Segurança Infantil via Bluetooth Low Energy**
+# Escolta UNITAU
 
-![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Expo](https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+Protótipo acadêmico funcional de monitoramento de proximidade infantil por Bluetooth Low Energy, desenvolvido como Trabalho de Conclusão de Curso em Engenharia da Computação na Universidade de Taubaté (UNITAU).
 
----
+> O Escolta UNITAU não é um produto comercial, equipamento certificado nem substituto da supervisão de um responsável. As distâncias exibidas são estimativas experimentais baseadas em RSSI e podem variar conforme o ambiente, obstáculos, corpo humano e características do celular.
 
-## 📖 Sobre o Projeto
-O **Escolta UNITAU** é um sistema de segurança infantil inovador desenvolvido como Trabalho de Conclusão de Curso (TCC). O projeto consiste em um dispositivo vestível (pulseira ou broche) equipado com Bluetooth Low Energy (BLE) que se conecta a um aplicativo móvel no smartphone do responsável.
+## Objetivo
 
-O objetivo principal é monitorar a proximidade da criança. Caso a criança se afaste além do limite seguro ou pressione o botão de pânico no dispositivo, o sistema emite alertas imediatos para o responsável através de vibração e sirene no aplicativo, além de notificações automáticas via Telegram e E-mail, contendo a localização do smartphone (via Google Maps) no momento exato do disparo.
+O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel podem ajudar o responsável a perceber afastamentos e acionamentos manuais de emergência. A experiência foi desenhada para apresentar os estados de maneira simples, sem afirmar direção ou localização exata da criança.
 
----
+## Estado atual
 
-## ✨ Funcionalidades
-- Monitoramento de proximidade via BLE (Bluetooth Low Energy)
-- Alarme de pânico com vibração e sirene
-- Notificações automáticas via Telegram e Email
-- Localização GPS do smartphone no momento do alerta (link do Google Maps)
-- Cerca virtual com 3 zonas (Seguro, Atenção, Pânico)
-- Reconexão automática (Cão de Guarda)
-- Histórico de alertas com exportação
-- Tela de login com Firebase Authentication
-- Manual de instruções integrado
-- Design premium dark mode
+- Aplicativo React Native com Expo SDK 54 e TypeScript.
+- Autenticação de acesso com Firebase.
+- Conexão automática ao dispositivo `ESCOLTA_BLE`.
+- Sentinela com tentativa imediata de reconexão e janela de tolerância antes da emergência.
+- Sirene e vibração locais, com confirmação humana para encerrar a emergência.
+- Distância estimada na Central; RSSI restrito ao código técnico/Telemetria.
+- Histórico de ocorrências persistido localmente.
+- Preferências de tema, reconexão, alertas, vibração, animações e localização opcional.
+- E-mail de emergência mantido como canal experimental para ensaios controlados.
+- Telemetria preservada no código, mas fora da navegação comum.
 
----
+O hardware de bancada utiliza atualmente ESP32 DevKit V1 e buzzer. A integração com Seeed Studio XIAO nRF52840 Sense, bateria LiPo, motor de vibração, transistor e botão de pânico faz parte da próxima etapa experimental após a chegada e validação dos componentes.
 
-## 🏗️ Arquitetura do Sistema
+## Navegação
+
+- **Central:** estado atual, núcleo de proteção, distância estimada e cobertura do protótipo.
+- **Protocolo:** orientações de uso e conduta durante atenção ou emergência.
+- **Registros:** linha do tempo dos eventos relevantes.
+- **Sistema:** perfil, criança, preferências, privacidade e canal experimental.
+
+## Arquitetura resumida
 
 ```mermaid
-flowchart TD
-    Wearable["XIAO nRF52840 (Wearable Device)"]
-    App["Smartphone App (React Native)"]
-    Firebase["Firebase Auth"]
-    Telegram["Telegram Bot API"]
-    EmailJS["EmailJS API"]
-    GPS["expo-location (GPS)"]
-
-    Wearable <-->|Bluetooth Low Energy| App
-    App -->|Login / Cadastro| Firebase
-    App -->|Localização do Alerta| GPS
-    App -->|Notificação de Emergência| Telegram
-    App -->|Email de Emergência| EmailJS
+flowchart LR
+    Device["Dispositivo vestível BLE"] <-->|"Telemetria e comandos"| App["Aplicativo Escolta UNITAU"]
+    App --> Auth["Firebase Authentication"]
+    App -.->|"Opcional e experimental"| Email["EmailJS"]
+    Phone["Localização do celular responsável"] -.->|"Somente se autorizada em emergência"| App
 ```
 
----
+O Telegram não integra mais o fluxo ativo porque um token dentro do aplicativo seria extraível. Uma evolução profissional de contatos de confiança deverá usar backend autenticado e notificações push.
 
-## 🛠️ Tecnologias Utilizadas
-
-| Tecnologia | Descrição |
-| --- | --- |
-| **React Native + Expo SDK 54** | Desenvolvimento mobile multiplataforma. |
-| **TypeScript** | Tipagem estática para JavaScript. |
-| **Firebase Authentication** | Gerenciamento de login seguro dos usuários. |
-| **Bluetooth Low Energy** | Comunicação com o wearable via `react-native-ble-plx`. |
-| **expo-location** | Captura das coordenadas GPS para envio de socorro. |
-| **Telegram Bot API** | Serviço de mensageria para envio de alertas. |
-| **EmailJS** | Serviço para envio de e-mails emergenciais. |
-| **Seeed Studio XIAO nRF52840 Sense** | Placa de desenvolvimento com Bluetooth integrado. |
-
----
-
-## 📂 Estrutura do Projeto
-
-Abaixo está a estrutura principal de diretórios referente ao código-fonte (`src/`):
+## Estrutura principal
 
 ```text
 src/
+├── context/
+│   └── AppPreferencesContext.tsx
 ├── hooks/
-│   └── useEsp32Monitor.ts      # Lógica central de monitoramento BLE e Cão de Guarda
+│   └── useEsp32Monitor.ts
 ├── screens/
-│   ├── AlertsScreen.tsx        # Tela de histórico de alertas
-│   ├── AuthScreen.tsx          # Tela de login e registro
-│   ├── DashboardScreen.tsx     # Tela principal de status e radar
-│   ├── ManualScreen.tsx        # Manual de instruções do sistema
-│   ├── PatrolScreen.tsx        # Tela de testes (LAB)
-│   └── SettingsScreen.tsx      # Configurações do perfil e contatos de emergência
+│   ├── AlertsScreen.tsx
+│   ├── AuthScreen.tsx
+│   ├── DashboardScreen.tsx
+│   ├── ManualScreen.tsx
+│   ├── PatrolScreen.tsx       # Telemetria preservada, fora da navegação
+│   └── SettingsScreen.tsx
 ├── services/
-│   ├── bleApi.ts               # Interface e comunicação Bluetooth com a placa
-│   └── firebaseConfig.ts       # Configuração do Firebase
-└── theme.ts                    # Paleta de cores premium
+│   ├── bleApi.ts
+│   └── firebaseConfig.ts
+└── theme.ts
 ```
 
----
+Os fluxos e critérios de experiência estão documentados em:
 
-## 🚀 Como Executar
+- [`docs/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md`](docs/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md)
+- [`docs/FLUXOS_CENTRAL_SENTINELA.md`](docs/FLUXOS_CENTRAL_SENTINELA.md)
 
-### Pré-requisitos
-- Node.js instalado.
-- Expo CLI.
-- Dispositivo físico (Recomendado para testes de BLE e GPS).
+## Execução
 
-### Passos
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/NicolasVMen/app_tcc.git
-   ```
-2. Acesse a pasta do projeto:
-   ```bash
-   cd escolta-unitau
-   ```
-3. Instale as dependências:
-   ```bash
-   npm install
-   ```
-4. Execute o aplicativo (Como utiliza bibliotecas nativas, é recomendado fazer o build usando um dev client ou diretamente via plataforma):
-   ```bash
-   npx expo run:android
-   # ou
-   npx expo run:ios
-   ```
+O BLE depende de código nativo e não funciona no Expo Go. Use um aparelho físico com development build:
 
----
+```bash
+npm install
+npx expo run:android
+```
 
-## ⚙️ Hardware
+Para iOS, será necessário um ambiente macOS com Xcode:
 
-O wearable é baseado no microcontrolador **Seeed Studio XIAO nRF52840 Sense**. Esta placa foi escolhida pelo seu formato compacto e suporte nativo ao Bluetooth 5.0 (BLE), tornando-a ideal para uso como acessório vestível.
+```bash
+npx expo run:ios
+```
 
-- **Alimentação:** Funciona com uma bateria recarregável de baixo consumo.
-- **Atuadores:** Um pequeno motor de vibração e um buzzer integrados para emissão de feedback físico e sonoro local (como confirmação de pareamento ou alarme acionado).
-- **Entradas:** Botão de pânico tátil para a criança disparar o alarme manualmente.
+## Autores
 
----
+- Nicolas Venciguerra Men
+- Rafael Gonçalves Dedini
+- Engenharia da Computação — UNITAU
 
-## 👥 Autores
+## Terminologia para apresentação
 
-- **Nicolas Venciguerra Men**
-- **Rafael Dedini**
-- **Prof. Luis Fernando (Orientador)**
-- **UNITAU — Universidade de Taubaté**
-
----
-
-## 📄 Licença
-
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+Use **protótipo acadêmico funcional**, **prova de conceito integrada**, **resultados dos ensaios** e **evolução futura**. Evite apresentar o sistema como produto pronto, solução infalível, rastreador ou dispositivo certificado.

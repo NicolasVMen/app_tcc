@@ -1,16 +1,25 @@
-// ============================================================
-// useEsp32Monitor — Hook de monitoramento contínuo via BLE
-// ============================================================
-
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Vibration } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-import { connectBle, disconnectBle, isBleConnected, setBleCallbacks, Esp32Status, EstadoEsp32 } from '../services/bleApi';
+
+import {
+  connectBle,
+  disconnectBle,
+  Esp32Status,
+  EstadoEsp32,
+  isBleConnected,
+  resetarAlarmeBle,
+  setBleCallbacks,
+} from '../services/bleApi';
+import { useAppPreferences } from '../context/AppPreferencesContext';
 
 const ALERTS_STORAGE_KEY = '@escolta_alerts_history';
-const MAX_SAVED_ALERTS = 200; // Limite para não encher o storage
+const PROFILE_STORAGE_KEY = '@escolta_user_profile';
+const MAX_SAVED_ALERTS = 200;
+const RECONNECT_INTERVAL_MS = 8000;
+const EMERGENCY_GRACE_MS = 5000;
 
 export type NivelSinal = 'seguro' | 'aviso' | 'panico' | 'desconectado';
 
@@ -24,11 +33,14 @@ export interface AlertItem {
 
 export interface Esp32MonitorState {
   somHabilitado: boolean;
+  somCarregado: boolean;
   rssiAtual: number;
   distanciaEstimada: number | null;
   modoPanico: boolean;
   nivelSinal: NivelSinal;
   conectado: boolean;
+  reconectando: boolean;
+  aguardandoConfirmacao: boolean;
   ultimaAtualizacao: Date | null;
   alertas: AlertItem[];
   isScanning: boolean;
@@ -42,278 +54,364 @@ function nivelDoEstado(estado: EstadoEsp32 | undefined, rssi: number): NivelSina
     case 'perigo':
     case 'panico': return 'panico';
     default:
-      // Valores calibrados com base no Experimento TCC
       if (rssi > -70) return 'seguro';
       if (rssi > -85) return 'aviso';
       return 'panico';
   }
 }
 
-// Salva alertas no storage de forma segura
+function currentTime() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 async function persistAlerts(alertas: AlertItem[]) {
   try {
-    const toSave = alertas.slice(0, MAX_SAVED_ALERTS);
-    await AsyncStorage.setItem(ALERTS_STORAGE_KEY, JSON.stringify(toSave));
-  } catch (e) {}
+    await AsyncStorage.setItem(ALERTS_STORAGE_KEY, JSON.stringify(alertas.slice(0, MAX_SAVED_ALERTS)));
+  } catch {}
 }
 
-// Captura a localização GPS atual e retorna um link do Google Maps
-async function getLocationLink(): Promise<string> {
-  try {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') return '(Permissão de localização negada)';
-    const loc = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High,
-    });
-    const { latitude, longitude } = loc.coords;
-    return `https://maps.google.com/?q=${latitude},${longitude}`;
-  } catch (e) {
-    return '(Localização indisponível)';
-  }
-}
-
-// Carrega alertas do storage
 async function loadAlerts(): Promise<AlertItem[]> {
   try {
     const raw = await AsyncStorage.getItem(ALERTS_STORAGE_KEY);
     if (raw) return JSON.parse(raw) as AlertItem[];
-  } catch (e) {}
-  return [
-    {
-      id: Date.now().toString() + '-init',
-      type: 'info',
-      title: 'Monitor Iniciado',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      desc: 'O sistema BLE foi iniciado.'
-    }
-  ];
+  } catch {}
+  return [{
+    id: `${Date.now()}-init`,
+    type: 'info',
+    title: 'Sentinela iniciada',
+    time: currentTime(),
+    desc: 'O monitoramento do protótipo foi iniciado.',
+  }];
+}
+
+async function getResponsiblePhoneLocation(): Promise<string> {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') return 'Localização do celular responsável não autorizada.';
+    const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+    return `Localização do celular responsável no início da emergência: https://maps.google.com/?q=${location.coords.latitude},${location.coords.longitude}`;
+  } catch {
+    return 'Localização do celular responsável indisponível.';
+  }
 }
 
 export function useEsp32Monitor() {
+  const { preferences } = useAppPreferences();
+  const preferencesRef = useRef(preferences);
+  preferencesRef.current = preferences;
+
   const [state, setState] = useState<Esp32MonitorState>({
     somHabilitado: true,
+    somCarregado: false,
     rssiAtual: 0,
     distanciaEstimada: null,
     modoPanico: false,
     nivelSinal: 'desconectado',
     conectado: false,
+    reconectando: false,
+    aguardandoConfirmacao: false,
     ultimaAtualizacao: null,
     alertas: [],
     isScanning: false,
     scanError: null,
   });
 
-  const jaAlertouRef = useRef(false);
   const soundRef = useRef<Audio.Sound | null>(null);
-  const previousNivelRef = useRef<NivelSinal>('desconectado');
-  const previousPanicoRef = useRef<boolean>(false);
-  const autoReconnectRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isConnectedRef = useRef(false);
-  const childNameRef = useRef<string>('');
+  const wasConnectedRef = useRef(false);
+  const emergencyRef = useRef(false);
+  const reconnectingRef = useRef(false);
+  const previousNivelRef = useRef<NivelSinal>('desconectado');
+  const childNameRef = useRef('A criança');
+  const graceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reconnectIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const mountedRef = useRef(true);
 
-  // === CARREGAR HISTÓRICO E NOME DA CRIANÇA ===
-  useEffect(() => {
-    loadAlerts().then(savedAlerts => {
-      setState(prev => ({ ...prev, alertas: savedAlerts }));
-    });
-    // Carrega nome da criança para usar nos alertas
-    AsyncStorage.getItem('@escolta_user_profile').then(raw => {
-      if (raw) {
-        try {
-          const p = JSON.parse(raw);
-          if (p.nomeCrianca) childNameRef.current = p.nomeCrianca;
-        } catch (e) {}
-      }
-    });
-  }, []);
-
-  // === CARREGAR SOM ===
-  useEffect(() => {
-    let unmounted = false;
-    async function loadSound() {
-      try {
-        const { sound } = await Audio.Sound.createAsync(
-          require('../../assets/alert_tone.wav')
-        );
-        await sound.setIsLoopingAsync(true);
-        if (!unmounted) soundRef.current = sound;
-        else sound.unloadAsync();
-      } catch (err) {}
-    }
-    loadSound();
-    return () => {
-      unmounted = true;
-      if (soundRef.current) soundRef.current.unloadAsync();
-      disconnectBle();
-      if (autoReconnectRef.current) clearInterval(autoReconnectRef.current);
+  const addAlert = useCallback((alert: Omit<AlertItem, 'id' | 'time'>) => {
+    const complete: AlertItem = {
+      ...alert,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      time: currentTime(),
     };
+    setState(previous => {
+      const alertas = [complete, ...previous.alertas].slice(0, MAX_SAVED_ALERTS);
+      persistAlerts(alertas);
+      return { ...previous, alertas };
+    });
   }, []);
 
-  // === CONECTAR ===
+  const stopLocalAlarm = useCallback(() => {
+    Vibration.cancel();
+    soundRef.current?.stopAsync().catch(() => {});
+  }, []);
+
+  const startLocalAlarm = useCallback(() => {
+    if (preferencesRef.current.vibrationEnabled) {
+      Vibration.vibrate([0, 500, 200, 500, 200, 500], true);
+    }
+    soundRef.current?.playAsync().catch(() => {});
+  }, []);
+
+  const notifyEmergencyContact = useCallback(async (reason: string) => {
+    if (!preferencesRef.current.notificationsEnabled) return;
+    try {
+      const raw = await AsyncStorage.getItem(PROFILE_STORAGE_KEY);
+      if (!raw) return;
+      const profile = JSON.parse(raw);
+      if (!profile.emailEmergencia) return;
+
+      const locationLine = preferencesRef.current.shareLocation
+        ? await getResponsiblePhoneLocation()
+        : 'Compartilhamento de localização desativado pelo responsável.';
+      const message = [
+        'EMERGÊNCIA — Escolta UNITAU (protótipo acadêmico)',
+        '',
+        `${childNameRef.current}: ${reason}`,
+        locationLine,
+        '',
+        'Verifique a situação e tente contato imediato com o responsável.',
+      ].join('\n');
+
+      // Canal experimental do protótipo. Em uma evolução, o envio deve passar por backend autenticado.
+      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: 'service_oepr28p',
+          template_id: 'template_4wi1j79',
+          user_id: 'o4hSlYAVWUIATAbWp',
+          template_params: {
+            to_email: profile.emailEmergencia,
+            message,
+            child_name: childNameRef.current,
+          },
+        }),
+      });
+    } catch {
+      addAlert({
+        type: 'aviso',
+        title: 'Aviso externo não confirmado',
+        desc: 'A emergência local continua ativa, mas o canal experimental de e-mail não confirmou o envio.',
+      });
+    }
+  }, [addAlert]);
+
+  const activateEmergency = useCallback((reason: string) => {
+    if (emergencyRef.current) return;
+    emergencyRef.current = true;
+    reconnectingRef.current = false;
+    startLocalAlarm();
+    setState(previous => ({
+      ...previous,
+      modoPanico: true,
+      nivelSinal: 'panico',
+      reconectando: false,
+      aguardandoConfirmacao: true,
+    }));
+    addAlert({
+      type: 'panico',
+      title: 'Emergência ativada',
+      desc: `${reason} Verifique ${childNameRef.current} imediatamente.`,
+    });
+    notifyEmergencyContact(reason);
+  }, [addAlert, notifyEmergencyContact, startLocalAlarm]);
+
   const conectar = useCallback(async () => {
     if (isBleConnected()) return;
-    setState(prev => ({ ...prev, isScanning: true, scanError: null }));
+    if (mountedRef.current) setState(previous => ({ ...previous, isScanning: true, scanError: null }));
     try {
       await connectBle();
-      setState(prev => ({ ...prev, isScanning: false }));
-    } catch (err: any) {
-      setState(prev => ({ ...prev, isScanning: false, scanError: err.message }));
+      if (mountedRef.current) setState(previous => ({ ...previous, isScanning: false, scanError: null }));
+    } catch (error: any) {
+      if (mountedRef.current) {
+        setState(previous => ({
+          ...previous,
+          isScanning: false,
+          scanError: error?.message || 'Não foi possível localizar o dispositivo.',
+        }));
+      }
     }
   }, []);
 
-  // === AUTO-RECONEXÃO (Cão de Guarda) ===
-  // Tenta reconectar automaticamente a cada 8 segundos se desconectado
   useEffect(() => {
-    autoReconnectRef.current = setInterval(() => {
-      if (!isConnectedRef.current && !isBleConnected()) {
-        conectar().catch(() => {});
-      }
-    }, 8000);
+    mountedRef.current = true;
+    loadAlerts().then(alertas => {
+      if (mountedRef.current) setState(previous => ({ ...previous, alertas }));
+    });
+    AsyncStorage.getItem(PROFILE_STORAGE_KEY).then(raw => {
+      if (!raw) return;
+      try {
+        const profile = JSON.parse(raw);
+        if (profile.nomeCrianca?.trim()) childNameRef.current = profile.nomeCrianca.trim();
+      } catch {}
+    });
+
+    Audio.Sound.createAsync(require('../../assets/alert_tone.wav')).then(async ({ sound }) => {
+      await sound.setIsLoopingAsync(true);
+      if (!mountedRef.current) return sound.unloadAsync();
+      soundRef.current = sound;
+      setState(previous => ({ ...previous, somCarregado: true }));
+    }).catch(() => {
+      if (mountedRef.current) setState(previous => ({ ...previous, somCarregado: false }));
+    });
 
     return () => {
-      if (autoReconnectRef.current) clearInterval(autoReconnectRef.current);
+      mountedRef.current = false;
+      if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
+      if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
+      stopLocalAlarm();
+      soundRef.current?.unloadAsync().catch(() => {});
+      disconnectBle().catch(() => {});
     };
-  }, [conectar]);
+  }, [stopLocalAlarm]);
 
-  // === CALLBACKS BLE ===
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
-      const nivel = nivelDoEstado(data.estado, data.rssi);
-      const isPanico = data.panico_ativo || nivel === 'panico';
-
+      const measuredLevel = nivelDoEstado(data.estado, data.rssi);
+      const deviceEmergency = data.panico_ativo || measuredLevel === 'panico';
       isConnectedRef.current = true;
+      wasConnectedRef.current = true;
 
-      // 1. LÓGICA DE PÂNICO: Vibração contínua + Sirene
-      if (isPanico && !jaAlertouRef.current) {
-        Vibration.vibrate([0, 500, 200, 500, 200, 500], true);
-        if (soundRef.current) soundRef.current.playAsync().catch(() => {});
-        jaAlertouRef.current = true;
-      }
-
-      // Desligar o Pânico
-      if (!isPanico && jaAlertouRef.current) {
-        Vibration.cancel();
-        if (soundRef.current) soundRef.current.stopAsync().catch(() => {});
-        jaAlertouRef.current = false;
-      }
-
-      // 2. LÓGICA DE AVISO: Apenas vibração dupla curta, sem som
-      if (!isPanico && nivel === 'aviso' && previousNivelRef.current !== 'aviso') {
-        Vibration.vibrate([0, 300, 100, 300]);
-      }
-
-      const newAlerts: AlertItem[] = [];
-      const hrAtual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const nome = childNameRef.current || 'A criança';
-
-      if (isPanico && !previousPanicoRef.current) {
-        newAlerts.push({
-          id: Date.now().toString() + '-pan', type: 'panico',
-          title: '🚨 Alarme de Pânico', time: hrAtual,
-          desc: `${nome} se afastou além do limite seguro! RSSI: ${data.rssi} dBm`
+      if (deviceEmergency) {
+        activateEmergency(data.panico_ativo
+          ? 'O dispositivo acionou o protocolo de emergência.'
+          : 'A estimativa de proximidade ultrapassou o limite configurado.');
+      } else if (measuredLevel === 'aviso' && previousNivelRef.current === 'seguro') {
+        if (preferencesRef.current.vibrationEnabled) Vibration.vibrate([0, 250, 120, 250]);
+        addAlert({
+          type: 'aviso',
+          title: 'Alcance reduzido',
+          desc: `${childNameRef.current} pode estar se afastando. Aproxime-se e observe o ambiente.`,
         });
-
-        // 3. LÓGICA DE DISPARO INVISÍVEL NA NUVEM (Telegram/Email) + GPS
-        (async () => {
-          try {
-            const [raw, locationLink] = await Promise.all([
-              AsyncStorage.getItem('@escolta_user_profile'),
-              getLocationLink(),
-            ]);
-            if (raw) {
-              const prof = JSON.parse(raw);
-              const msg = `🚨 ALERTA DE PÂNICO (Escolta UNITAU) 🚨\n\nO colar de segurança de ${nome} ativou o modo pânico. Possível afastamento!\n\n📍 Localização no momento do alerta:\n${locationLink}\n\nTente contato imediato.`;
-              
-              if (prof.telefoneEmergencia) {
-                fetch(`https://api.telegram.org/bot8936092894:AAFCgwcQ523iMO1Lxe55bgsxv_hIEOGXQyc/sendMessage`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ chat_id: prof.telefoneEmergencia, text: msg })
-                }).catch(() => {});
-              }
-              if (prof.emailEmergencia) {
-                fetch('https://api.emailjs.com/api/v1.0/email/send', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    service_id: 'service_oepr28p', template_id: 'template_4wi1j79', user_id: 'o4hSlYAVWUIATAbWp',
-                    template_params: { to_email: prof.emailEmergencia, message: msg, child_name: nome }
-                  })
-                }).catch(() => {});
-              }
-            }
-          } catch (e) {}
-        })();
-
-      } else if (!isPanico && nivel === 'aviso' && previousNivelRef.current === 'seguro') {
-        newAlerts.push({
-          id: Date.now().toString() + '-av', type: 'aviso',
-          title: 'Sinal Fraco (Atenção)', time: hrAtual,
-          desc: `${nome} está se afastando. RSSI: ${data.rssi} dBm`
-        });
-      } else if (nivel === 'seguro' && (previousNivelRef.current === 'aviso' || previousPanicoRef.current)) {
-        newAlerts.push({
-          id: Date.now().toString() + '-seg', type: 'info',
-          title: 'Zona Segura Restabelecida', time: hrAtual,
-          desc: `${nome} voltou para a zona segura. RSSI: ${data.rssi} dBm`
+      } else if (measuredLevel === 'seguro' && previousNivelRef.current === 'aviso') {
+        addAlert({
+          type: 'info',
+          title: 'Cobertura restabelecida',
+          desc: 'A estimativa voltou à faixa segura do protótipo.',
         });
       }
 
-      previousPanicoRef.current = isPanico;
-      previousNivelRef.current = nivel;
-
-      setState(prev => {
-        const updatedAlerts = newAlerts.length > 0 ? [...newAlerts, ...prev.alertas] : prev.alertas;
-        if (newAlerts.length > 0) persistAlerts(updatedAlerts);
-        return {
-          ...prev,
-          somHabilitado: data.som_on,
-          rssiAtual: data.rssi,
-          distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
-          modoPanico: isPanico,
-          nivelSinal: nivel,
-          conectado: true,
-          ultimaAtualizacao: new Date(),
-          alertas: updatedAlerts,
-        };
-      });
+      previousNivelRef.current = emergencyRef.current ? 'panico' : measuredLevel;
+      setState(previous => ({
+        ...previous,
+        somHabilitado: data.som_on,
+        rssiAtual: data.rssi,
+        distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
+        modoPanico: emergencyRef.current,
+        nivelSinal: emergencyRef.current ? 'panico' : measuredLevel,
+        conectado: true,
+        reconectando: false,
+        aguardandoConfirmacao: emergencyRef.current,
+        ultimaAtualizacao: new Date(),
+        isScanning: false,
+        scanError: null,
+      }));
     };
 
-    const onConnectionChange = (isConnected: boolean) => {
-      isConnectedRef.current = isConnected;
-      if (!isConnected) {
-        setState(prev => {
-          let disconnectedAlerts: AlertItem[] = [];
-          if (previousNivelRef.current !== 'desconectado') {
-            const newAlert: AlertItem = {
-              id: Date.now().toString() + '-desc', type: 'panico',
-              title: 'Conexão Perdida',
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              desc: 'O dispositivo BLE foi desconectado! Tentando reconectar...'
-            };
-            disconnectedAlerts.push(newAlert);
-            previousNivelRef.current = 'desconectado';
-          }
-          const updatedAlerts = disconnectedAlerts.length > 0
-            ? [...disconnectedAlerts, ...prev.alertas]
-            : prev.alertas;
-          if (disconnectedAlerts.length > 0) persistAlerts(updatedAlerts);
-          return {
-            ...prev, conectado: false, nivelSinal: 'desconectado',
-            alertas: updatedAlerts,
-          };
-        });
+    const onConnectionChange = (connected: boolean) => {
+      const hadConnection = wasConnectedRef.current;
+      isConnectedRef.current = connected;
+      if (connected) {
+        wasConnectedRef.current = true;
+        reconnectingRef.current = false;
+        if (graceTimerRef.current) {
+          clearTimeout(graceTimerRef.current);
+          graceTimerRef.current = null;
+          addAlert({
+            type: 'info',
+            title: 'Vínculo restabelecido',
+            desc: emergencyRef.current
+              ? 'A conexão voltou. Confirme presencialmente que a criança está segura.'
+              : 'A Sentinela recuperou a conexão antes de iniciar uma emergência.',
+          });
+        }
+        setState(previous => ({
+          ...previous,
+          conectado: true,
+          reconectando: false,
+          isScanning: false,
+          scanError: null,
+        }));
+        return;
       }
+
+      setState(previous => ({
+        ...previous,
+        conectado: false,
+        nivelSinal: emergencyRef.current ? 'panico' : 'desconectado',
+        distanciaEstimada: null,
+      }));
+
+      if (!hadConnection || emergencyRef.current) return;
+      reconnectingRef.current = true;
+      previousNivelRef.current = 'desconectado';
+      setState(previous => ({ ...previous, reconectando: true, scanError: null }));
+      addAlert({
+        type: 'aviso',
+        title: 'Vínculo interrompido',
+        desc: 'A Sentinela iniciou uma tentativa automática de reconexão.',
+      });
+
+      if (preferencesRef.current.autoConnect) conectar();
+      if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
+      graceTimerRef.current = setTimeout(() => {
+        graceTimerRef.current = null;
+        if (!isConnectedRef.current) {
+          activateEmergency('Não foi possível restabelecer o vínculo após a tentativa automática.');
+        }
+      }, EMERGENCY_GRACE_MS);
     };
 
     setBleCallbacks(onStatusUpdate, onConnectionChange);
-  }, []);
+  }, [activateEmergency, addAlert, conectar]);
+
+  useEffect(() => {
+    if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
+    if (!preferences.autoConnect) return;
+
+    if (!isConnectedRef.current) conectar();
+    reconnectIntervalRef.current = setInterval(() => {
+      if (!isConnectedRef.current && !isBleConnected()) conectar();
+    }, RECONNECT_INTERVAL_MS);
+
+    return () => {
+      if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
+      reconnectIntervalRef.current = null;
+    };
+  }, [conectar, preferences.autoConnect]);
+
+  const confirmarSeguranca = useCallback(async () => {
+    if (isBleConnected()) await resetarAlarmeBle();
+    stopLocalAlarm();
+    emergencyRef.current = false;
+    previousNivelRef.current = isConnectedRef.current ? 'seguro' : 'desconectado';
+    setState(previous => ({
+      ...previous,
+      modoPanico: false,
+      aguardandoConfirmacao: false,
+      nivelSinal: isConnectedRef.current ? 'seguro' : 'desconectado',
+    }));
+    addAlert({
+      type: 'info',
+      title: 'Segurança confirmada',
+      desc: `O responsável confirmou presencialmente que ${childNameRef.current} está segura.`,
+    });
+  }, [addAlert, stopLocalAlarm]);
+
+  const continuarEmAlerta = useCallback(() => {
+    if (emergencyRef.current) startLocalAlarm();
+  }, [startLocalAlarm]);
 
   const limparAlertas = useCallback(async () => {
-    const emptyAlerts: AlertItem[] = [];
     await AsyncStorage.removeItem(ALERTS_STORAGE_KEY);
-    setState(prev => ({ ...prev, alertas: emptyAlerts }));
+    setState(previous => ({ ...previous, alertas: [] }));
   }, []);
 
-  return { ...state, conectar, limparAlertas };
+  return {
+    ...state,
+    conectar,
+    confirmarSeguranca,
+    continuarEmAlerta,
+    limparAlertas,
+  };
 }
