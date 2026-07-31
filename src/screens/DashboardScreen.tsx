@@ -130,7 +130,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const soundReady = monitor.somCarregado !== false;
   const essentialReady = monitor.conectado && soundReady && preferences.autoConnect;
-  const hasCoverageWarning = essentialReady && !preferences.notificationsEnabled;
+  const notificationsReady = preferences.notificationsEnabled && monitor.notificacoesAutorizadas !== false;
+  const hasCoverageWarning = essentialReady && !notificationsReady;
 
   const readiness = monitor.modoPanico
     ? { label: 'Emergência ativa', color: colors.dangerRed, icon: 'alert-circle' as const }
@@ -240,7 +241,15 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
               <StatusDetail colors={colors} ok={preferences.autoConnect} icon="radio" title="Sentinela" detail={preferences.autoConnect ? 'Reconexão automática ativa' : 'Desativada por você'} />
               <StatusDetail colors={colors} ok={soundReady} icon="volume-high" title="Sirene do celular" detail={soundReady ? 'Pronta' : 'Indisponível'} />
               <StatusDetail colors={colors} ok={monitor.conectado} icon="notifications" title="Buzzer do dispositivo" detail={monitor.conectado ? 'Respondendo' : 'Não verificado'} />
-              <StatusDetail colors={colors} ok={preferences.notificationsEnabled} icon="phone-portrait" title="Avisos no celular" detail={preferences.notificationsEnabled ? 'Habilitados' : 'Desativados por você'} />
+              <StatusDetail
+                colors={colors}
+                ok={notificationsReady}
+                icon="phone-portrait"
+                title="Alertas de emergência"
+                detail={!preferences.notificationsEnabled
+                  ? 'Desativados por você'
+                  : monitor.notificacoesAutorizadas === false ? 'Bloqueados nas configurações do Android' : 'Habilitados'}
+              />
               <StatusDetail colors={colors} neutral={!preferences.shareLocation} ok={preferences.shareLocation} icon="location" title="Localização" detail={preferences.shareLocation ? 'Disponível em emergências' : 'Desativada por você'} />
             </View>
           )}

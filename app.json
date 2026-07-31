@@ -32,6 +32,13 @@
       ],
       "expo-font",
       [
+        "expo-notifications",
+        {
+          "color": "#2563EB",
+          "defaultChannel": "escolta_emergencias"
+        }
+      ],
+      [
         "expo-location",
         {
           "locationWhenInUsePermission": "Se você ativar essa opção, o protótipo poderá incluir a localização deste celular no início de uma emergência."

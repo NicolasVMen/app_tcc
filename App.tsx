@@ -26,6 +26,10 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import { useEsp32Monitor } from './src/hooks/useEsp32Monitor';
 import { AppPreferencesProvider, useAppPreferences } from './src/context/AppPreferencesContext';
 import { AppColors } from './src/theme';
+import {
+  addNotificationResponseListener,
+  consumeInitialCentralDestination,
+} from './src/services/notificationService';
 
 type Tab = 'CENTRAL' | 'PROTOCOL' | 'RECORDS' | 'SYSTEM';
 
@@ -135,6 +139,12 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       changeTab('CENTRAL');
       return true;
     });
+    return () => subscription.remove();
+  }, [changeTab]);
+
+  useEffect(() => {
+    if (consumeInitialCentralDestination()) changeTab('CENTRAL');
+    const subscription = addNotificationResponseListener(() => changeTab('CENTRAL'));
     return () => subscription.remove();
   }, [changeTab]);
 

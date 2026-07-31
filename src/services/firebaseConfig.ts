@@ -20,5 +20,7 @@ if (getApps().length === 0) {
 }
 
 const auth = getAuth(app);
+// Padroniza mensagens e páginas de ação do Firebase para português do Brasil.
+auth.languageCode = 'pt-BR';
 
 export { auth };

@@ -66,7 +66,7 @@ O ensaio validou a navegação, autenticação, preferências, conexão BLE, est
 
 1. Implementar serviço Android em primeiro plano com notificação persistente.
 2. Retestar segundo plano, tela bloqueada, remoção dos recentes e economia de bateria.
-3. Revisar o template de recuperação de senha no Firebase Console.
+3. Finalizar a identidade visual em português do template de recuperação no Firebase Console; o aplicativo já solicita `pt-BR` ao Firebase.
 4. Repetir calibração de distância e pânico físico com a XIAO nRF52840 Sense.
 5. Executar ensaios prolongados de uma, duas e quatro horas.
 
