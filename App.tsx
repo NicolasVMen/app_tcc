@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
+  BackHandler,
   Image,
   PanResponder,
   Platform,
@@ -92,7 +93,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const monitor = useEsp32Monitor();
 
-  const changeTab = (newTab: Tab) => {
+  const changeTab = useCallback((newTab: Tab) => {
     if (newTab === activeTabRef.current) return;
     if (preferences.reduceMotion) {
       activeTabRef.current = newTab;
@@ -104,7 +105,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       setActiveTab(newTab);
       Animated.timing(fadeAnim, { toValue: 1, duration: 170, useNativeDriver: true }).start();
     });
-  };
+  }, [fadeAnim, preferences.reduceMotion]);
 
   const panResponder = useRef(PanResponder.create({
     onStartShouldSetPanResponder: () => false,
@@ -128,12 +129,21 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
     }).catch(() => {});
   }, [activeTab, user.uid]);
 
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (activeTabRef.current === 'CENTRAL') return false;
+      changeTab('CENTRAL');
+      return true;
+    });
+    return () => subscription.remove();
+  }, [changeTab]);
+
   const renderScreen = () => {
     switch (activeTab) {
       case 'CENTRAL': return <DashboardScreen monitor={monitor} />;
       case 'PROTOCOL': return <ManualScreen />;
       case 'RECORDS': return <AlertsScreen alertas={monitor.alertas} limparAlertas={monitor.limparAlertas} />;
-      case 'SYSTEM': return <SettingsScreen />;
+      case 'SYSTEM': return <SettingsScreen onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || ''))} />;
     }
   };
 

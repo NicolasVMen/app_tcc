@@ -32,7 +32,7 @@ const EMPTY_PROFILE: UserProfile = {
   emailEmergencia: '',
 };
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ onProfileUpdated }: { onProfileUpdated?: (profile: UserProfile) => void }) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [profile, setProfile] = useState<UserProfile>(EMPTY_PROFILE);
@@ -70,6 +70,7 @@ export default function SettingsScreen() {
       const next = { ...profile, ...changes };
       await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify(next));
       setProfile(next);
+      onProfileUpdated?.(next);
       return true;
     } catch {
       Alert.alert('Não foi possível salvar', 'Tente novamente em alguns instantes.');
@@ -192,7 +193,7 @@ export default function SettingsScreen() {
               onCancel={() => { setChildInput(profile.nomeCrianca); setEditingChild(false); }} onSave={saveChild} saving={saving}
             />
           ) : (
-            <SettingsRow colors={colors} styles={styles} icon="happy" title={profile.nomeCrianca || 'Adicionar criança'} detail="Uma criança monitorada por conta" onPress={() => setEditingChild(true)} />
+            <SettingsRow colors={colors} styles={styles} icon="happy" title={profile.nomeCrianca || 'Criança'} detail={profile.nomeCrianca ? 'Uma criança monitorada por conta' : 'Toque para informar o nome'} onPress={() => setEditingChild(true)} />
           )}
         </View>
 
@@ -216,7 +217,7 @@ export default function SettingsScreen() {
           <View style={styles.separator} />
           <PreferenceSwitch colors={colors} styles={styles} icon="notifications" title="Avisos no celular" description="Permite apresentar avisos e emergências fora da Central." value={preferences.notificationsEnabled} onChange={value => confirmCriticalToggle('notificationsEnabled', value, 'Desativar avisos?', 'Alertas fora da tela poderão ser limitados. O alarme crítico dentro do aplicativo permanece independente.')} />
           <View style={styles.separator} />
-          <PreferenceSwitch colors={colors} styles={styles} icon="phone-portrait" title="Vibração" description="Usa padrões diferentes para atenção e emergência." value={preferences.vibrationEnabled} onChange={value => setPreference('vibrationEnabled', value)} />
+          <PreferenceSwitch colors={colors} styles={styles} icon="phone-portrait" title="Vibração" description="Usa padrões diferentes para atenção e emergência." value={preferences.vibrationEnabled} onChange={value => confirmCriticalToggle('vibrationEnabled', value, 'Desativar vibração?', 'O celular deixará de vibrar em situações de atenção e emergência. A sirene crítica continuará ativa.')} />
           <View style={styles.separator} />
           <PreferenceSwitch colors={colors} styles={styles} icon="volume-medium" title="Sons informativos" description="Controla sons não críticos. Não silencia emergências." value={preferences.informationalSounds} onChange={value => setPreference('informationalSounds', value)} />
           <View style={styles.separator} />
@@ -264,7 +265,7 @@ export default function SettingsScreen() {
               <View style={styles.academicHeader}><Ionicons name="school" size={22} color={colors.primaryBlue} /><Text style={styles.academicTitle}>Protótipo Escolta UNITAU</Text></View>
               <Text style={styles.academicText}>TCC de Engenharia da Computação — Universidade de Taubaté.</Text>
               <Text style={styles.academicText}>Nicolas Venciguerra Men e Rafael Gonçalves Dedini.</Text>
-              <Text style={styles.academicText}>A Telemetria permanece preservada no código e fora da navegação comum.</Text>
+              <Text style={styles.academicText}>Telemetria é a área técnica que mostra medições do sinal Bluetooth, como RSSI, médias e variações. Ela permanece preservada no código, mas escondida do uso comum.</Text>
             </View>
           </>
         )}

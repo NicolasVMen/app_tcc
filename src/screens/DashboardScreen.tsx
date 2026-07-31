@@ -19,7 +19,7 @@ import { resetarAlarmeBle } from '../services/bleApi';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from '../theme';
 
-type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'emergency';
+type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency';
 
 type MonitorController = Esp32MonitorState & {
   conectar: () => Promise<void>;
@@ -64,6 +64,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const visualState: VisualState = monitor.modoPanico
     ? 'emergency'
+    : monitor.segurancaConfirmadaSemVinculo
+      ? 'uncovered'
     : monitor.reconectando
       ? 'reconnecting'
       : monitor.conectado && monitor.nivelSinal === 'aviso'
@@ -85,6 +87,10 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       case 'reconnecting': return {
         title: 'RECONECTANDO', childMessage: `O vínculo com ${childName} foi interrompido`,
         description: 'A Sentinela está tentando restabelecer a proteção.', icon: 'radio', color: colors.primaryBlue,
+      };
+      case 'uncovered': return {
+        title: 'SEM COBERTURA', childMessage: `${childName} foi confirmada segura`,
+        description: 'O dispositivo continua sem vínculo. A Sentinela segue procurando.', icon: 'shield-outline', color: colors.warningYellow,
       };
       case 'emergency': return {
         title: 'EMERGÊNCIA', childMessage: 'Não foi possível restabelecer o vínculo',
@@ -120,9 +126,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
   const secondsSinceUpdate = monitor.ultimaAtualizacao
     ? Math.max(0, Math.floor((now - new Date(monitor.ultimaAtualizacao).getTime()) / 1000))
     : null;
-  const updatedLabel = secondsSinceUpdate == null
-    ? 'Aguardando primeira leitura'
-    : secondsSinceUpdate < 2 ? 'Atualizado agora' : `Atualizado há ${secondsSinceUpdate} s`;
+  const updatedLabel = formatElapsedUpdate(secondsSinceUpdate);
 
   const soundReady = monitor.somCarregado !== false;
   const essentialReady = monitor.conectado && soundReady && preferences.autoConnect;
@@ -163,7 +167,9 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
         <View style={styles.sentinelRow}>
           <View style={[styles.statusDot, { backgroundColor: copy.color }]} />
           <Text style={styles.sentinelText}>
-            {monitor.reconectando ? 'Sentinela em busca' : monitor.conectado ? 'Sentinela ativa' : 'Sentinela aguardando vínculo'}
+            {monitor.segurancaConfirmadaSemVinculo
+              ? 'Sentinela sem cobertura'
+              : monitor.reconectando ? 'Sentinela em busca' : monitor.conectado ? 'Sentinela ativa' : 'Sentinela aguardando vínculo'}
           </Text>
         </View>
 
@@ -244,6 +250,18 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       </ScrollView>
     </View>
   );
+}
+
+function formatElapsedUpdate(totalSeconds: number | null) {
+  if (totalSeconds == null) return 'Aguardando primeira leitura';
+  if (totalSeconds < 2) return 'Atualizado agora';
+  if (totalSeconds < 60) return `Atualizado há ${totalSeconds} s`;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  if (minutes < 60) return `Atualizado há ${minutes} min${seconds ? ` ${seconds} s` : ''}`;
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `Atualizado há ${hours} h${remainingMinutes ? ` ${remainingMinutes} min` : ''}`;
 }
 
 function StatusDetail({ colors, ok, neutral, icon, title, detail }: {

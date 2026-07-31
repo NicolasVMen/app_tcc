@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, FlatList, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Modal, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,6 +11,7 @@ export default function AlertsScreen({ alertas, limparAlertas }: { alertas: Aler
   const { colors } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [profile, setProfile] = useState<{ nomeResponsavel?: string; nomeCrianca?: string } | null>(null);
+  const [reportPreview, setReportPreview] = useState<string | null>(null);
 
   useEffect(() => {
     AsyncStorage.getItem('@escolta_user_profile').then(raw => {
@@ -29,23 +30,51 @@ export default function AlertsScreen({ alertas, limparAlertas }: { alertas: Aler
     );
   };
 
-  const handleShare = async () => {
+  const buildReport = () => {
+    const generatedAt = new Date().toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      dateStyle: 'short',
+      timeStyle: 'short',
+      hour12: false,
+    });
+    const events = alertas.map((item, index) => [
+      `${index + 1}. ${item.title.replace(/[🚨✅]/g, '').trim().toUpperCase()}`,
+      `Horário: ${item.time}`,
+      `Detalhes: ${item.desc}`,
+    ].join('\n')).join('\n\n────────────────────\n\n');
+
+    return [
+      'ESCOLTA UNITAU',
+      'RELATÓRIO DE OCORRÊNCIAS',
+      'Protótipo acadêmico funcional',
+      '',
+      'IDENTIFICAÇÃO',
+      `Responsável: ${profile?.nomeResponsavel || 'Não informado'}`,
+      `Criança monitorada: ${profile?.nomeCrianca || 'Criança'}`,
+      `Gerado em: ${generatedAt} (horário de Brasília)`,
+      '',
+      `OCORRÊNCIAS REGISTRADAS: ${alertas.length}`,
+      '',
+      events,
+      '',
+      'AVISO',
+      'Este relatório pertence a um protótipo acadêmico e não representa certificação de segurança ou localização exata da criança.',
+    ].join('\n');
+  };
+
+  const handleShare = () => {
     if (alertas.length === 0) {
       Alert.alert('Nenhum registro', 'Ainda não existem ocorrências para compartilhar.');
       return;
     }
-    const lines = [
-      'ESCOLTA UNITAU — REGISTRO DE OCORRÊNCIAS',
-      'Protótipo acadêmico funcional',
-      '',
-      profile?.nomeResponsavel ? `Responsável: ${profile.nomeResponsavel}` : '',
-      profile?.nomeCrianca ? `Criança monitorada: ${profile.nomeCrianca}` : '',
-      `Gerado em: ${new Date().toLocaleString('pt-BR')}`,
-      '',
-      ...alertas.map(item => `[${item.time}] ${item.title}\n${item.desc}`),
-    ].filter(Boolean);
+    setReportPreview(buildReport());
+  };
+
+  const confirmShare = async () => {
+    if (!reportPreview) return;
     try {
-      await Share.share({ title: 'Registros Escolta UNITAU', message: lines.join('\n') });
+      await Share.share({ title: 'Relatório de ocorrências — Escolta UNITAU', message: reportPreview });
+      setReportPreview(null);
     } catch {
       Alert.alert('Falha ao compartilhar', 'O relatório não pôde ser aberto em outro aplicativo.');
     }
@@ -83,6 +112,34 @@ export default function AlertsScreen({ alertas, limparAlertas }: { alertas: Aler
           </View>
         }
       />
+
+      <Modal visible={reportPreview !== null} transparent animationType="fade" onRequestClose={() => setReportPreview(null)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.previewCard}>
+            <View style={styles.previewHeader}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.previewEyebrow}>PRÉVIA DO RELATÓRIO</Text>
+                <Text style={styles.previewTitle}>Confira antes de compartilhar</Text>
+              </View>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setReportPreview(null)} accessibilityLabel="Fechar prévia">
+                <Ionicons name="close" size={22} color={colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.previewScroll} contentContainerStyle={styles.previewContent}>
+              <Text style={styles.previewText}>{reportPreview}</Text>
+            </ScrollView>
+            <View style={styles.previewActions}>
+              <TouchableOpacity style={styles.previewCancel} onPress={() => setReportPreview(null)}>
+                <Text style={styles.previewCancelText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.previewShare} onPress={confirmShare}>
+                <Ionicons name="share-outline" size={18} color={colors.white} />
+                <Text style={styles.previewShareText}>Compartilhar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -132,5 +189,19 @@ function createStyles(colors: AppColors) {
     emptyIcon: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.cardBg, marginBottom: 15 },
     emptyTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: '800' },
     emptyText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, textAlign: 'center', marginTop: 6 },
+    modalBackdrop: { flex: 1, justifyContent: 'center', padding: 18, backgroundColor: 'rgba(0,0,0,0.72)' },
+    previewCard: { height: '86%', maxHeight: 720, backgroundColor: colors.cardBg, borderRadius: 20, borderWidth: 1, borderColor: colors.cardBorder, overflow: 'hidden' },
+    previewHeader: { flexDirection: 'row', alignItems: 'center', padding: 17, borderBottomWidth: 1, borderBottomColor: colors.cardBorder },
+    previewEyebrow: { color: colors.primaryBlue, fontSize: 9, fontWeight: '900', letterSpacing: 1.1 },
+    previewTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '800', marginTop: 3 },
+    closeButton: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.inputBg },
+    previewScroll: { flex: 1 },
+    previewContent: { padding: 18 },
+    previewText: { color: colors.textSecondary, fontSize: 12, lineHeight: 19, fontFamily: 'monospace' },
+    previewActions: { flexDirection: 'row', gap: 10, padding: 15, borderTopWidth: 1, borderTopColor: colors.cardBorder },
+    previewCancel: { flex: 1, minHeight: 46, borderRadius: 12, borderWidth: 1, borderColor: colors.cardBorder, alignItems: 'center', justifyContent: 'center' },
+    previewCancelText: { color: colors.textSecondary, fontSize: 13, fontWeight: '800' },
+    previewShare: { flex: 1.4, minHeight: 46, borderRadius: 12, backgroundColor: colors.primaryBlue, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
+    previewShareText: { color: colors.white, fontSize: 13, fontWeight: '900' },
   });
 }

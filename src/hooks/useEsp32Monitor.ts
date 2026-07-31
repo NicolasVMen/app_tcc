@@ -41,6 +41,7 @@ export interface Esp32MonitorState {
   conectado: boolean;
   reconectando: boolean;
   aguardandoConfirmacao: boolean;
+  segurancaConfirmadaSemVinculo: boolean;
   ultimaAtualizacao: Date | null;
   alertas: AlertItem[];
   isScanning: boolean;
@@ -61,7 +62,12 @@ function nivelDoEstado(estado: EstadoEsp32 | undefined, rssi: number): NivelSina
 }
 
 function currentTime() {
-  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return new Date().toLocaleTimeString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 }
 
 async function persistAlerts(alertas: AlertItem[]) {
@@ -110,6 +116,7 @@ export function useEsp32Monitor() {
     conectado: false,
     reconectando: false,
     aguardandoConfirmacao: false,
+    segurancaConfirmadaSemVinculo: false,
     ultimaAtualizacao: null,
     alertas: [],
     isScanning: false,
@@ -207,6 +214,7 @@ export function useEsp32Monitor() {
       nivelSinal: 'panico',
       reconectando: false,
       aguardandoConfirmacao: true,
+      segurancaConfirmadaSemVinculo: false,
     }));
     addAlert({
       type: 'panico',
@@ -302,6 +310,7 @@ export function useEsp32Monitor() {
         conectado: true,
         reconectando: false,
         aguardandoConfirmacao: emergencyRef.current,
+        segurancaConfirmadaSemVinculo: false,
         ultimaAtualizacao: new Date(),
         isScanning: false,
         scanError: null,
@@ -331,6 +340,7 @@ export function useEsp32Monitor() {
           reconectando: false,
           isScanning: false,
           scanError: null,
+          segurancaConfirmadaSemVinculo: false,
         }));
         return;
       }
@@ -390,11 +400,15 @@ export function useEsp32Monitor() {
       modoPanico: false,
       aguardandoConfirmacao: false,
       nivelSinal: isConnectedRef.current ? 'seguro' : 'desconectado',
+      reconectando: false,
+      segurancaConfirmadaSemVinculo: !isConnectedRef.current,
     }));
     addAlert({
       type: 'info',
       title: 'Segurança confirmada',
-      desc: `O responsável confirmou presencialmente que ${childNameRef.current} está segura.`,
+      desc: isConnectedRef.current
+        ? `O responsável confirmou presencialmente que ${childNameRef.current} está segura.`
+        : `O responsável confirmou que ${childNameRef.current} está segura, mas o dispositivo continua sem vínculo. A Sentinela seguirá procurando.`,
     });
   }, [addAlert, stopLocalAlarm]);
 
