@@ -8,16 +8,23 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.media.AudioAttributes
+import android.media.Ringtone
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 
 class EscoltaSentinelaService : Service() {
   private val handler = Handler(Looper.getMainLooper())
   private var emergencyRunnable: Runnable? = null
+  private var emergencyRingtone: Ringtone? = null
+  private var emergencyVibrator: Vibrator? = null
 
   override fun onCreate() {
     super.onCreate()
@@ -48,7 +55,8 @@ class EscoltaSentinelaService : Service() {
       val childName = intent.getStringExtra(EXTRA_CHILD_NAME) ?: "a criança"
       val delayMs = intent.getLongExtra(EXTRA_DELAY_MS, DEFAULT_GRACE_MS)
       val alertsEnabled = intent.getBooleanExtra(EXTRA_ALERTS_ENABLED, true)
-      armEmergency(childName, delayMs, alertsEnabled)
+      val vibrationEnabled = intent.getBooleanExtra(EXTRA_VIBRATION_ENABLED, true)
+      armEmergency(childName, delayMs, alertsEnabled, vibrationEnabled)
       return START_STICKY
     }
 
@@ -60,7 +68,8 @@ class EscoltaSentinelaService : Service() {
       startForeground(
         NOTIFICATION_ID,
         notification,
-        ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE or
+          ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
       )
     } else {
       startForeground(NOTIFICATION_ID, notification)
@@ -135,13 +144,21 @@ class EscoltaSentinelaService : Service() {
       .build()
   }
 
-  private fun armEmergency(childName: String, delayMs: Long, alertsEnabled: Boolean) {
+  private fun armEmergency(
+    childName: String,
+    delayMs: Long,
+    alertsEnabled: Boolean,
+    vibrationEnabled: Boolean
+  ) {
     cancelEmergency()
     emergencyRunnable = Runnable {
       val body = "Não foi possível restabelecer o vínculo. Verifique $childName imediatamente."
       val manager = getSystemService(NotificationManager::class.java)
       manager.notify(NOTIFICATION_ID, buildNotification("Emergência ativa — Escolta UNITAU", body))
-      if (alertsEnabled) manager.notify(EMERGENCY_NOTIFICATION_ID, buildEmergencyNotification(childName, body))
+      if (alertsEnabled) {
+        manager.notify(EMERGENCY_NOTIFICATION_ID, buildEmergencyNotification(body))
+        startNativeAlarm(vibrationEnabled)
+      }
       emergencyRunnable = null
     }.also { handler.postDelayed(it, delayMs.coerceAtLeast(0)) }
   }
@@ -149,10 +166,39 @@ class EscoltaSentinelaService : Service() {
   private fun cancelEmergency() {
     emergencyRunnable?.let(handler::removeCallbacks)
     emergencyRunnable = null
+    emergencyRingtone?.stop()
+    emergencyRingtone = null
+    emergencyVibrator?.cancel()
+    emergencyVibrator = null
     getSystemService(NotificationManager::class.java).cancel(EMERGENCY_NOTIFICATION_ID)
   }
 
-  private fun buildEmergencyNotification(childName: String, body: String): Notification {
+  private fun startNativeAlarm(vibrationEnabled: Boolean) {
+    val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+      ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    emergencyRingtone = RingtoneManager.getRingtone(this, alarmUri)?.apply {
+      audioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_ALARM)
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+        .build()
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) isLooping = true
+      play()
+    }
+
+    if (!vibrationEnabled) return
+    @Suppress("DEPRECATION")
+    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    emergencyVibrator = vibrator
+    val pattern = longArrayOf(0, 500, 200, 500, 600)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
+    } else {
+      @Suppress("DEPRECATION")
+      vibrator.vibrate(pattern, 0)
+    }
+  }
+
+  private fun buildEmergencyNotification(body: String): Notification {
     val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
       flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
       putExtra("escolta_destino", "CENTRAL")
@@ -184,7 +230,7 @@ class EscoltaSentinelaService : Service() {
 
   companion object {
     private const val MONITORING_CHANNEL_ID = "escolta_monitoramento"
-    private const val EMERGENCY_CHANNEL_ID = "escolta_emergencias"
+    private const val EMERGENCY_CHANNEL_ID = "escolta_emergencias_v2"
     private const val NOTIFICATION_ID = 4101
     private const val EMERGENCY_NOTIFICATION_ID = 4102
     private const val ACTION_START = "expo.modules.escoltasentinela.INICIAR"
@@ -197,6 +243,7 @@ class EscoltaSentinelaService : Service() {
     private const val EXTRA_CHILD_NAME = "nome_crianca"
     private const val EXTRA_DELAY_MS = "atraso_ms"
     private const val EXTRA_ALERTS_ENABLED = "alertas_habilitados"
+    private const val EXTRA_VIBRATION_ENABLED = "vibracao_habilitada"
     private const val DEFAULT_GRACE_MS = 5000L
     private const val DEFAULT_TITLE = "Sentinela ativa"
     private const val DEFAULT_BODY = "Monitorando o vínculo com o dispositivo Escolta"
@@ -223,13 +270,20 @@ class EscoltaSentinelaService : Service() {
       context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_STOP))
     }
 
-    fun armEmergency(context: Context, childName: String, delayMs: Long, alertsEnabled: Boolean) {
+    fun armEmergency(
+      context: Context,
+      childName: String,
+      delayMs: Long,
+      alertsEnabled: Boolean,
+      vibrationEnabled: Boolean
+    ) {
       if (!isRunning) start(context, DEFAULT_TITLE, DEFAULT_BODY)
       context.startService(Intent(context, EscoltaSentinelaService::class.java).apply {
         action = ACTION_ARM_EMERGENCY
         putExtra(EXTRA_CHILD_NAME, childName)
         putExtra(EXTRA_DELAY_MS, delayMs)
         putExtra(EXTRA_ALERTS_ENABLED, alertsEnabled)
+        putExtra(EXTRA_VIBRATION_ENABLED, vibrationEnabled)
       })
     }
 

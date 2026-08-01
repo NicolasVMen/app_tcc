@@ -25,10 +25,17 @@ class EscoltaSentinelaModule : Module() {
       EscoltaSentinelaService.stop(context)
     }
 
-    AsyncFunction("armEmergencyAsync") { childName: String, delayMs: Long, alertsEnabled: Boolean ->
+    AsyncFunction("armEmergencyAsync") {
+        childName: String, delayMs: Long, alertsEnabled: Boolean, vibrationEnabled: Boolean ->
       val context = appContext.reactContext
         ?: throw IllegalStateException("Contexto Android indisponível")
-      EscoltaSentinelaService.armEmergency(context, childName, delayMs, alertsEnabled)
+      EscoltaSentinelaService.armEmergency(
+        context,
+        childName,
+        delayMs,
+        alertsEnabled,
+        vibrationEnabled
+      )
     }
 
     AsyncFunction("cancelEmergencyAsync") {

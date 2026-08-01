@@ -252,11 +252,14 @@ export function useEsp32Monitor() {
         setState(previous => ({ ...previous, notificacoesAutorizadas: granted }));
       }
     } catch {}
+    const isReconnection = reconnectingRef.current;
     await startBackgroundSentinel(
-      isBleConnected() ? 'Sentinela ativa' : 'Sentinela procurando',
+      isBleConnected() ? 'Sentinela ativa' : isReconnection ? 'Vínculo interrompido' : 'Sentinela procurando',
       isBleConnected()
         ? 'Monitorando o vínculo com o dispositivo Escolta'
-        : 'Buscando o dispositivo Escolta próximo'
+        : isReconnection
+          ? 'A Sentinela está tentando reconectar ao dispositivo Escolta'
+          : 'Buscando o dispositivo Escolta próximo'
     ).catch(() => false);
     if (isBleConnected()) return;
     if (mountedRef.current) setState(previous => ({ ...previous, isScanning: true, scanError: null }));
@@ -405,7 +408,8 @@ export function useEsp32Monitor() {
       armBackgroundEmergency(
         childNameRef.current,
         EMERGENCY_GRACE_MS,
-        preferencesRef.current.notificationsEnabled
+        preferencesRef.current.notificationsEnabled,
+        preferencesRef.current.vibrationEnabled
       ).catch(() => {});
       addAlert({
         type: 'aviso',
@@ -418,7 +422,10 @@ export function useEsp32Monitor() {
       graceTimerRef.current = setTimeout(() => {
         graceTimerRef.current = null;
         if (!isConnectedRef.current) {
-          activateEmergency('Não foi possível restabelecer o vínculo após a tentativa automática.', true);
+          activateEmergency(
+            'Não foi possível restabelecer o vínculo após a tentativa automática.',
+            preferencesRef.current.notificationsEnabled
+          );
         }
       }, EMERGENCY_GRACE_MS);
     };
@@ -442,7 +449,16 @@ export function useEsp32Monitor() {
   }, [conectar, preferences.autoConnect]);
 
   const confirmarSeguranca = useCallback(async () => {
-    if (isBleConnected()) await resetarAlarmeBle();
+    let hardwareResetConfirmed = true;
+    if (isBleConnected()) {
+      try {
+        await resetarAlarmeBle();
+      } catch {
+        hardwareResetConfirmed = false;
+        isConnectedRef.current = false;
+        await disconnectBle().catch(() => {});
+      }
+    }
     stopLocalAlarm();
     await cancelBackgroundEmergency();
     await dismissEmergencyNotification();
@@ -463,13 +479,21 @@ export function useEsp32Monitor() {
         ? `O responsável confirmou presencialmente que ${childNameRef.current} está segura.`
         : `O responsável confirmou que ${childNameRef.current} está segura, mas o dispositivo continua sem vínculo. A Sentinela seguirá procurando.`,
     });
+    if (!hardwareResetConfirmed) {
+      addAlert({
+        type: 'aviso',
+        title: 'Comando não confirmado pela placa',
+        desc: 'A confirmação no celular foi concluída. A Sentinela reiniciará o vínculo para sincronizar o dispositivo.',
+      });
+    }
     updateBackgroundSentinel(
       isConnectedRef.current ? 'Sentinela ativa' : 'Sentinela sem cobertura',
       isConnectedRef.current
         ? 'Monitorando o vínculo com o dispositivo Escolta'
         : 'O dispositivo ainda não foi localizado. A Sentinela segue procurando.'
     ).catch(() => {});
-  }, [addAlert, stopLocalAlarm]);
+    if (!hardwareResetConfirmed && preferencesRef.current.autoConnect) conectar();
+  }, [addAlert, conectar, stopLocalAlarm]);
 
   const continuarEmAlerta = useCallback(() => {
     if (emergencyRef.current) startLocalAlarm();

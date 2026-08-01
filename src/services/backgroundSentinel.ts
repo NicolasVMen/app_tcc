@@ -5,7 +5,12 @@ type EscoltaSentinelaNativeModule = {
   startAsync: (title: string, body: string) => Promise<void>;
   updateAsync: (title: string, body: string) => Promise<void>;
   stopAsync: () => Promise<void>;
-  armEmergencyAsync: (childName: string, delayMs: number, alertsEnabled: boolean) => Promise<void>;
+  armEmergencyAsync: (
+    childName: string,
+    delayMs: number,
+    alertsEnabled: boolean,
+    vibrationEnabled: boolean
+  ) => Promise<void>;
   cancelEmergencyAsync: () => Promise<void>;
   isRunningAsync: () => Promise<boolean>;
 };
@@ -40,10 +45,11 @@ export async function stopBackgroundSentinel() {
 export async function armBackgroundEmergency(
   childName: string,
   delayMs: number,
-  alertsEnabled: boolean
+  alertsEnabled: boolean,
+  vibrationEnabled: boolean
 ) {
   if (!nativeModule) return false;
-  await nativeModule.armEmergencyAsync(childName, delayMs, alertsEnabled);
+  await nativeModule.armEmergencyAsync(childName, delayMs, alertsEnabled, vibrationEnabled);
   return true;
 }
 

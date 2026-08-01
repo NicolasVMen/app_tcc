@@ -35,7 +35,7 @@
         "expo-notifications",
         {
           "color": "#2563EB",
-          "defaultChannel": "escolta_emergencias"
+          "defaultChannel": "escolta_emergencias_v2"
         }
       ],
       [

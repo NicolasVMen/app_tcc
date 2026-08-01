@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 const MONITORING_CHANNEL = 'escolta_monitoramento';
-const EMERGENCY_CHANNEL = 'escolta_emergencias';
+const EMERGENCY_CHANNEL = 'escolta_emergencias_v2';
 let emergencyNotificationId: string | null = null;
 let channelsPrepared = false;
 let permissionRequestedThisSession = false;
