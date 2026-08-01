@@ -32,6 +32,7 @@ import {
 
 const ALERTS_STORAGE_KEY = '@escolta_alerts_history';
 const PROFILE_STORAGE_KEY = '@escolta_user_profile';
+const MONITORING_INTENT_STORAGE_KEY = '@escolta_monitoring_intent';
 const MAX_SAVED_ALERTS = 200;
 const RECONNECT_INTERVAL_MS = 8000;
 const EMERGENCY_GRACE_MS = 5000;
@@ -157,6 +158,8 @@ export function useEsp32Monitor() {
   const shuttingDownRef = useRef(false);
   const standbyRef = useRef(false);
   const standbyTransitionRef = useRef(false);
+  const desiredMonitoringActiveRef = useRef(true);
+  const [monitoringIntentReady, setMonitoringIntentReady] = useState(false);
 
   const restoreBackgroundEmergencyState = useCallback(async () => {
     const active = await isBackgroundEmergencyActive().catch(() => false);
@@ -350,6 +353,8 @@ export function useEsp32Monitor() {
     try {
       await setMonitoringModeBle(false);
       standbyRef.current = true;
+      desiredMonitoringActiveRef.current = false;
+      await AsyncStorage.setItem(MONITORING_INTENT_STORAGE_KEY, 'standby').catch(() => {});
       wasConnectedRef.current = false;
       isConnectedRef.current = false;
       reconnectingRef.current = false;
@@ -401,6 +406,8 @@ export function useEsp32Monitor() {
       await connectBle();
       await setMonitoringModeBle(true);
       standbyRef.current = false;
+      desiredMonitoringActiveRef.current = true;
+      await AsyncStorage.setItem(MONITORING_INTENT_STORAGE_KEY, 'active').catch(() => {});
       wasConnectedRef.current = true;
       isConnectedRef.current = true;
       await startBackgroundSentinel(
@@ -462,6 +469,16 @@ export function useEsp32Monitor() {
 
   useEffect(() => {
     mountedRef.current = true;
+    AsyncStorage.getItem(MONITORING_INTENT_STORAGE_KEY).then(value => {
+      if (!mountedRef.current) return;
+      const intentionalStandby = value === 'standby';
+      desiredMonitoringActiveRef.current = !intentionalStandby;
+      standbyRef.current = intentionalStandby;
+      setState(previous => ({ ...previous, emEspera: intentionalStandby }));
+      setMonitoringIntentReady(true);
+    }).catch(() => {
+      if (mountedRef.current) setMonitoringIntentReady(true);
+    });
     restoreBackgroundEmergencyState();
     loadAlerts().then(alertas => {
       if (mountedRef.current) setState(previous => ({ ...previous, alertas }));
@@ -541,8 +558,12 @@ export function useEsp32Monitor() {
         stopLocalAlarm();
         cancelBackgroundEmergency().catch(() => {});
         dismissEmergencyNotification().catch(() => {});
-        stopBackgroundSentinel().catch(() => false);
-        disconnectBle().catch(() => {});
+        if (desiredMonitoringActiveRef.current) {
+          retomarProtecao().catch(() => {});
+        } else {
+          stopBackgroundSentinel().catch(() => false);
+          disconnectBle().catch(() => {});
+        }
       }
     };
 
@@ -623,11 +644,11 @@ export function useEsp32Monitor() {
     };
 
     setBleCallbacks(onStatusUpdate, onConnectionChange);
-  }, [activateEmergency, addAlert, conectar, stopLocalAlarm]);
+  }, [activateEmergency, addAlert, conectar, retomarProtecao, stopLocalAlarm]);
 
   useEffect(() => {
     if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
-    if (!preferences.autoConnect || standbyRef.current) return;
+    if (!monitoringIntentReady || !preferences.autoConnect || standbyRef.current) return;
 
     if (!isConnectedRef.current) conectar();
     reconnectIntervalRef.current = setInterval(() => {
@@ -638,7 +659,7 @@ export function useEsp32Monitor() {
       if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
       reconnectIntervalRef.current = null;
     };
-  }, [conectar, preferences.autoConnect]);
+  }, [conectar, monitoringIntentReady, preferences.autoConnect]);
 
   const confirmarSeguranca = useCallback(async () => {
     let hardwareResetConfirmed = true;
