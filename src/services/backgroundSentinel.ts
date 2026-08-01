@@ -5,6 +5,8 @@ type EscoltaSentinelaNativeModule = {
   startAsync: (title: string, body: string) => Promise<void>;
   updateAsync: (title: string, body: string) => Promise<void>;
   stopAsync: () => Promise<void>;
+  armEmergencyAsync: (childName: string, delayMs: number, alertsEnabled: boolean) => Promise<void>;
+  cancelEmergencyAsync: () => Promise<void>;
   isRunningAsync: () => Promise<boolean>;
 };
 
@@ -32,6 +34,22 @@ export async function updateBackgroundSentinel(title: string, body: string) {
 export async function stopBackgroundSentinel() {
   if (!nativeModule) return false;
   await nativeModule.stopAsync();
+  return true;
+}
+
+export async function armBackgroundEmergency(
+  childName: string,
+  delayMs: number,
+  alertsEnabled: boolean
+) {
+  if (!nativeModule) return false;
+  await nativeModule.armEmergencyAsync(childName, delayMs, alertsEnabled);
+  return true;
+}
+
+export async function cancelBackgroundEmergency() {
+  if (!nativeModule) return false;
+  await nativeModule.cancelEmergencyAsync();
   return true;
 }
 

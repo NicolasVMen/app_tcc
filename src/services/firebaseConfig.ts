@@ -1,5 +1,11 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { Auth, getAuth, initializeAuth, Persistence } from "firebase/auth";
+import * as FirebaseAuth from "firebase/auth";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+
+const getReactNativePersistence = (FirebaseAuth as unknown as {
+  getReactNativePersistence: (storage: typeof ReactNativeAsyncStorage) => Persistence;
+}).getReactNativePersistence;
 
 const firebaseConfig = {
   apiKey: "AIzaSyAS27cWNgZLeuS1plp2G1wZE4k2WgKfbBs",
@@ -19,7 +25,15 @@ if (getApps().length === 0) {
   app = getApp();
 }
 
-const auth = getAuth(app);
+let auth: Auth;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+  });
+} catch {
+  // O Auth já existe durante recargas rápidas do ambiente de desenvolvimento.
+  auth = getAuth(app);
+}
 // Padroniza mensagens e páginas de ação do Firebase para português do Brasil.
 auth.languageCode = 'pt-BR';
 

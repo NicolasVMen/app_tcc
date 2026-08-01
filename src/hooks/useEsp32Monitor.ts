@@ -15,6 +15,8 @@ import {
 } from '../services/bleApi';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import {
+  armBackgroundEmergency,
+  cancelBackgroundEmergency,
   startBackgroundSentinel,
   stopBackgroundSentinel,
   updateBackgroundSentinel,
@@ -215,7 +217,7 @@ export function useEsp32Monitor() {
     }
   }, [addAlert]);
 
-  const activateEmergency = useCallback((reason: string) => {
+  const activateEmergency = useCallback((reason: string, notificationHandledNatively = false) => {
     if (emergencyRef.current) return;
     emergencyRef.current = true;
     reconnectingRef.current = false;
@@ -237,23 +239,26 @@ export function useEsp32Monitor() {
       'Emergência ativa — Escolta UNITAU',
       `Verifique ${childNameRef.current} imediatamente.`
     ).catch(() => {});
-    if (preferencesRef.current.notificationsEnabled) {
+    if (preferencesRef.current.notificationsEnabled && !notificationHandledNatively) {
       showEmergencyNotification(childNameRef.current, reason).catch(() => {});
     }
     notifyEmergencyContact(reason);
   }, [addAlert, notifyEmergencyContact, startLocalAlarm]);
 
   const conectar = useCallback(async () => {
-    if (isBleConnected()) return;
-    prepareNotifications(true).then(granted => {
+    try {
+      const granted = await prepareNotifications(true);
       if (mountedRef.current) {
         setState(previous => ({ ...previous, notificacoesAutorizadas: granted }));
       }
-    }).catch(() => {});
-    startBackgroundSentinel(
-      'Sentinela procurando',
-      'Buscando o dispositivo Escolta próximo'
-    ).catch(() => {});
+    } catch {}
+    await startBackgroundSentinel(
+      isBleConnected() ? 'Sentinela ativa' : 'Sentinela procurando',
+      isBleConnected()
+        ? 'Monitorando o vínculo com o dispositivo Escolta'
+        : 'Buscando o dispositivo Escolta próximo'
+    ).catch(() => false);
+    if (isBleConnected()) return;
     if (mountedRef.current) setState(previous => ({ ...previous, isScanning: true, scanError: null }));
     try {
       await connectBle();
@@ -351,6 +356,7 @@ export function useEsp32Monitor() {
       const hadConnection = wasConnectedRef.current;
       isConnectedRef.current = connected;
       if (connected) {
+        cancelBackgroundEmergency().catch(() => {});
         wasConnectedRef.current = true;
         reconnectingRef.current = false;
         if (graceTimerRef.current) {
@@ -396,6 +402,11 @@ export function useEsp32Monitor() {
         'Vínculo interrompido',
         'A Sentinela está tentando reconectar ao dispositivo Escolta'
       ).catch(() => {});
+      armBackgroundEmergency(
+        childNameRef.current,
+        EMERGENCY_GRACE_MS,
+        preferencesRef.current.notificationsEnabled
+      ).catch(() => {});
       addAlert({
         type: 'aviso',
         title: 'Vínculo interrompido',
@@ -407,7 +418,7 @@ export function useEsp32Monitor() {
       graceTimerRef.current = setTimeout(() => {
         graceTimerRef.current = null;
         if (!isConnectedRef.current) {
-          activateEmergency('Não foi possível restabelecer o vínculo após a tentativa automática.');
+          activateEmergency('Não foi possível restabelecer o vínculo após a tentativa automática.', true);
         }
       }, EMERGENCY_GRACE_MS);
     };
@@ -419,17 +430,6 @@ export function useEsp32Monitor() {
     if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
     if (!preferences.autoConnect) return;
 
-    prepareNotifications(true).then(granted => {
-      if (mountedRef.current) {
-        setState(previous => ({ ...previous, notificacoesAutorizadas: granted }));
-      }
-    }).catch(() => {});
-    startBackgroundSentinel(
-      'Sentinela ativa',
-      isConnectedRef.current
-        ? 'Monitorando o vínculo com o dispositivo Escolta'
-        : 'Procurando o dispositivo Escolta próximo'
-    ).catch(() => {});
     if (!isConnectedRef.current) conectar();
     reconnectIntervalRef.current = setInterval(() => {
       if (!isConnectedRef.current && !isBleConnected()) conectar();
@@ -444,6 +444,7 @@ export function useEsp32Monitor() {
   const confirmarSeguranca = useCallback(async () => {
     if (isBleConnected()) await resetarAlarmeBle();
     stopLocalAlarm();
+    await cancelBackgroundEmergency();
     await dismissEmergencyNotification();
     emergencyRef.current = false;
     previousNivelRef.current = isConnectedRef.current ? 'seguro' : 'desconectado';
