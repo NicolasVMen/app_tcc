@@ -149,6 +149,7 @@ export function useEsp32Monitor() {
   const graceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mountedRef = useRef(true);
+  const shuttingDownRef = useRef(false);
 
   const restoreBackgroundEmergencyState = useCallback(async () => {
     const active = await isBackgroundEmergencyActive().catch(() => false);
@@ -267,6 +268,7 @@ export function useEsp32Monitor() {
   }, [addAlert, notifyEmergencyContact, startLocalAlarm]);
 
   const conectar = useCallback(async () => {
+    if (shuttingDownRef.current) return;
     try {
       const granted = await prepareNotifications(true);
       if (mountedRef.current) {
@@ -299,6 +301,39 @@ export function useEsp32Monitor() {
     }
   }, [restoreBackgroundEmergencyState]);
 
+  const encerrarMonitoramento = useCallback(async () => {
+    shuttingDownRef.current = true;
+    wasConnectedRef.current = false;
+    isConnectedRef.current = false;
+    reconnectingRef.current = false;
+    emergencyRef.current = false;
+    previousNivelRef.current = 'desconectado';
+    if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
+    graceTimerRef.current = null;
+    if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
+    reconnectIntervalRef.current = null;
+    stopLocalAlarm();
+    await Promise.allSettled([
+      cancelBackgroundEmergency(),
+      dismissEmergencyNotification(),
+      disconnectBle(),
+    ]);
+    await stopBackgroundSentinel().catch(() => false);
+    if (mountedRef.current) {
+      setState(previous => ({
+        ...previous,
+        modoPanico: false,
+        nivelSinal: 'desconectado',
+        conectado: false,
+        reconectando: false,
+        aguardandoConfirmacao: false,
+        segurancaConfirmadaSemVinculo: false,
+        distanciaEstimada: null,
+        isScanning: false,
+      }));
+    }
+  }, [stopLocalAlarm]);
+
   useEffect(() => {
     mountedRef.current = true;
     restoreBackgroundEmergencyState();
@@ -324,15 +359,10 @@ export function useEsp32Monitor() {
 
     return () => {
       mountedRef.current = false;
-      if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
-      if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
-      stopLocalAlarm();
-      dismissEmergencyNotification().catch(() => {});
       soundRef.current?.unloadAsync().catch(() => {});
-      stopBackgroundSentinel().catch(() => {});
-      disconnectBle().catch(() => {});
+      encerrarMonitoramento().catch(() => {});
     };
-  }, [restoreBackgroundEmergencyState, stopLocalAlarm]);
+  }, [encerrarMonitoramento, restoreBackgroundEmergencyState]);
 
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
@@ -533,5 +563,6 @@ export function useEsp32Monitor() {
     confirmarSeguranca,
     continuarEmAlerta,
     limparAlertas,
+    encerrarMonitoramento,
   };
 }

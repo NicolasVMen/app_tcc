@@ -153,7 +153,12 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       case 'CENTRAL': return <DashboardScreen monitor={monitor} />;
       case 'PROTOCOL': return <ManualScreen />;
       case 'RECORDS': return <AlertsScreen alertas={monitor.alertas} limparAlertas={monitor.limparAlertas} />;
-      case 'SYSTEM': return <SettingsScreen onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || ''))} />;
+      case 'SYSTEM': return (
+        <SettingsScreen
+          onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || ''))}
+          onBeforeLogout={monitor.encerrarMonitoramento}
+        />
+      );
     }
   };
 

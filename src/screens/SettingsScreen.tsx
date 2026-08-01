@@ -32,7 +32,10 @@ const EMPTY_PROFILE: UserProfile = {
   emailEmergencia: '',
 };
 
-export default function SettingsScreen({ onProfileUpdated }: { onProfileUpdated?: (profile: UserProfile) => void }) {
+export default function SettingsScreen({ onProfileUpdated, onBeforeLogout }: {
+  onProfileUpdated?: (profile: UserProfile) => void;
+  onBeforeLogout?: () => Promise<void>;
+}) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [profile, setProfile] = useState<UserProfile>(EMPTY_PROFILE);
@@ -132,9 +135,20 @@ export default function SettingsScreen({ onProfileUpdated }: { onProfileUpdated?
   };
 
   const handleLogout = () => {
-    Alert.alert('Sair da conta?', 'A Sentinela deixará de monitorar enquanto não houver uma conta ativa.', [
+    Alert.alert('Sair e encerrar a Sentinela?', 'A conexão com o dispositivo, os alarmes e o monitoramento em segundo plano serão interrompidos.', [
       { text: 'Permanecer', style: 'cancel' },
-      { text: 'Sair', style: 'destructive', onPress: () => signOut(auth).catch(() => Alert.alert('Falha ao sair')) },
+      {
+        text: 'Sair e encerrar',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await onBeforeLogout?.();
+            await signOut(auth);
+          } catch {
+            Alert.alert('Falha ao sair', 'Não foi possível encerrar a sessão. Tente novamente.');
+          }
+        },
+      },
     ]);
   };
 
@@ -274,7 +288,7 @@ export default function SettingsScreen({ onProfileUpdated }: { onProfileUpdated?
         <View style={styles.card}>
           <SettingsRow colors={colors} styles={styles} icon="refresh" title="Restaurar preferências" detail="Retorna às opções recomendadas" onPress={handleReset} />
           <View style={styles.separator} />
-          <SettingsRow colors={colors} styles={styles} icon="log-out" title="Sair da conta" detail="Interrompe a sessão atual" onPress={handleLogout} danger />
+          <SettingsRow colors={colors} styles={styles} icon="log-out" title="Sair da conta" detail="Encerra a sessão e o monitoramento" onPress={handleLogout} danger />
         </View>
 
         <TouchableOpacity style={styles.versionArea} onPress={handleVersionTap} activeOpacity={0.65}>

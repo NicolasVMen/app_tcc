@@ -89,6 +89,12 @@ class EscoltaSentinelaService : Service() {
 
   override fun onDestroy() {
     cancelEmergency()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      stopForeground(STOP_FOREGROUND_REMOVE)
+    } else {
+      @Suppress("DEPRECATION")
+      stopForeground(true)
+    }
     isRunning = false
     super.onDestroy()
   }
@@ -300,8 +306,7 @@ class EscoltaSentinelaService : Service() {
     }
 
     fun stop(context: Context) {
-      if (!isRunning) return
-      context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_STOP))
+      context.stopService(Intent(context, EscoltaSentinelaService::class.java))
     }
 
     fun armEmergency(
