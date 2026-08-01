@@ -17,6 +17,7 @@ import { useAppPreferences } from '../context/AppPreferencesContext';
 import {
   armBackgroundEmergency,
   cancelBackgroundEmergency,
+  isBackgroundEmergencyActive,
   notifyBackgroundConnectionRestored,
   startBackgroundSentinel,
   stopBackgroundSentinel,
@@ -149,6 +150,23 @@ export function useEsp32Monitor() {
   const reconnectIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mountedRef = useRef(true);
 
+  const restoreBackgroundEmergencyState = useCallback(async () => {
+    const active = await isBackgroundEmergencyActive().catch(() => false);
+    if (!active || !mountedRef.current) return false;
+    emergencyRef.current = true;
+    reconnectingRef.current = false;
+    previousNivelRef.current = 'panico';
+    setState(previous => ({
+      ...previous,
+      modoPanico: true,
+      nivelSinal: 'panico',
+      reconectando: false,
+      aguardandoConfirmacao: true,
+      segurancaConfirmadaSemVinculo: false,
+    }));
+    return true;
+  }, []);
+
   const addAlert = useCallback((alert: Omit<AlertItem, 'id' | 'time'>) => {
     const complete: AlertItem = {
       ...alert,
@@ -264,6 +282,7 @@ export function useEsp32Monitor() {
           ? 'A Sentinela está tentando reconectar ao dispositivo Escolta'
           : 'Buscando o dispositivo Escolta próximo'
     ).catch(() => false);
+    await restoreBackgroundEmergencyState();
     if (isBleConnected()) return;
     if (mountedRef.current) setState(previous => ({ ...previous, isScanning: true, scanError: null }));
     try {
@@ -278,10 +297,11 @@ export function useEsp32Monitor() {
         }));
       }
     }
-  }, []);
+  }, [restoreBackgroundEmergencyState]);
 
   useEffect(() => {
     mountedRef.current = true;
+    restoreBackgroundEmergencyState();
     loadAlerts().then(alertas => {
       if (mountedRef.current) setState(previous => ({ ...previous, alertas }));
     });
@@ -312,7 +332,7 @@ export function useEsp32Monitor() {
       stopBackgroundSentinel().catch(() => {});
       disconnectBle().catch(() => {});
     };
-  }, [stopLocalAlarm]);
+  }, [restoreBackgroundEmergencyState, stopLocalAlarm]);
 
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {

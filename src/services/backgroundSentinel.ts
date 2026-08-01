@@ -14,6 +14,7 @@ type EscoltaSentinelaNativeModule = {
   cancelEmergencyAsync: () => Promise<void>;
   connectionRestoredAsync: () => Promise<void>;
   isRunningAsync: () => Promise<boolean>;
+  isEmergencyActiveAsync: () => Promise<boolean>;
 };
 
 const nativeModule = Platform.OS === 'android'
@@ -69,4 +70,9 @@ export async function notifyBackgroundConnectionRestored() {
 export async function isBackgroundSentinelRunning() {
   if (!nativeModule) return false;
   return nativeModule.isRunningAsync();
+}
+
+export async function isBackgroundEmergencyActive() {
+  if (!nativeModule) return false;
+  return nativeModule.isEmergencyActiveAsync();
 }

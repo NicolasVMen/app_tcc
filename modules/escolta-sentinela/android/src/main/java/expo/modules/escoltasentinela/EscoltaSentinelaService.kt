@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 class EscoltaSentinelaService : Service() {
   private val handler = Handler(Looper.getMainLooper())
   private var emergencyRunnable: Runnable? = null
-  private var emergencyActive = false
   private var emergencyPlayer: MediaPlayer? = null
   private var emergencyVibrator: Vibrator? = null
 
@@ -65,6 +64,10 @@ class EscoltaSentinelaService : Service() {
       armEmergency(childName, delayMs, alertsEnabled, vibrationEnabled)
       return START_STICKY
     }
+
+    // Enquanto houver uma emergência confirmada pelo serviço, atualizações comuns
+    // de conexão não podem esconder o alerta antes da confirmação presencial.
+    if (emergencyActive) return START_STICKY
 
     val title = intent?.getStringExtra(EXTRA_TITLE) ?: DEFAULT_TITLE
     val body = intent?.getStringExtra(EXTRA_BODY) ?: DEFAULT_BODY
@@ -277,6 +280,10 @@ class EscoltaSentinelaService : Service() {
 
     @Volatile
     var isRunning: Boolean = false
+      private set
+
+    @Volatile
+    var emergencyActive: Boolean = false
       private set
 
     fun start(context: Context, title: String, body: String) {

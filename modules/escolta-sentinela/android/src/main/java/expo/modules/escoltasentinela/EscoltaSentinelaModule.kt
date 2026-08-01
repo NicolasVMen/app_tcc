@@ -53,5 +53,9 @@ class EscoltaSentinelaModule : Module() {
     AsyncFunction<Boolean>("isRunningAsync") {
       return@AsyncFunction EscoltaSentinelaService.isRunning
     }
+
+    AsyncFunction<Boolean>("isEmergencyActiveAsync") {
+      return@AsyncFunction EscoltaSentinelaService.emergencyActive
+    }
   }
 }
