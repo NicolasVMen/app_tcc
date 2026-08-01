@@ -32,9 +32,24 @@ const EMPTY_PROFILE: UserProfile = {
   emailEmergencia: '',
 };
 
-export default function SettingsScreen({ onProfileUpdated, onBeforeLogout }: {
+export default function SettingsScreen({
+  onProfileUpdated,
+  onBeforeLogout,
+  onForceLogout,
+  deviceStandby,
+  deviceConnected,
+  changingStandby,
+  onPauseMonitoring,
+  onResumeMonitoring,
+}: {
   onProfileUpdated?: (profile: UserProfile) => void;
   onBeforeLogout?: () => Promise<void>;
+  onForceLogout?: () => Promise<void>;
+  deviceStandby: boolean;
+  deviceConnected: boolean;
+  changingStandby: boolean;
+  onPauseMonitoring: () => Promise<void>;
+  onResumeMonitoring: () => Promise<void>;
 }) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -134,22 +149,83 @@ export default function SettingsScreen({ onProfileUpdated, onBeforeLogout }: {
     );
   };
 
+  const forceLogout = async (): Promise<void> => {
+    try {
+      await onForceLogout?.();
+      await signOut(auth);
+    } catch {
+      Alert.alert('Falha ao sair', 'Não foi possível encerrar a sessão. Tente novamente.');
+    }
+  };
+
+  const finishLogout = async (): Promise<void> => {
+    try {
+      await onBeforeLogout?.();
+      await signOut(auth);
+    } catch (error) {
+      Alert.alert(
+        'Placa não confirmou o modo de espera',
+        error instanceof Error ? error.message : 'Não foi possível confirmar que o buzzer foi desarmado.',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          { text: 'Tentar novamente', onPress: finishLogout },
+          { text: 'Sair mesmo assim', style: 'destructive', onPress: forceLogout },
+        ]
+      );
+    }
+  };
+
   const handleLogout = () => {
     Alert.alert('Sair e encerrar a Sentinela?', 'A conexão com o dispositivo, os alarmes e o monitoramento em segundo plano serão interrompidos.', [
       { text: 'Permanecer', style: 'cancel' },
       {
         text: 'Sair e encerrar',
         style: 'destructive',
-        onPress: async () => {
-          try {
-            await onBeforeLogout?.();
-            await signOut(auth);
-          } catch {
-            Alert.alert('Falha ao sair', 'Não foi possível encerrar a sessão. Tente novamente.');
-          }
-        },
+        onPress: finishLogout,
       },
     ]);
+  };
+
+  const handleMonitoringMode = () => {
+    if (changingStandby) return;
+    if (deviceStandby) {
+      Alert.alert(
+        'Retomar proteção?',
+        'O aplicativo reconectará à placa e só indicará proteção ativa depois da confirmação do dispositivo.',
+        [
+          { text: 'Agora não', style: 'cancel' },
+          {
+            text: 'Retomar proteção',
+            onPress: async () => {
+              try {
+                await onResumeMonitoring();
+              } catch (error) {
+                Alert.alert('Não foi possível retomar', error instanceof Error ? error.message : 'Verifique a placa e tente novamente.');
+              }
+            },
+          },
+        ]
+      );
+      return;
+    }
+    Alert.alert(
+      'Colocar a Sentinela em espera?',
+      'A placa será desarmada e o monitoramento será interrompido intencionalmente. Nenhum alerta será emitido até você retomar a proteção.',
+      [
+        { text: 'Manter proteção', style: 'cancel' },
+        {
+          text: 'Colocar em espera',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await onPauseMonitoring();
+            } catch (error) {
+              Alert.alert('Modo de espera não confirmado', error instanceof Error ? error.message : 'A placa não respondeu. A proteção não foi interrompida.');
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleReset = () => {
@@ -236,6 +312,22 @@ export default function SettingsScreen({ onProfileUpdated, onBeforeLogout }: {
           <PreferenceSwitch colors={colors} styles={styles} icon="volume-medium" title="Sons informativos" description="Controla sons não críticos. Não silencia emergências." value={preferences.informationalSounds} onChange={value => setPreference('informationalSounds', value)} />
           <View style={styles.separator} />
           <PreferenceSwitch colors={colors} styles={styles} icon="accessibility" title="Reduzir animações" description="Mantém cores e estados, com movimentos mais discretos." value={preferences.reduceMotion} onChange={value => setPreference('reduceMotion', value)} />
+        </View>
+
+        <SectionTitle colors={colors} title="Dispositivo Escolta" />
+        <View style={styles.card}>
+          <SettingsRow
+            colors={colors}
+            styles={styles}
+            icon={deviceStandby ? 'play-circle' : 'pause-circle'}
+            title={changingStandby ? 'Aguardando confirmação da placa…' : deviceStandby ? 'Retomar proteção' : 'Colocar Sentinela em espera'}
+            detail={deviceStandby
+              ? 'Monitoramento pausado intencionalmente. Toque para reconectar e reativar.'
+              : deviceConnected
+                ? 'Desarma a placa antes de encerrar a conexão, evitando um alarme indevido.'
+                : 'Conecte a placa antes de solicitar uma pausa segura.'}
+            onPress={handleMonitoringMode}
+          />
         </View>
 
         <SectionTitle colors={colors} title="Privacidade e localização" />

@@ -12,6 +12,7 @@ export interface Esp32Status {
   rssi: number;             // RSSI já filtrado (EMA) pela placa
   modo_casa: boolean;
   som_on: boolean;
+  monitoramento_ativo?: boolean;
   panico_ativo: boolean;
   configurado: boolean;
   // ---- Campos novos (firmware com filtragem) ----
@@ -30,12 +31,20 @@ export const CHAR_STATUS_UUID = "e5c1f4a1-1234-4b5c-9abc-def012345678";
 export const CHAR_SOM_UUID = "e5c1f4a2-1234-4b5c-9abc-def012345678";
 export const CHAR_RESET_UUID = "e5c1f4a3-1234-4b5c-9abc-def012345678";
 export const CHAR_RSSI_UUID = "e5c1f4a4-1234-4b5c-9abc-def012345678";
+export const CHAR_CONTROLE_UUID = "e5c1f4a5-1234-4b5c-9abc-def012345678";
 
 // Singleton do BleManager
 const bleManager = new BleManager();
 let connectedDevice: Device | null = null;
 let rssiInterval: NodeJS.Timeout | null = null;
 let connectionPromise: Promise<void> | null = null;
+type ControlConfirmation = {
+  expected: boolean;
+  resolve: () => void;
+  reject: (error: Error) => void;
+  timeout: ReturnType<typeof setTimeout>;
+};
+let controlConfirmation: ControlConfirmation | null = null;
 
 // Callbacks que a interface pode registrar
 type StatusCallback = (status: Esp32Status) => void;
@@ -133,6 +142,15 @@ async function startConnection(): Promise<void> {
                 const jsonStr = base64ToString(characteristic.value);
                 try {
                   const status = JSON.parse(jsonStr) as Esp32Status;
+                  if (
+                    controlConfirmation &&
+                    status.monitoramento_ativo === controlConfirmation.expected
+                  ) {
+                    const pending = controlConfirmation;
+                    controlConfirmation = null;
+                    clearTimeout(pending.timeout);
+                    pending.resolve();
+                  }
                   if (onStatusUpdate) onStatusUpdate(status);
                 } catch (e) {
                   console.warn('Erro ao parsear JSON BLE:', e);
@@ -165,6 +183,12 @@ async function startConnection(): Promise<void> {
           connected.onDisconnected((error, disconnectedDevice) => {
             connectedDevice = null;
             if (rssiInterval) clearInterval(rssiInterval);
+            if (controlConfirmation) {
+              const pending = controlConfirmation;
+              controlConfirmation = null;
+              clearTimeout(pending.timeout);
+              pending.reject(new Error('A conexão foi interrompida antes da confirmação da placa.'));
+            }
             if (onConnectionChange) onConnectionChange(false);
           });
 
@@ -227,6 +251,44 @@ export async function resetarAlarmeBle(): Promise<void> {
     CHAR_RESET_UUID,
     stringToBase64('reset') // Qualquer valor serve
   );
+}
+
+/**
+ * Pausa ou retoma o monitoramento e só conclui depois que o status da placa
+ * confirma a mudança. Isso evita tratar uma desconexão intencional como perigo.
+ */
+export async function setMonitoringModeBle(active: boolean): Promise<void> {
+  if (!connectedDevice) throw new Error('O dispositivo Escolta não está conectado.');
+  if (controlConfirmation) throw new Error('Já existe uma alteração aguardando confirmação da placa.');
+
+  const confirmation = new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      if (!controlConfirmation) return;
+      controlConfirmation = null;
+      reject(new Error('A placa não confirmou a alteração em até 4 segundos.'));
+    }, 4000);
+    controlConfirmation = { expected: active, resolve, reject, timeout };
+  });
+
+  try {
+    await connectedDevice.writeCharacteristicWithResponseForService(
+      SERVICE_UUID,
+      CHAR_CONTROLE_UUID,
+      stringToBase64(active ? 'retomar' : 'pausar')
+    );
+    await confirmation;
+  } catch (error) {
+    const pending = controlConfirmation as ControlConfirmation | null;
+    if (pending) {
+      clearTimeout(pending.timeout);
+      controlConfirmation = null;
+    }
+    throw new Error(
+      active
+        ? 'A placa não confirmou a retomada. Verifique se o firmware está atualizado.'
+        : 'A placa não confirmou o modo de espera. Verifique se o firmware está atualizado.'
+    );
+  }
 }
 
 /** Verifica se está conectado */

@@ -156,7 +156,13 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       case 'SYSTEM': return (
         <SettingsScreen
           onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || ''))}
-          onBeforeLogout={monitor.encerrarMonitoramento}
+          onBeforeLogout={monitor.prepararLogoff}
+          onForceLogout={monitor.encerrarMonitoramento}
+          deviceStandby={monitor.emEspera}
+          deviceConnected={monitor.conectado}
+          changingStandby={monitor.alterandoEspera}
+          onPauseMonitoring={monitor.colocarEmEspera}
+          onResumeMonitoring={monitor.retomarProtecao}
         />
       );
     }

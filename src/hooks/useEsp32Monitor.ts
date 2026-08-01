@@ -11,6 +11,7 @@ import {
   EstadoEsp32,
   isBleConnected,
   resetarAlarmeBle,
+  setMonitoringModeBle,
   setBleCallbacks,
 } from '../services/bleApi';
 import { useAppPreferences } from '../context/AppPreferencesContext';
@@ -61,6 +62,8 @@ export interface Esp32MonitorState {
   alertas: AlertItem[];
   isScanning: boolean;
   scanError: string | null;
+  emEspera: boolean;
+  alterandoEspera: boolean;
 }
 
 function nivelDoEstado(estado: EstadoEsp32 | undefined, rssi: number): NivelSinal {
@@ -137,6 +140,8 @@ export function useEsp32Monitor() {
     alertas: [],
     isScanning: false,
     scanError: null,
+    emEspera: false,
+    alterandoEspera: false,
   });
 
   const soundRef = useRef<Audio.Sound | null>(null);
@@ -150,6 +155,8 @@ export function useEsp32Monitor() {
   const reconnectIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mountedRef = useRef(true);
   const shuttingDownRef = useRef(false);
+  const standbyRef = useRef(false);
+  const standbyTransitionRef = useRef(false);
 
   const restoreBackgroundEmergencyState = useCallback(async () => {
     const active = await isBackgroundEmergencyActive().catch(() => false);
@@ -268,7 +275,7 @@ export function useEsp32Monitor() {
   }, [addAlert, notifyEmergencyContact, startLocalAlarm]);
 
   const conectar = useCallback(async () => {
-    if (shuttingDownRef.current) return;
+    if (shuttingDownRef.current || standbyRef.current) return;
     try {
       const granted = await prepareNotifications(true);
       if (mountedRef.current) {
@@ -334,6 +341,125 @@ export function useEsp32Monitor() {
     }
   }, [stopLocalAlarm]);
 
+  const colocarEmEspera = useCallback(async () => {
+    if (!isBleConnected()) {
+      throw new Error('Conecte-se ao dispositivo Escolta para confirmar o modo de espera.');
+    }
+    standbyTransitionRef.current = true;
+    if (mountedRef.current) setState(previous => ({ ...previous, alterandoEspera: true }));
+    try {
+      await setMonitoringModeBle(false);
+      standbyRef.current = true;
+      wasConnectedRef.current = false;
+      isConnectedRef.current = false;
+      reconnectingRef.current = false;
+      emergencyRef.current = false;
+      previousNivelRef.current = 'desconectado';
+      if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
+      graceTimerRef.current = null;
+      stopLocalAlarm();
+      await Promise.allSettled([
+        cancelBackgroundEmergency(),
+        dismissEmergencyNotification(),
+        disconnectBle(),
+      ]);
+      await stopBackgroundSentinel().catch(() => false);
+      addAlert({
+        type: 'info',
+        title: 'Sentinela em espera',
+        desc: 'O responsável pausou intencionalmente o monitoramento do dispositivo.',
+      });
+      if (mountedRef.current) {
+        setState(previous => ({
+          ...previous,
+          emEspera: true,
+          alterandoEspera: false,
+          modoPanico: false,
+          nivelSinal: 'desconectado',
+          conectado: false,
+          reconectando: false,
+          aguardandoConfirmacao: false,
+          segurancaConfirmadaSemVinculo: false,
+          distanciaEstimada: null,
+          isScanning: false,
+          scanError: null,
+        }));
+      }
+    } finally {
+      standbyTransitionRef.current = false;
+      if (mountedRef.current) setState(previous => ({ ...previous, alterandoEspera: false }));
+    }
+  }, [addAlert, stopLocalAlarm]);
+
+  const retomarProtecao = useCallback(async () => {
+    standbyTransitionRef.current = true;
+    shuttingDownRef.current = false;
+    if (mountedRef.current) {
+      setState(previous => ({ ...previous, alterandoEspera: true, isScanning: true, scanError: null }));
+    }
+    try {
+      await connectBle();
+      await setMonitoringModeBle(true);
+      standbyRef.current = false;
+      wasConnectedRef.current = true;
+      isConnectedRef.current = true;
+      await startBackgroundSentinel(
+        'Sentinela ativa',
+        'Monitorando o vínculo com o dispositivo Escolta'
+      ).catch(() => false);
+      addAlert({
+        type: 'info',
+        title: 'Proteção retomada',
+        desc: 'A placa confirmou a retomada do monitoramento.',
+      });
+      if (mountedRef.current) {
+        setState(previous => ({
+          ...previous,
+          emEspera: false,
+          alterandoEspera: false,
+          conectado: true,
+          reconectando: false,
+          isScanning: false,
+          scanError: null,
+        }));
+      }
+    } catch (error) {
+      standbyRef.current = true;
+      wasConnectedRef.current = false;
+      isConnectedRef.current = false;
+      await disconnectBle().catch(() => {});
+      if (mountedRef.current) {
+        setState(previous => ({
+          ...previous,
+          emEspera: true,
+          alterandoEspera: false,
+          conectado: false,
+          isScanning: false,
+          scanError: error instanceof Error ? error.message : 'Não foi possível retomar a proteção.',
+        }));
+      }
+      throw error;
+    } finally {
+      standbyTransitionRef.current = false;
+    }
+  }, [addAlert]);
+
+  const prepararLogoff = useCallback(async () => {
+    if (!standbyRef.current) {
+      if (!isBleConnected()) {
+        throw new Error('A placa está sem conexão e não pôde confirmar o modo de espera.');
+      }
+      standbyTransitionRef.current = true;
+      try {
+        await setMonitoringModeBle(false);
+        standbyRef.current = true;
+      } finally {
+        standbyTransitionRef.current = false;
+      }
+    }
+    await encerrarMonitoramento();
+  }, [encerrarMonitoramento]);
+
   useEffect(() => {
     mountedRef.current = true;
     restoreBackgroundEmergencyState();
@@ -366,8 +492,10 @@ export function useEsp32Monitor() {
 
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
+      const deviceStandby = data.monitoramento_ativo === false;
+      standbyRef.current = deviceStandby;
       const measuredLevel = nivelDoEstado(data.estado, data.rssi);
-      const deviceEmergency = data.panico_ativo || measuredLevel === 'panico';
+      const deviceEmergency = !deviceStandby && (data.panico_ativo || measuredLevel === 'panico');
       isConnectedRef.current = true;
       wasConnectedRef.current = true;
 
@@ -396,8 +524,9 @@ export function useEsp32Monitor() {
         somHabilitado: data.som_on,
         rssiAtual: data.rssi,
         distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
-        modoPanico: emergencyRef.current,
-        nivelSinal: emergencyRef.current ? 'panico' : measuredLevel,
+        modoPanico: deviceStandby ? false : emergencyRef.current,
+        nivelSinal: deviceStandby ? 'desconectado' : emergencyRef.current ? 'panico' : measuredLevel,
+        emEspera: deviceStandby,
         conectado: true,
         reconectando: false,
         aguardandoConfirmacao: emergencyRef.current,
@@ -406,6 +535,15 @@ export function useEsp32Monitor() {
         isScanning: false,
         scanError: null,
       }));
+      if (deviceStandby && !standbyTransitionRef.current) {
+        emergencyRef.current = false;
+        wasConnectedRef.current = false;
+        stopLocalAlarm();
+        cancelBackgroundEmergency().catch(() => {});
+        dismissEmergencyNotification().catch(() => {});
+        stopBackgroundSentinel().catch(() => false);
+        disconnectBle().catch(() => {});
+      }
     };
 
     const onConnectionChange = (connected: boolean) => {
@@ -450,6 +588,7 @@ export function useEsp32Monitor() {
         distanciaEstimada: null,
       }));
 
+      if (standbyRef.current || standbyTransitionRef.current || shuttingDownRef.current) return;
       if (!hadConnection || emergencyRef.current) return;
       reconnectingRef.current = true;
       previousNivelRef.current = 'desconectado';
@@ -484,15 +623,15 @@ export function useEsp32Monitor() {
     };
 
     setBleCallbacks(onStatusUpdate, onConnectionChange);
-  }, [activateEmergency, addAlert, conectar]);
+  }, [activateEmergency, addAlert, conectar, stopLocalAlarm]);
 
   useEffect(() => {
     if (reconnectIntervalRef.current) clearInterval(reconnectIntervalRef.current);
-    if (!preferences.autoConnect) return;
+    if (!preferences.autoConnect || standbyRef.current) return;
 
     if (!isConnectedRef.current) conectar();
     reconnectIntervalRef.current = setInterval(() => {
-      if (!isConnectedRef.current && !isBleConnected()) conectar();
+      if (!standbyRef.current && !isConnectedRef.current && !isBleConnected()) conectar();
     }, RECONNECT_INTERVAL_MS);
 
     return () => {
@@ -564,5 +703,8 @@ export function useEsp32Monitor() {
     continuarEmAlerta,
     limparAlertas,
     encerrarMonitoramento,
+    colocarEmEspera,
+    retomarProtecao,
+    prepararLogoff,
   };
 }

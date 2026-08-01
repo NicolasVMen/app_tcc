@@ -19,7 +19,7 @@ import { resetarAlarmeBle } from '../services/bleApi';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from '../theme';
 
-type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency';
+type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency' | 'standby';
 
 type MonitorController = Esp32MonitorState & {
   conectar: () => Promise<void>;
@@ -28,6 +28,7 @@ type MonitorController = Esp32MonitorState & {
   aguardandoConfirmacao?: boolean;
   confirmarSeguranca?: () => Promise<void>;
   continuarEmAlerta?: () => void;
+  retomarProtecao?: () => Promise<void>;
 };
 
 interface VisualCopy {
@@ -64,6 +65,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const visualState: VisualState = monitor.modoPanico
     ? 'emergency'
+    : monitor.emEspera
+      ? 'standby'
     : monitor.segurancaConfirmadaSemVinculo
       ? 'uncovered'
     : monitor.reconectando
@@ -95,6 +98,10 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       case 'emergency': return {
         title: 'EMERGÊNCIA', childMessage: 'Não foi possível restabelecer o vínculo',
         description: `Verifique ${childName} imediatamente.`, icon: 'alert-circle', color: colors.dangerRed,
+      };
+      case 'standby': return {
+        title: 'EM ESPERA', childMessage: 'Monitoramento pausado',
+        description: 'A Sentinela não emitirá alertas até você retomar a proteção.', icon: 'pause-circle', color: colors.warningYellow,
       };
       default: return {
         title: monitor.isScanning ? 'PROCURANDO' : 'SISTEMA EM ESPERA',
@@ -135,6 +142,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const readiness = monitor.modoPanico
     ? { label: 'Emergência ativa', color: colors.dangerRed, icon: 'alert-circle' as const }
+    : monitor.emEspera
+      ? { label: 'Monitoramento pausado', color: colors.warningYellow, icon: 'pause-circle' as const }
     : essentialReady && !hasCoverageWarning
       ? { label: 'Sistema pronto', color: colors.safeGreen, icon: 'checkmark-circle' as const }
       : essentialReady
@@ -162,13 +171,23 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
     );
   };
 
+  const handleResumeProtection = async () => {
+    try {
+      await monitor.retomarProtecao?.();
+    } catch (error) {
+      Alert.alert('Não foi possível retomar', error instanceof Error ? error.message : 'Verifique a placa e tente novamente.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.sentinelRow}>
           <View style={[styles.statusDot, { backgroundColor: copy.color }]} />
           <Text style={styles.sentinelText}>
-            {monitor.segurancaConfirmadaSemVinculo
+            {monitor.emEspera
+              ? 'Sentinela em espera'
+              : monitor.segurancaConfirmadaSemVinculo
               ? 'Sentinela sem cobertura'
               : monitor.reconectando ? 'Sentinela em busca' : monitor.conectado ? 'Sentinela ativa' : 'Sentinela aguardando vínculo'}
           </Text>
@@ -200,10 +219,19 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
             <Text style={styles.updatedText}>{updatedLabel}</Text>
           </View>
 
-          {!monitor.conectado && !monitor.isScanning && (
+          {!monitor.emEspera && !monitor.conectado && !monitor.isScanning && (
             <TouchableOpacity style={styles.primaryButton} onPress={monitor.conectar} activeOpacity={0.82}>
               <Ionicons name="bluetooth" size={19} color={colors.white} />
               <Text style={styles.primaryButtonText}>PROCURAR AGORA</Text>
+            </TouchableOpacity>
+          )}
+
+          {monitor.emEspera && (
+            <TouchableOpacity style={styles.primaryButton} onPress={handleResumeProtection} disabled={monitor.alterandoEspera} activeOpacity={0.82}>
+              {monitor.alterandoEspera
+                ? <ActivityIndicator size="small" color={colors.white} />
+                : <Ionicons name="play" size={19} color={colors.white} />}
+              <Text style={styles.primaryButtonText}>{monitor.alterandoEspera ? 'RETOMANDO…' : 'RETOMAR PROTEÇÃO'}</Text>
             </TouchableOpacity>
           )}
 
@@ -237,10 +265,10 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
           {detailsOpen && (
             <View style={styles.details}>
-              <StatusDetail colors={colors} ok={monitor.conectado} icon="bluetooth" title="Vínculo com o Escolta" detail={monitor.conectado ? 'Ativo' : 'Sem conexão'} />
-              <StatusDetail colors={colors} ok={preferences.autoConnect} icon="radio" title="Sentinela" detail={preferences.autoConnect ? 'Reconexão automática ativa' : 'Desativada por você'} />
+              <StatusDetail colors={colors} neutral={monitor.emEspera} ok={monitor.conectado} icon="bluetooth" title="Vínculo com o Escolta" detail={monitor.emEspera ? 'Pausado intencionalmente' : monitor.conectado ? 'Ativo' : 'Sem conexão'} />
+              <StatusDetail colors={colors} neutral={monitor.emEspera} ok={preferences.autoConnect} icon="radio" title="Sentinela" detail={monitor.emEspera ? 'Em espera até retomada explícita' : preferences.autoConnect ? 'Reconexão automática ativa' : 'Desativada por você'} />
               <StatusDetail colors={colors} ok={soundReady} icon="volume-high" title="Sirene do celular" detail={soundReady ? 'Pronta' : 'Indisponível'} />
-              <StatusDetail colors={colors} ok={monitor.conectado} icon="notifications" title="Buzzer do dispositivo" detail={monitor.conectado ? 'Respondendo' : 'Não verificado'} />
+              <StatusDetail colors={colors} neutral={monitor.emEspera} ok={monitor.conectado} icon="notifications" title="Buzzer do dispositivo" detail={monitor.emEspera ? 'Desarmado pela placa' : monitor.conectado ? 'Respondendo' : 'Não verificado'} />
               <StatusDetail
                 colors={colors}
                 ok={notificationsReady}

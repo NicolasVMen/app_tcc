@@ -45,6 +45,7 @@ double gpsLat = 0.0, gpsLng = 0.0;
 #define CHAR_SOM_UUID             "e5c1f4a2-1234-4b5c-9abc-def012345678"  // Read/Write - "1"/"0"
 #define CHAR_RESET_UUID           "e5c1f4a3-1234-4b5c-9abc-def012345678"  // Write - reseta panico
 #define CHAR_RSSI_UUID            "e5c1f4a4-1234-4b5c-9abc-def012345678"  // Write - app envia RSSI
+#define CHAR_CONTROLE_UUID        "e5c1f4a5-1234-4b5c-9abc-def012345678"  // Read/Write - pausar/retomar
 #define CHAR_NOME_DISPOSITIVO     "ESCOLTA_BLE"
 
 // ============================================================
@@ -55,6 +56,7 @@ BLECharacteristic* pStatusChar = NULL;
 BLECharacteristic* pSomChar = NULL;
 BLECharacteristic* pResetChar = NULL;
 BLECharacteristic* pRssiChar = NULL;
+BLECharacteristic* pControleChar = NULL;
 bool clienteConectado = false;
 bool clienteAnterior  = false;
 
@@ -64,6 +66,7 @@ Preferences prefs;
 //   VARIAVEIS DO SISTEMA
 // ============================================================
 bool escoltaAtivada = false;
+bool pausaIntencional = false;
 bool modoPanico = false;
 bool somHabilitado = true;
 
@@ -127,6 +130,11 @@ Estado proximoEstadoHisterese(Estado atual, float r) {
 }
 
 void processarSinal(int8_t rssiCru, bool conectado) {
+  if (!escoltaAtivada) {
+    contadorDesconectado = 0;
+    return;
+  }
+
   if (!conectado) {
     contadorDesconectado++;
     if (escoltaAtivada && contadorDesconectado >= DEBOUNCE_AMOSTRAS && !modoPanico) {
@@ -137,11 +145,6 @@ void processarSinal(int8_t rssiCru, bool conectado) {
     return;
   }
   contadorDesconectado = 0;
-
-  if (!escoltaAtivada) {
-    escoltaAtivada = true;
-    Serial.println("\n[SISTEMA] MONITORAMENTO ARMADO!");
-  }
 
   if (!filtroIniciado) { rssiFiltrado = (float)rssiCru; filtroIniciado = true; }
   else rssiFiltrado = EMA_ALFA * (float)rssiCru + (1.0f - EMA_ALFA) * rssiFiltrado;
@@ -178,6 +181,13 @@ const char* nomeEstado() {
 void atualizarBuzzer() {
   static unsigned long ultimo = 0;
   static bool ligado = false;
+
+  // Uma pausa confirmada pelo responsavel sempre vence qualquer estado anterior.
+  if (!escoltaAtivada) {
+    digitalWrite(PINO_BUZZER, LOW);
+    ligado = false;
+    return;
+  }
 
   // !!! REGRA DE OURO INSERIDA AQUI !!!
   // O som pode estar mutado, MAS SE ENTRAR EM PANICO, ELE APITA!
@@ -216,6 +226,10 @@ void lerGPS() {
 class ServerCallbacks: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
     clienteConectado = true;
+    if (!pausaIntencional) {
+      escoltaAtivada = true;
+      Serial.println("[SISTEMA] MONITORAMENTO ARMADO!");
+    }
     Serial.println("[BLE] Cliente conectado!");
   }
   void onDisconnect(BLEServer* pServer) {
@@ -223,6 +237,45 @@ class ServerCallbacks: public BLEServerCallbacks {
     Serial.println("[BLE] Cliente desconectado. Reiniciando advertising...");
     delay(500);
     pServer->startAdvertising();
+  }
+};
+
+void aplicarModoEspera(bool emEspera) {
+  pausaIntencional = emEspera;
+  escoltaAtivada = !emEspera;
+  modoPanico = false;
+  estadoAtual = SEGURO;
+  candidatoEstado = SEGURO;
+  contadorEstado = 0;
+  contadorDesconectado = 0;
+  filtroIniciado = false;
+  digitalWrite(PINO_BUZZER, LOW);
+
+  prefs.begin("escolta", false);
+  prefs.putBool("pausado", pausaIntencional);
+  prefs.end();
+
+  if (pControleChar != NULL) {
+    pControleChar->setValue(emEspera ? "espera" : "ativo");
+  }
+  Serial.println(emEspera
+    ? "[SISTEMA] MODO EM ESPERA CONFIRMADO"
+    : "[SISTEMA] PROTECAO RETOMADA");
+}
+
+class ControleCallback: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pChar) {
+    String comando = pChar->getValue().c_str();
+    comando.trim();
+    comando.toLowerCase();
+    if (comando == "pausar") {
+      aplicarModoEspera(true);
+    } else if (comando == "retomar") {
+      aplicarModoEspera(false);
+    } else {
+      Serial.print("[BLE] Comando de controle invalido: ");
+      Serial.println(comando);
+    }
   }
 };
 
@@ -271,7 +324,9 @@ void setup() {
 
   prefs.begin("escolta", false);
   somHabilitado = prefs.getBool("som", true);
+  pausaIntencional = prefs.getBool("pausado", false);
   prefs.end();
+  escoltaAtivada = false;
 
   Serial.println("\n========= ESCOLTA UNITAU - BLE =========");
 
@@ -307,6 +362,13 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE
   );
   pRssiChar->setCallbacks(new RssiCallback());
+
+  pControleChar = pService->createCharacteristic(
+    CHAR_CONTROLE_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
+  pControleChar->setCallbacks(new ControleCallback());
+  pControleChar->setValue(pausaIntencional ? "espera" : "ativo");
 
   pService->start();
 
@@ -363,6 +425,7 @@ void loop() {
     json += "\"distancia_m\":" + String(distancia, 1) + ",";
     json += "\"estado\":\"" + String(nomeEstado()) + "\",";
     json += "\"som_on\":" + String(somHabilitado ? "true" : "false") + ",";
+    json += "\"monitoramento_ativo\":" + String(escoltaAtivada ? "true" : "false") + ",";
     json += "\"panico_ativo\":" + String(modoPanico ? "true" : "false") + ",";
     json += "\"gps_fix\":" + String(gpsFix ? "true" : "false") + ",";
     json += "\"lat\":" + String(gpsLat, 6) + ",";
