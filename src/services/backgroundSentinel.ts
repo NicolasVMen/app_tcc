@@ -12,6 +12,7 @@ type EscoltaSentinelaNativeModule = {
     vibrationEnabled: boolean
   ) => Promise<void>;
   cancelEmergencyAsync: () => Promise<void>;
+  connectionRestoredAsync: () => Promise<void>;
   isRunningAsync: () => Promise<boolean>;
 };
 
@@ -56,6 +57,12 @@ export async function armBackgroundEmergency(
 export async function cancelBackgroundEmergency() {
   if (!nativeModule) return false;
   await nativeModule.cancelEmergencyAsync();
+  return true;
+}
+
+export async function notifyBackgroundConnectionRestored() {
+  if (!nativeModule) return false;
+  await nativeModule.connectionRestoredAsync();
   return true;
 }
 

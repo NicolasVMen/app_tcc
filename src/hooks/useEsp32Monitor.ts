@@ -17,6 +17,7 @@ import { useAppPreferences } from '../context/AppPreferencesContext';
 import {
   armBackgroundEmergency,
   cancelBackgroundEmergency,
+  notifyBackgroundConnectionRestored,
   startBackgroundSentinel,
   stopBackgroundSentinel,
   updateBackgroundSentinel,
@@ -359,7 +360,7 @@ export function useEsp32Monitor() {
       const hadConnection = wasConnectedRef.current;
       isConnectedRef.current = connected;
       if (connected) {
-        cancelBackgroundEmergency().catch(() => {});
+        notifyBackgroundConnectionRestored().catch(() => {});
         wasConnectedRef.current = true;
         reconnectingRef.current = false;
         if (graceTimerRef.current) {

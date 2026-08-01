@@ -44,6 +44,12 @@ class EscoltaSentinelaModule : Module() {
       EscoltaSentinelaService.cancelEmergency(context)
     }
 
+    AsyncFunction("connectionRestoredAsync") {
+      val context = appContext.reactContext
+        ?: throw IllegalStateException("Contexto Android indisponível")
+      EscoltaSentinelaService.connectionRestored(context)
+    }
+
     AsyncFunction<Boolean>("isRunningAsync") {
       return@AsyncFunction EscoltaSentinelaService.isRunning
     }

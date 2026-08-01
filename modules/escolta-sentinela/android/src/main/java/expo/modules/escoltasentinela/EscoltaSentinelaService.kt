@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 class EscoltaSentinelaService : Service() {
   private val handler = Handler(Looper.getMainLooper())
   private var emergencyRunnable: Runnable? = null
+  private var emergencyActive = false
   private var emergencyRingtone: Ringtone? = null
   private var emergencyVibrator: Vibrator? = null
 
@@ -48,6 +49,11 @@ class EscoltaSentinelaService : Service() {
 
     if (intent?.action == ACTION_CANCEL_EMERGENCY) {
       cancelEmergency()
+      return START_STICKY
+    }
+
+    if (intent?.action == ACTION_CONNECTION_RESTORED) {
+      handleConnectionRestored()
       return START_STICKY
     }
 
@@ -159,6 +165,7 @@ class EscoltaSentinelaService : Service() {
         manager.notify(EMERGENCY_NOTIFICATION_ID, buildEmergencyNotification(body))
         startNativeAlarm(vibrationEnabled)
       }
+      emergencyActive = true
       emergencyRunnable = null
     }.also { handler.postDelayed(it, delayMs.coerceAtLeast(0)) }
   }
@@ -166,11 +173,17 @@ class EscoltaSentinelaService : Service() {
   private fun cancelEmergency() {
     emergencyRunnable?.let(handler::removeCallbacks)
     emergencyRunnable = null
+    emergencyActive = false
     emergencyRingtone?.stop()
     emergencyRingtone = null
     emergencyVibrator?.cancel()
     emergencyVibrator = null
     getSystemService(NotificationManager::class.java).cancel(EMERGENCY_NOTIFICATION_ID)
+  }
+
+  private fun handleConnectionRestored() {
+    if (emergencyActive) return
+    cancelEmergency()
   }
 
   private fun startNativeAlarm(vibrationEnabled: Boolean) {
@@ -238,6 +251,7 @@ class EscoltaSentinelaService : Service() {
     private const val ACTION_STOP = "expo.modules.escoltasentinela.PARAR"
     private const val ACTION_ARM_EMERGENCY = "expo.modules.escoltasentinela.ARMAR_EMERGENCIA"
     private const val ACTION_CANCEL_EMERGENCY = "expo.modules.escoltasentinela.CANCELAR_EMERGENCIA"
+    private const val ACTION_CONNECTION_RESTORED = "expo.modules.escoltasentinela.VINCULO_RESTABELECIDO"
     private const val EXTRA_TITLE = "titulo"
     private const val EXTRA_BODY = "mensagem"
     private const val EXTRA_CHILD_NAME = "nome_crianca"
@@ -290,6 +304,13 @@ class EscoltaSentinelaService : Service() {
     fun cancelEmergency(context: Context) {
       if (!isRunning) return
       context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_CANCEL_EMERGENCY))
+    }
+
+    fun connectionRestored(context: Context) {
+      if (!isRunning) return
+      context.startService(
+        Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_CONNECTION_RESTORED)
+      )
     }
 
     private fun serviceIntent(context: Context, action: String, title: String, body: String) =
