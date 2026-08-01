@@ -19,7 +19,7 @@ import { resetarAlarmeBle } from '../services/bleApi';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from '../theme';
 
-type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency' | 'standby';
+type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency' | 'standby' | 'synchronizing';
 
 type MonitorController = Esp32MonitorState & {
   conectar: () => Promise<void>;
@@ -65,6 +65,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const visualState: VisualState = monitor.modoPanico
     ? 'emergency'
+    : monitor.sincronizandoProtecao
+      ? 'synchronizing'
     : monitor.emEspera
       ? 'standby'
     : monitor.segurancaConfirmadaSemVinculo
@@ -103,8 +105,12 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
         title: 'EM ESPERA', childMessage: 'Monitoramento pausado',
         description: 'A Sentinela não emitirá alertas até você retomar a proteção.', icon: 'pause-circle', color: colors.warningYellow,
       };
+      case 'synchronizing': return {
+        title: 'SINCRONIZANDO', childMessage: 'Retomando a proteção',
+        description: 'Confirmando o monitoramento com o dispositivo Escolta.', icon: 'sync', color: colors.primaryBlue,
+      };
       default: return {
-        title: monitor.isScanning ? 'PROCURANDO' : 'SISTEMA EM ESPERA',
+        title: monitor.isScanning ? 'PROCURANDO' : 'AGUARDANDO VÍNCULO',
         childMessage: monitor.isScanning ? 'Localizando o Escolta próximo' : 'O dispositivo ainda não está conectado',
         description: monitor.scanError || 'A Sentinela iniciará a busca automaticamente.',
         icon: monitor.isScanning ? 'scan' : 'bluetooth-outline', color: colors.primaryBlue,
@@ -127,7 +133,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
   }, [visualState, preferences.reduceMotion, pulse]);
 
   const coreSize = Math.max(190, Math.min(260, width * 0.58));
-  const distance = monitor.conectado && monitor.distanciaEstimada != null && Number.isFinite(monitor.distanciaEstimada)
+  const distance = !monitor.sincronizandoProtecao && monitor.conectado && monitor.distanciaEstimada != null && Number.isFinite(monitor.distanciaEstimada)
     ? `~${Math.max(1, Math.round(monitor.distanciaEstimada))} m`
     : '—';
   const secondsSinceUpdate = monitor.ultimaAtualizacao
@@ -142,6 +148,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const readiness = monitor.modoPanico
     ? { label: 'Emergência ativa', color: colors.dangerRed, icon: 'alert-circle' as const }
+    : monitor.sincronizandoProtecao
+      ? { label: 'Sincronizando proteção', color: colors.primaryBlue, icon: 'sync' as const }
     : monitor.emEspera
       ? { label: 'Monitoramento pausado', color: colors.warningYellow, icon: 'pause-circle' as const }
     : essentialReady && !hasCoverageWarning
@@ -185,7 +193,9 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
         <View style={styles.sentinelRow}>
           <View style={[styles.statusDot, { backgroundColor: copy.color }]} />
           <Text style={styles.sentinelText}>
-            {monitor.emEspera
+            {monitor.sincronizandoProtecao
+              ? 'Sentinela sincronizando'
+              : monitor.emEspera
               ? 'Sentinela em espera'
               : monitor.segurancaConfirmadaSemVinculo
               ? 'Sentinela sem cobertura'

@@ -65,6 +65,7 @@ export interface Esp32MonitorState {
   scanError: string | null;
   emEspera: boolean;
   alterandoEspera: boolean;
+  sincronizandoProtecao: boolean;
 }
 
 function nivelDoEstado(estado: EstadoEsp32 | undefined, rssi: number): NivelSinal {
@@ -143,6 +144,7 @@ export function useEsp32Monitor() {
     scanError: null,
     emEspera: false,
     alterandoEspera: false,
+    sincronizandoProtecao: false,
   });
 
   const soundRef = useRef<Audio.Sound | null>(null);
@@ -340,6 +342,7 @@ export function useEsp32Monitor() {
         segurancaConfirmadaSemVinculo: false,
         distanciaEstimada: null,
         isScanning: false,
+        sincronizandoProtecao: false,
       }));
     }
   }, [stopLocalAlarm]);
@@ -379,6 +382,7 @@ export function useEsp32Monitor() {
           ...previous,
           emEspera: true,
           alterandoEspera: false,
+          sincronizandoProtecao: false,
           modoPanico: false,
           nivelSinal: 'desconectado',
           conectado: false,
@@ -396,11 +400,18 @@ export function useEsp32Monitor() {
     }
   }, [addAlert, stopLocalAlarm]);
 
-  const retomarProtecao = useCallback(async () => {
+  const retomarProtecao = useCallback(async (automaticamente = false) => {
     standbyTransitionRef.current = true;
     shuttingDownRef.current = false;
     if (mountedRef.current) {
-      setState(previous => ({ ...previous, alterandoEspera: true, isScanning: true, scanError: null }));
+      setState(previous => ({
+        ...previous,
+        emEspera: automaticamente ? false : previous.emEspera,
+        alterandoEspera: true,
+        sincronizandoProtecao: automaticamente,
+        isScanning: true,
+        scanError: null,
+      }));
     }
     try {
       await connectBle();
@@ -424,6 +435,7 @@ export function useEsp32Monitor() {
           ...previous,
           emEspera: false,
           alterandoEspera: false,
+          sincronizandoProtecao: false,
           conectado: true,
           reconectando: false,
           isScanning: false,
@@ -440,6 +452,7 @@ export function useEsp32Monitor() {
           ...previous,
           emEspera: true,
           alterandoEspera: false,
+          sincronizandoProtecao: false,
           conectado: false,
           isScanning: false,
           scanError: error instanceof Error ? error.message : 'Não foi possível retomar a proteção.',
@@ -510,6 +523,9 @@ export function useEsp32Monitor() {
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
       const deviceStandby = data.monitoramento_ativo === false;
+      const shouldResumeAutomatically = deviceStandby
+        && desiredMonitoringActiveRef.current
+        && !standbyTransitionRef.current;
       standbyRef.current = deviceStandby;
       const measuredLevel = nivelDoEstado(data.estado, data.rssi);
       const deviceEmergency = !deviceStandby && (data.panico_ativo || measuredLevel === 'panico');
@@ -543,7 +559,8 @@ export function useEsp32Monitor() {
         distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
         modoPanico: deviceStandby ? false : emergencyRef.current,
         nivelSinal: deviceStandby ? 'desconectado' : emergencyRef.current ? 'panico' : measuredLevel,
-        emEspera: deviceStandby,
+        emEspera: deviceStandby && !shouldResumeAutomatically,
+        sincronizandoProtecao: shouldResumeAutomatically || previous.sincronizandoProtecao,
         conectado: true,
         reconectando: false,
         aguardandoConfirmacao: emergencyRef.current,
@@ -558,8 +575,8 @@ export function useEsp32Monitor() {
         stopLocalAlarm();
         cancelBackgroundEmergency().catch(() => {});
         dismissEmergencyNotification().catch(() => {});
-        if (desiredMonitoringActiveRef.current) {
-          retomarProtecao().catch(() => {});
+        if (shouldResumeAutomatically) {
+          retomarProtecao(true).catch(() => {});
         } else {
           stopBackgroundSentinel().catch(() => false);
           disconnectBle().catch(() => {});
