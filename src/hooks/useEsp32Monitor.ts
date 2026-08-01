@@ -222,7 +222,7 @@ export function useEsp32Monitor() {
     if (emergencyRef.current) return;
     emergencyRef.current = true;
     reconnectingRef.current = false;
-    startLocalAlarm();
+    if (!notificationHandledNatively) startLocalAlarm();
     setState(previous => ({
       ...previous,
       modoPanico: true,
@@ -236,10 +236,12 @@ export function useEsp32Monitor() {
       title: 'Emergência ativada',
       desc: `${reason} Verifique ${childNameRef.current} imediatamente.`,
     });
-    updateBackgroundSentinel(
-      'Emergência ativa — Escolta UNITAU',
-      `Verifique ${childNameRef.current} imediatamente.`
-    ).catch(() => {});
+    if (!notificationHandledNatively) {
+      updateBackgroundSentinel(
+        'Emergência ativa — Escolta UNITAU',
+        `Verifique ${childNameRef.current} imediatamente.`
+      ).catch(() => {});
+    }
     if (preferencesRef.current.notificationsEnabled && !notificationHandledNatively) {
       showEmergencyNotification(childNameRef.current, reason).catch(() => {});
     }

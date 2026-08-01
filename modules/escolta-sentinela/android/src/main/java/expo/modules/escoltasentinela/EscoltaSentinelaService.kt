@@ -9,8 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.media.AudioAttributes
-import android.media.Ringtone
-import android.media.RingtoneManager
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -24,12 +23,13 @@ class EscoltaSentinelaService : Service() {
   private val handler = Handler(Looper.getMainLooper())
   private var emergencyRunnable: Runnable? = null
   private var emergencyActive = false
-  private var emergencyRingtone: Ringtone? = null
+  private var emergencyPlayer: MediaPlayer? = null
   private var emergencyVibrator: Vibrator? = null
 
   override fun onCreate() {
     super.onCreate()
     createNotificationChannels()
+    getSystemService(NotificationManager::class.java).cancel(EMERGENCY_NOTIFICATION_ID)
     isRunning = true
   }
 
@@ -111,8 +111,8 @@ class EscoltaSentinelaService : Service() {
       NotificationManager.IMPORTANCE_HIGH
     ).apply {
       description = "Alertas críticos de perda de vínculo ou pânico do dispositivo"
-      enableVibration(true)
-      vibrationPattern = longArrayOf(0, 500, 200, 500, 200, 500)
+      enableVibration(false)
+      setSound(null, null)
       enableLights(true)
       lightColor = android.graphics.Color.RED
       lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -160,10 +160,24 @@ class EscoltaSentinelaService : Service() {
     emergencyRunnable = Runnable {
       val body = "Não foi possível restabelecer o vínculo. Verifique $childName imediatamente."
       val manager = getSystemService(NotificationManager::class.java)
-      manager.notify(NOTIFICATION_ID, buildNotification("Emergência ativa — Escolta UNITAU", body))
       if (alertsEnabled) {
-        manager.notify(EMERGENCY_NOTIFICATION_ID, buildEmergencyNotification(body))
+        val notification = buildEmergencyNotification(body)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          startForeground(
+            NOTIFICATION_ID,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE or
+              ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+          )
+        } else {
+          startForeground(NOTIFICATION_ID, notification)
+        }
         startNativeAlarm(vibrationEnabled)
+      } else {
+        manager.notify(
+          NOTIFICATION_ID,
+          buildNotification("Emergência ativa — Escolta UNITAU", body)
+        )
       }
       emergencyActive = true
       emergencyRunnable = null
@@ -174,8 +188,9 @@ class EscoltaSentinelaService : Service() {
     emergencyRunnable?.let(handler::removeCallbacks)
     emergencyRunnable = null
     emergencyActive = false
-    emergencyRingtone?.stop()
-    emergencyRingtone = null
+    emergencyPlayer?.stop()
+    emergencyPlayer?.release()
+    emergencyPlayer = null
     emergencyVibrator?.cancel()
     emergencyVibrator = null
     getSystemService(NotificationManager::class.java).cancel(EMERGENCY_NOTIFICATION_ID)
@@ -187,15 +202,13 @@ class EscoltaSentinelaService : Service() {
   }
 
   private fun startNativeAlarm(vibrationEnabled: Boolean) {
-    val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-      ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-    emergencyRingtone = RingtoneManager.getRingtone(this, alarmUri)?.apply {
-      audioAttributes = AudioAttributes.Builder()
+    val alarmAttributes = AudioAttributes.Builder()
         .setUsage(AudioAttributes.USAGE_ALARM)
         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
         .build()
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) isLooping = true
-      play()
+    emergencyPlayer = MediaPlayer.create(this, R.raw.escolta_alerta, alarmAttributes, 0)?.apply {
+      isLooping = true
+      start()
     }
 
     if (!vibrationEnabled) return
@@ -233,7 +246,7 @@ class EscoltaSentinelaService : Service() {
       .setContentIntent(pendingIntent)
       .setCategory(NotificationCompat.CATEGORY_ALARM)
       .setPriority(NotificationCompat.PRIORITY_MAX)
-      .setDefaults(NotificationCompat.DEFAULT_ALL)
+      .setSilent(true)
       .setAutoCancel(false)
       .setOngoing(true)
       .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -243,7 +256,7 @@ class EscoltaSentinelaService : Service() {
 
   companion object {
     private const val MONITORING_CHANNEL_ID = "escolta_monitoramento"
-    private const val EMERGENCY_CHANNEL_ID = "escolta_emergencias_v2"
+    private const val EMERGENCY_CHANNEL_ID = "escolta_emergencias_v3"
     private const val NOTIFICATION_ID = 4101
     private const val EMERGENCY_NOTIFICATION_ID = 4102
     private const val ACTION_START = "expo.modules.escoltasentinela.INICIAR"

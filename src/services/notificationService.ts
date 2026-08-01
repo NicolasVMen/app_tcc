@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 const MONITORING_CHANNEL = 'escolta_monitoramento';
-const EMERGENCY_CHANNEL = 'escolta_emergencias_v2';
+const EMERGENCY_CHANNEL = 'escolta_emergencias_v3';
 let emergencyNotificationId: string | null = null;
 let channelsPrepared = false;
 let permissionRequestedThisSession = false;
@@ -32,9 +32,9 @@ export async function prepareNotifications(requestPermission = true) {
       name: 'Emergências do Escolta',
       description: 'Alertas críticos de perda de vínculo ou pânico do dispositivo.',
       importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 500, 200, 500, 200, 500],
-      sound: 'default',
-      enableVibrate: true,
+      vibrationPattern: null,
+      sound: null,
+      enableVibrate: false,
       enableLights: true,
       lightColor: '#EF4444',
       showBadge: true,
