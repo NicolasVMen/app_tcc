@@ -507,3 +507,33 @@ O sistema deve distinguir claramente:
 - comportamento dos alertas quando o celular está no modo silencioso ou Não Perturbe;
 - validação experimental da fórmula de distância;
 - requisitos mínimos de Android e iOS.
+
+## 18. Diagnóstico e confiabilidade operacional
+
+A área **Verificação de prontidão** reúne condições observáveis que influenciam o funcionamento do protótipo:
+
+- vínculo com o dispositivo Escolta;
+- permissões de Bluetooth;
+- autorização de notificações;
+- reconexão automática;
+- disponibilidade da sirene local;
+- identificação da criança;
+- localização opcional do celular;
+- canal externo experimental;
+- orientação sobre bateria e execução em segundo plano.
+
+O diagnóstico oferece testes controlados separados de uma emergência real:
+
+- notificação visual identificada como teste;
+- sirene e vibração locais por aproximadamente 2,5 segundos;
+- nenhum envio de e-mail ou abertura de ocorrência;
+- confirmação prévia antes do teste sonoro.
+
+O relatório compartilhável registra versão, plataforma, horário, última telemetria e resultado das verificações. O próprio documento deve declarar que representa condições observáveis do protótipo e não uma certificação de segurança.
+
+### 18.1 Limites do diagnóstico
+
+- A otimização de bateria depende do fabricante e requer revisão manual nos ajustes do Android.
+- Um arquivo de sirene carregado não comprova, sozinho, que o volume físico estava audível; o usuário confirma o teste.
+- A disponibilidade de um canal externo não altera o estado da proteção BLE local.
+- O resultado pode mudar após alterações de permissão, Bluetooth, bateria ou conexão.

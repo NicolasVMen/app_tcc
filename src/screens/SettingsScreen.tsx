@@ -18,6 +18,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebaseConfig';
 import { AppPreferences, useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha, ThemeMode } from '../theme';
+import SystemDiagnosticsModal, { DiagnosticsMonitorSnapshot } from './SystemDiagnosticsModal';
 
 interface UserProfile {
   nomeResponsavel: string;
@@ -41,6 +42,8 @@ export default function SettingsScreen({
   changingStandby,
   onPauseMonitoring,
   onResumeMonitoring,
+  diagnosticsMonitor,
+  onTestLocalAlert,
 }: {
   onProfileUpdated?: (profile: UserProfile) => void;
   onBeforeLogout?: () => Promise<void>;
@@ -50,6 +53,8 @@ export default function SettingsScreen({
   changingStandby: boolean;
   onPauseMonitoring: () => Promise<void>;
   onResumeMonitoring: () => Promise<void>;
+  diagnosticsMonitor: DiagnosticsMonitorSnapshot;
+  onTestLocalAlert: () => Promise<void>;
 }) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -64,6 +69,7 @@ export default function SettingsScreen({
   const [emailInput, setEmailInput] = useState('');
   const [versionTaps, setVersionTaps] = useState(0);
   const [showAcademic, setShowAcademic] = useState(false);
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   const loadProfile = useCallback(async () => {
     try {
@@ -330,6 +336,18 @@ export default function SettingsScreen({
           />
         </View>
 
+        <SectionTitle colors={colors} title="Diagnóstico e confiabilidade" />
+        <View style={styles.card}>
+          <SettingsRow
+            colors={colors}
+            styles={styles}
+            icon="shield-checkmark"
+            title="Verificar prontidão"
+            detail="Analisa conexão, permissões, alertas e funcionamento em segundo plano"
+            onPress={() => setShowDiagnostics(true)}
+          />
+        </View>
+
         <SectionTitle colors={colors} title="Privacidade e localização" />
         <View style={styles.card}>
           <PreferenceSwitch colors={colors} styles={styles} icon="location" title="Compartilhar localização deste celular" description="Usada somente no início de uma emergência. Não representa a posição exata da criança." value={preferences.shareLocation} onChange={handleLocationToggle} />
@@ -388,6 +406,14 @@ export default function SettingsScreen({
           <Text style={styles.prototype}>PROTÓTIPO ACADÊMICO FUNCIONAL</Text>
         </TouchableOpacity>
       </ScrollView>
+      <SystemDiagnosticsModal
+        visible={showDiagnostics}
+        onClose={() => setShowDiagnostics(false)}
+        monitor={diagnosticsMonitor}
+        childName={profile.nomeCrianca || ''}
+        emergencyEmailConfigured={Boolean(profile.emailEmergencia?.trim())}
+        onTestLocalAlert={onTestLocalAlert}
+      />
     </View>
   );
 }

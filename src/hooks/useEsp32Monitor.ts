@@ -734,6 +734,27 @@ export function useEsp32Monitor() {
     setState(previous => ({ ...previous, alertas: [] }));
   }, []);
 
+  const testarAlertaLocal = useCallback(async () => {
+    if (emergencyRef.current) {
+      throw new Error('Finalize a emergência ativa antes de executar um teste controlado.');
+    }
+    const sound = soundRef.current;
+    if (!sound) throw new Error('A sirene do celular ainda não está pronta.');
+    try {
+      await sound.stopAsync().catch(() => {});
+      await sound.setPositionAsync(0);
+      if (preferencesRef.current.vibrationEnabled) {
+        Vibration.vibrate([0, 300, 180, 300, 180, 300]);
+      }
+      await sound.playAsync();
+      await new Promise<void>(resolve => setTimeout(resolve, 2500));
+    } finally {
+      Vibration.cancel();
+      await sound.stopAsync().catch(() => {});
+      await sound.setPositionAsync(0).catch(() => {});
+    }
+  }, []);
+
   return {
     ...state,
     conectar,
@@ -744,5 +765,6 @@ export function useEsp32Monitor() {
     colocarEmEspera,
     retomarProtecao,
     prepararLogoff,
+    testarAlertaLocal,
   };
 }

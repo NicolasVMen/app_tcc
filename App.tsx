@@ -163,6 +163,17 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
           changingStandby={monitor.alterandoEspera}
           onPauseMonitoring={monitor.colocarEmEspera}
           onResumeMonitoring={monitor.retomarProtecao}
+          diagnosticsMonitor={{
+            connected: monitor.conectado,
+            standby: monitor.emEspera,
+            reconnecting: monitor.reconectando,
+            scanning: monitor.isScanning,
+            soundReady: monitor.somCarregado,
+            notificationAuthorized: monitor.notificacoesAutorizadas,
+            lastUpdate: monitor.ultimaAtualizacao,
+            signalLevel: monitor.nivelSinal,
+          }}
+          onTestLocalAlert={monitor.testarAlertaLocal}
         />
       );
     }

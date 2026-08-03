@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 
 const MONITORING_CHANNEL = 'escolta_monitoramento';
 const EMERGENCY_CHANNEL = 'escolta_emergencias_v3';
+const DIAGNOSTIC_CHANNEL = 'escolta_diagnosticos';
 let emergencyNotificationId: string | null = null;
 let channelsPrepared = false;
 let permissionRequestedThisSession = false;
@@ -40,6 +41,16 @@ export async function prepareNotifications(requestPermission = true) {
       showBadge: true,
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
     });
+    await Notifications.setNotificationChannelAsync(DIAGNOSTIC_CHANNEL, {
+      name: 'Testes do Escolta',
+      description: 'Notificações controladas da verificação de prontidão.',
+      importance: Notifications.AndroidImportance.HIGH,
+      vibrationPattern: null,
+      sound: null,
+      enableVibrate: false,
+      showBadge: false,
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+    });
     channelsPrepared = true;
   }
 
@@ -72,6 +83,22 @@ export async function showEmergencyNotification(childName: string, reason: strin
     trigger: Platform.OS === 'android' ? { channelId: EMERGENCY_CHANNEL } : null,
   });
   return emergencyNotificationId;
+}
+
+/** Exibe uma notificação não emergencial para validar permissão e apresentação visual. */
+export async function showDiagnosticNotification() {
+  const granted = await prepareNotifications(true);
+  if (!granted) throw new Error('As notificações estão bloqueadas nas configurações do celular.');
+  return Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Teste da Sentinela — Escolta UNITAU',
+      body: 'Notificação recebida. Este é apenas um teste controlado do protótipo.',
+      sound: false,
+      color: '#2563EB',
+      data: { tipo: 'diagnostico' },
+    },
+    trigger: Platform.OS === 'android' ? { channelId: DIAGNOSTIC_CHANNEL } : null,
+  });
 }
 
 export async function dismissEmergencyNotification() {

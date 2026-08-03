@@ -555,3 +555,35 @@ Durante os testes futuros, registrar:
 6. Definir quando uma distância deixa de ser confiável e passa a aparecer como indisponível.
 7. Definir retenção dos Registros.
 8. Definir o comportamento do tema claro em situações de emergência.
+
+## 21. Espera voluntária e encerramento de sessão
+
+O estado **Em espera** somente pode representar uma escolha explícita do responsável.
+
+```mermaid
+flowchart TD
+    A["Protegido"] -->|"Colocar Sentinela em espera"| B["Solicitar pausa à placa"]
+    B -->|"Placa confirmou"| C["Desarmar buzzer e encerrar vínculo"]
+    C --> D["Em espera"]
+    D -->|"Retomar proteção"| E["Reconectar e solicitar retomada"]
+    E -->|"Placa confirmou"| A
+    B -->|"Sem confirmação"| F["Manter proteção e informar falha"]
+```
+
+No logoff enquanto protegido, a pausa é técnica e temporária: o aplicativo desarma a placa antes de desconectar, mas preserva a intenção de proteção ativa. Após o próximo login, a interface apresenta **Aguardando vínculo**, **Procurando** ou **Sincronizando**, e retorna a **Protegido** após a confirmação da placa. Ela não deve mostrar **Em espera** nesse fluxo.
+
+Se o usuário já havia escolhido **Em espera** antes do logoff, essa intenção persiste após o novo login e exige **Retomar proteção**.
+
+## 22. Fluxo de verificação de prontidão
+
+```mermaid
+flowchart TD
+    A["Abrir Verificação de prontidão"] --> B["Ler permissões, preferências e estado local"]
+    B --> C["Apresentar verificações essenciais e informativas"]
+    C --> D["Testar notificação visual"]
+    C --> E["Testar sirene e vibração com confirmação"]
+    C --> F["Revisar bateria e segundo plano"]
+    C --> G["Compartilhar relatório técnico"]
+```
+
+Os testes controlados não criam emergência, não enviam e-mail e não alteram o estado da placa. O relatório descreve o estado observado no momento e informa explicitamente que o protótipo não possui certificação de segurança.
