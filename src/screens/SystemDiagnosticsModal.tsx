@@ -43,7 +43,7 @@ export interface DiagnosticsMonitorSnapshot {
   signalLevel: string;
 }
 
-export default function SystemDiagnosticsModal({
+function SystemDiagnosticsModal({
   visible,
   onClose,
   monitor,
@@ -165,7 +165,10 @@ export default function SystemDiagnosticsModal({
 
   useEffect(() => {
     if (visible) runDiagnostics();
-  }, [runDiagnostics, visible]);
+    // A verificação automática ocorre somente ao abrir. Atualizações frequentes
+    // de telemetria não devem reconstruir a lista enquanto o usuário rola a tela.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   const essentialChecks = checks.filter(check => check.essential);
   const approvedEssentials = essentialChecks.filter(check => check.status === 'approved').length;
@@ -255,7 +258,7 @@ export default function SystemDiagnosticsModal({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent>
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent hardwareAccelerated>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.headerCopy}>
@@ -267,7 +270,14 @@ export default function SystemDiagnosticsModal({
           </TouchableOpacity>
         </View>
 
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+          keyboardShouldPersistTaps="handled"
+          removeClippedSubviews={false}
+        >
           <View style={[styles.summary, { borderColor: colorWithAlpha(allEssentialApproved ? colors.safeGreen : colors.warningYellow, 0.35) }]}>
             <View style={[styles.scoreCircle, { backgroundColor: colorWithAlpha(allEssentialApproved ? colors.safeGreen : colors.warningYellow, 0.14) }]}>
               {running
@@ -321,6 +331,18 @@ export default function SystemDiagnosticsModal({
     </Modal>
   );
 }
+
+export default React.memo(SystemDiagnosticsModal, (previous, next) => (
+  previous.visible === next.visible
+  && previous.childName === next.childName
+  && previous.emergencyEmailConfigured === next.emergencyEmailConfigured
+  && previous.monitor.connected === next.monitor.connected
+  && previous.monitor.standby === next.monitor.standby
+  && previous.monitor.reconnecting === next.monitor.reconnecting
+  && previous.monitor.scanning === next.monitor.scanning
+  && previous.monitor.soundReady === next.monitor.soundReady
+  && previous.monitor.notificationAuthorized === next.monitor.notificationAuthorized
+));
 
 async function checkBluetoothPermissions() {
   if (Platform.OS !== 'android') return true;
@@ -386,6 +408,7 @@ function SimpleActionRow({ colors, styles, icon, title, detail, onPress }: {
 function createStyles(colors: AppColors) {
   return StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: colors.background },
+    scroll: { flex: 1 },
     header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: colors.cardBorder },
     headerCopy: { flex: 1 },
     eyebrow: { color: colors.primaryBlue, fontSize: 9, fontWeight: '900', letterSpacing: 1.15 },

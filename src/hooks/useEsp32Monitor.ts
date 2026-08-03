@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Vibration } from 'react-native';
+import { AppState, Vibration } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
@@ -516,9 +516,19 @@ export function useEsp32Monitor() {
     return () => {
       mountedRef.current = false;
       soundRef.current?.unloadAsync().catch(() => {});
-      encerrarMonitoramento().catch(() => {});
     };
-  }, [encerrarMonitoramento, restoreBackgroundEmergencyState]);
+  }, [restoreBackgroundEmergencyState]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextState => {
+      if (nextState === 'active') {
+        // O serviço Android pode declarar emergência enquanto o JavaScript está
+        // suspenso. Ao voltar, o estado nativo sempre prevalece sobre a última UI.
+        restoreBackgroundEmergencyState().catch(() => false);
+      }
+    });
+    return () => subscription.remove();
+  }, [restoreBackgroundEmergencyState]);
 
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
