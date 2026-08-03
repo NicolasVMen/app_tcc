@@ -750,7 +750,28 @@ export function useEsp32Monitor() {
     }
     const sound = soundRef.current;
     if (!sound) throw new Error('A sirene do celular ainda não está pronta.');
+    if (AppState.currentState !== 'active') {
+      await new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          subscription.remove();
+          reject(new Error('O aplicativo ainda não recuperou o foco de áudio. Volte à tela e tente novamente.'));
+        }, 3000);
+        const subscription = AppState.addEventListener('change', nextState => {
+          if (nextState !== 'active') return;
+          clearTimeout(timeout);
+          subscription.remove();
+          resolve();
+        });
+      });
+    }
+    // O Android pode informar "active" alguns milissegundos antes de devolver o
+    // foco de mídia depois de fechar uma interface do sistema.
+    await new Promise<void>(resolve => setTimeout(resolve, 250));
     try {
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: false,
+      });
       await sound.stopAsync().catch(() => {});
       await sound.setPositionAsync(0);
       if (preferencesRef.current.vibrationEnabled) {

@@ -4,7 +4,6 @@ import {
   Animated,
   BackHandler,
   Image,
-  PanResponder,
   Platform,
   StatusBar,
   StyleSheet,
@@ -39,8 +38,6 @@ const TABS: Array<{ key: Tab; icon: keyof typeof Ionicons.glyphMap; label: strin
   { key: 'RECORDS', icon: 'time', label: 'REGISTROS' },
   { key: 'SYSTEM', icon: 'settings', label: 'SISTEMA' },
 ];
-
-const SWIPE_THRESHOLD = 52;
 
 function getInitials(name: string): string {
   const parts = name.trim().split(' ').filter(Boolean);
@@ -110,18 +107,6 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       Animated.timing(fadeAnim, { toValue: 1, duration: 170, useNativeDriver: true }).start();
     });
   }, [fadeAnim, preferences.reduceMotion]);
-
-  const panResponder = useRef(PanResponder.create({
-    onStartShouldSetPanResponder: () => false,
-    onMoveShouldSetPanResponder: (_, gesture) => (
-      Math.abs(gesture.dx) > Math.abs(gesture.dy) && Math.abs(gesture.dx) > 18
-    ),
-    onPanResponderRelease: (_, gesture) => {
-      const index = TABS.findIndex(tab => tab.key === activeTabRef.current);
-      if (gesture.dx < -SWIPE_THRESHOLD && index < TABS.length - 1) changeTab(TABS[index + 1].key);
-      if (gesture.dx > SWIPE_THRESHOLD && index > 0) changeTab(TABS[index - 1].key);
-    },
-  })).current;
 
   useEffect(() => {
     AsyncStorage.getItem('@escolta_user_profile').then(raw => {
@@ -200,7 +185,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
         </TouchableOpacity>
       </View>
 
-      <Animated.View style={[styles.content, { opacity: fadeAnim }]} {...panResponder.panHandlers}>
+      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {renderScreen()}
       </Animated.View>
 

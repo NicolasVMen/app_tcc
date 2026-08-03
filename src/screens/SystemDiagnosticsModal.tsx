@@ -61,6 +61,7 @@ function SystemDiagnosticsModal({
   const [checks, setChecks] = useState<DiagnosticCheck[]>([]);
   const [running, setRunning] = useState(false);
   const [testing, setTesting] = useState<'notification' | 'alert' | null>(null);
+  const [confirmingAlertTest, setConfirmingAlertTest] = useState(false);
   const [lastRun, setLastRun] = useState<Date | null>(null);
 
   const runDiagnostics = useCallback(async () => {
@@ -185,28 +186,17 @@ function SystemDiagnosticsModal({
     }
   };
 
-  const confirmAlertTest = () => {
-    Alert.alert(
-      'Testar sirene e vibração?',
-      'O celular tocará e, se a vibração estiver habilitada, vibrará por aproximadamente 2,5 segundos. Isso não cria uma emergência nem envia e-mail.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Iniciar teste',
-          onPress: async () => {
-            setTesting('alert');
-            try {
-              await onTestLocalAlert();
-              Alert.alert('Teste concluído', 'A sirene local foi executada. Confirme se som e vibração foram percebidos.');
-            } catch (error) {
-              Alert.alert('Teste não concluído', error instanceof Error ? error.message : 'Não foi possível testar o alerta local.');
-            } finally {
-              setTesting(null);
-            }
-          },
-        },
-      ]
-    );
+  const runAlertTest = async () => {
+    setConfirmingAlertTest(false);
+    setTesting('alert');
+    try {
+      await onTestLocalAlert();
+      Alert.alert('Teste concluído', 'A sirene local foi executada. Confirme se som e vibração foram percebidos.');
+    } catch (error) {
+      Alert.alert('Teste não concluído', error instanceof Error ? error.message : 'Não foi possível testar o alerta local.');
+    } finally {
+      setTesting(null);
+    }
   };
 
   const openBatterySettings = () => {
@@ -310,9 +300,27 @@ function SystemDiagnosticsModal({
             />
             <ActionButton
               colors={colors} styles={styles} icon="volume-high-outline" title="Testar sirene"
-              detail="Som e vibração por 2,5 segundos." loading={testing === 'alert'} onPress={confirmAlertTest}
+              detail="Som e vibração por 2,5 segundos." loading={testing === 'alert'} onPress={() => setConfirmingAlertTest(true)}
             />
           </View>
+
+          {confirmingAlertTest && (
+            <View style={styles.testConfirmation}>
+              <View style={styles.testConfirmationHeader}>
+                <Ionicons name="volume-high" size={21} color={colors.warningYellow} />
+                <Text style={styles.testConfirmationTitle}>Teste audível controlado</Text>
+              </View>
+              <Text style={styles.testConfirmationText}>O celular tocará e, se habilitada, vibrará por aproximadamente 2,5 segundos. Nenhuma emergência ou e-mail será gerado.</Text>
+              <View style={styles.testConfirmationActions}>
+                <TouchableOpacity style={styles.testCancelButton} onPress={() => setConfirmingAlertTest(false)}>
+                  <Text style={styles.testCancelText}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.testStartButton} onPress={runAlertTest}>
+                  <Text style={styles.testStartText}>Iniciar teste</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
 
           <Text style={styles.sectionTitle}>CONFIABILIDADE E REGISTRO</Text>
           <View style={styles.card}>
@@ -435,6 +443,15 @@ function createStyles(colors: AppColors) {
     actionIcon: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft, marginBottom: 12 },
     actionTitle: { color: colors.textPrimary, fontSize: 13, fontWeight: '800' },
     actionDetail: { color: colors.textSecondary, fontSize: 11, lineHeight: 16, marginTop: 4 },
+    testConfirmation: { marginTop: 11, padding: 14, borderRadius: 15, borderWidth: 1, borderColor: colorWithAlpha(colors.warningYellow, 0.35), backgroundColor: colors.warningSoft },
+    testConfirmationHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    testConfirmationTitle: { color: colors.textPrimary, fontSize: 13, fontWeight: '800' },
+    testConfirmationText: { color: colors.textSecondary, fontSize: 11, lineHeight: 17, marginTop: 7 },
+    testConfirmationActions: { flexDirection: 'row', gap: 9, marginTop: 12 },
+    testCancelButton: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 11, borderWidth: 1, borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
+    testCancelText: { color: colors.textSecondary, fontSize: 12, fontWeight: '800' },
+    testStartButton: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: colors.primaryBlue },
+    testStartText: { color: colors.white, fontSize: 12, fontWeight: '900' },
     simpleRow: { flexDirection: 'row', alignItems: 'center', gap: 11, minHeight: 70, paddingHorizontal: 14, paddingVertical: 10 },
     simpleIcon: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
     prototypeNotice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginTop: 22, padding: 14, borderRadius: 14, backgroundColor: colors.primarySoft },
