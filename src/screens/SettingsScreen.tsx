@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   Linking,
   ScrollView,
   StyleSheet,
@@ -87,6 +88,15 @@ export default function SettingsScreen({
   }, []);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
+
+  useEffect(() => {
+    if (!showDiagnostics) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      setShowDiagnostics(false);
+      return true;
+    });
+    return () => subscription.remove();
+  }, [showDiagnostics]);
 
   const persistProfile = async (changes: Partial<UserProfile>) => {
     setSaving(true);
@@ -261,6 +271,19 @@ export default function SettingsScreen({
     return <View style={styles.loading}><ActivityIndicator color={colors.primaryBlue} /></View>;
   }
 
+  if (showDiagnostics) {
+    return (
+      <SystemDiagnosticsModal
+        visible
+        onClose={() => setShowDiagnostics(false)}
+        monitor={diagnosticsMonitor}
+        childName={profile.nomeCrianca || ''}
+        emergencyEmailConfigured={Boolean(profile.emailEmergencia?.trim())}
+        onTestLocalAlert={onTestLocalAlert}
+      />
+    );
+  }
+
   const initials = getInitials(profile.nomeResponsavel);
 
   return (
@@ -406,14 +429,6 @@ export default function SettingsScreen({
           <Text style={styles.prototype}>PROTÓTIPO ACADÊMICO FUNCIONAL</Text>
         </TouchableOpacity>
       </ScrollView>
-      <SystemDiagnosticsModal
-        visible={showDiagnostics}
-        onClose={() => setShowDiagnostics(false)}
-        monitor={diagnosticsMonitor}
-        childName={profile.nomeCrianca || ''}
-        emergencyEmailConfigured={Boolean(profile.emailEmergencia?.trim())}
-        onTestLocalAlert={onTestLocalAlert}
-      />
     </View>
   );
 }

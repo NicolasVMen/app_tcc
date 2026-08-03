@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
-  Modal,
   PermissionsAndroid,
   Platform,
   ScrollView,
@@ -13,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
@@ -257,9 +255,10 @@ function SystemDiagnosticsModal({
     await Share.share({ title: 'Relatório de prontidão — Escolta UNITAU', message: report });
   };
 
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent hardwareAccelerated>
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.headerCopy}>
             <Text style={styles.eyebrow}>CONFIABILIDADE DO PROTÓTIPO</Text>
@@ -277,6 +276,8 @@ function SystemDiagnosticsModal({
           nestedScrollEnabled
           keyboardShouldPersistTaps="handled"
           removeClippedSubviews={false}
+          directionalLockEnabled
+          scrollEnabled
         >
           <View style={[styles.summary, { borderColor: colorWithAlpha(allEssentialApproved ? colors.safeGreen : colors.warningYellow, 0.35) }]}>
             <View style={[styles.scoreCircle, { backgroundColor: colorWithAlpha(allEssentialApproved ? colors.safeGreen : colors.warningYellow, 0.14) }]}>
@@ -327,8 +328,7 @@ function SystemDiagnosticsModal({
             <Text style={styles.prototypeText}>Ferramenta de apoio ao protótipo acadêmico. Ela verifica condições observáveis, mas não substitui ensaios controlados nem representa certificação.</Text>
           </View>
         </ScrollView>
-      </SafeAreaView>
-    </Modal>
+      </View>
   );
 }
 
@@ -407,7 +407,7 @@ function SimpleActionRow({ colors, styles, icon, title, detail, onPress }: {
 
 function createStyles(colors: AppColors) {
   return StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: colors.background },
+    safeArea: { flex: 1, minHeight: 0, backgroundColor: colors.background },
     scroll: { flex: 1 },
     header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: colors.cardBorder },
     headerCopy: { flex: 1 },
