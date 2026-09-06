@@ -18,3 +18,4 @@ veda
 *.njsproj
 *.sln
 *.sw?
+.codex-canva-review/
