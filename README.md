@@ -10,7 +10,7 @@ O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel 
 
 ## Estado atual
 
-_Atualizado em 6 de setembro de 2026._
+_Atualizado em 9 de setembro de 2026._
 
 - Aplicativo React Native com Expo SDK 54 e TypeScript.
 - Autenticação de acesso com Firebase.
@@ -21,11 +21,17 @@ _Atualizado em 6 de setembro de 2026._
 - Histórico de ocorrências persistido localmente.
 - Preferências de tema, reconexão, alertas, vibração, animações e localização opcional.
 - E-mail de emergência mantido como canal experimental para ensaios controlados.
-- Telemetria preservada no código, mas fora da navegação comum.
+- Indicador discreto da bateria do dispositivo no cabeçalho, com percentual,
+  tensão, carregamento e avisos por faixa.
+- Telemetria técnica preservada no código, mas fora da navegação comum.
 
-O hardware vestível já utiliza a **Seeed Studio XIAO nRF52840 Sense**. O circuito foi montado, soldado e validado com buzzer ativo, transistor P2N2222A, resistores de 1 kΩ e 10 kΩ, diodo 1N4007 e botão físico de emergência. A bateria LiPo 3,7 V/180 mAh possui proteção PCM/BMS confirmada e sua ligação ao conector é a última etapa elétrica pendente.
+O hardware vestível já utiliza a **Seeed Studio XIAO nRF52840 Sense**. O circuito foi montado, soldado e validado com buzzer funcional, transistor P2N2222A, resistores de 1 kΩ e 10 kΩ, diodo 1N4007 e botão físico de emergência.
 
-Após a validação da alimentação pela bateria, a próxima etapa será projetar e imprimir em 3D uma estrutura compacta que permita testar o protótipo como pulseira ou broche. O motor de vibração foi retirado do escopo atual para reduzir volume, consumo e complexidade de montagem.
+A bateria LiPo 3,7 V/180 mAh com proteção PCM/BMS já está ligada por conector, alimenta a XIAO e pode ser recarregada pela USB-C da placa. A leitura interna foi comparada com multímetro e apresentou diferença de apenas 0,01 V. O primeiro ensaio registrou 11 h 10 min de funcionamento entre 90% e 5%, com autonomia total preliminar projetada próxima de 13 horas.
+
+A próxima etapa é projetar e imprimir em 3D uma estrutura compacta que permita testar o protótipo no braço, usando passantes laterais para elástico ou velcro e mantendo acesso à USB-C, botão, LED, saída acústica e região da antena. O motor de vibração foi retirado do escopo atual para reduzir volume, consumo e complexidade de montagem.
+
+> Durante o ensaio de autonomia, as saídas automáticas de alerta estão temporariamente bloqueadas no aplicativo e no firmware. Estados, LEDs, conexão, registros e telemetria continuam ativos. Esse bloqueio deverá ser removido antes dos ensaios finais de segurança.
 
 ### Situação do hardware
 
@@ -33,9 +39,12 @@ Após a validação da alimentação pela bateria, a próxima etapa será projet
 - [x] Comunicação BLE e comandos do buzzer validados.
 - [x] Transistor, resistores, diodo e buzzer soldados.
 - [x] Botão físico de emergência soldado e validado.
-- [ ] Soldar e isolar o conector da bateria LiPo.
-- [ ] Repetir os ensaios completos alimentando o dispositivo somente pela bateria.
-- [ ] Medir autonomia e comportamento durante recarga.
+- [x] Conector da bateria LiPo soldado e isolado.
+- [x] Validar alimentação e recarga pela XIAO.
+- [x] Exibir percentual, tensão e estado de carga no aplicativo.
+- [x] Executar o primeiro ensaio alimentado somente pela bateria.
+- [ ] Repetir o ensaio de autonomia para calcular média e variação.
+- [ ] Medir separadamente a autonomia em espera.
 - [ ] Definir dimensões e encaixes da estrutura vestível.
 - [ ] Imprimir e validar os modelos de pulseira e/ou broche.
 
@@ -85,6 +94,7 @@ Os fluxos e critérios de experiência estão documentados em:
 - [`docs/FLUXOS_CENTRAL_SENTINELA.md`](docs/FLUXOS_CENTRAL_SENTINELA.md)
 - [`docs/imagens_montagem/01-transistor-resistores.png`](docs/imagens_montagem/01-transistor-resistores.png)
 - [`docs/imagens_montagem/02-circuito-completo.png`](docs/imagens_montagem/02-circuito-completo.png)
+- [`docs/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md`](docs/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md)
 
 ## Execução
 

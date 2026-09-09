@@ -134,8 +134,14 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const coreSize = Math.max(190, Math.min(260, width * 0.58));
   const distance = !monitor.sincronizandoProtecao && monitor.conectado && monitor.distanciaEstimada != null && Number.isFinite(monitor.distanciaEstimada)
-    ? `~${Math.max(1, Math.round(monitor.distanciaEstimada))} m`
+    ? monitor.distanciaEstimada < 1
+      ? '< 1 m'
+      : `~${Math.round(monitor.distanciaEstimada)} m`
     : '—';
+  const deviceBatteryAvailable = monitor.bateriaPercentual != null && Number.isFinite(monitor.bateriaPercentual);
+  const deviceBatteryDetail = deviceBatteryAvailable
+    ? `${Math.round(monitor.bateriaPercentual!)}% estimados${monitor.bateriaTensao != null ? ` • ${monitor.bateriaTensao.toFixed(2)} V` : ''}${monitor.bateriaCarregando ? ' • Carregando' : monitor.dispositivoUsbConectado ? ' • USB conectado' : ''}`
+    : monitor.conectado ? 'Aguardando leitura do dispositivo' : 'Disponível quando conectado';
   const secondsSinceUpdate = monitor.ultimaAtualizacao
     ? Math.max(0, Math.floor((now - new Date(monitor.ultimaAtualizacao).getTime()) / 1000))
     : null;
@@ -279,6 +285,14 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
               <StatusDetail colors={colors} neutral={monitor.emEspera} ok={preferences.autoConnect} icon="radio" title="Sentinela" detail={monitor.emEspera ? 'Em espera até retomada explícita' : preferences.autoConnect ? 'Reconexão automática ativa' : 'Desativada por você'} />
               <StatusDetail colors={colors} ok={soundReady} icon="volume-high" title="Sirene do celular" detail={soundReady ? 'Pronta' : 'Indisponível'} />
               <StatusDetail colors={colors} neutral={monitor.emEspera} ok={monitor.conectado} icon="notifications" title="Buzzer do dispositivo" detail={monitor.emEspera ? 'Desarmado pela placa' : monitor.conectado ? 'Respondendo' : 'Não verificado'} />
+              <StatusDetail
+                colors={colors}
+                neutral={!deviceBatteryAvailable}
+                ok={monitor.bateriaCarregando || (monitor.bateriaPercentual ?? 0) > 20}
+                icon={monitor.bateriaCarregando ? 'battery-charging' : 'battery-half'}
+                title="Bateria do dispositivo"
+                detail={deviceBatteryDetail}
+              />
               <StatusDetail
                 colors={colors}
                 ok={notificationsReady}

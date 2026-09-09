@@ -24,7 +24,7 @@ import AlertsScreen from './src/screens/AlertsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import { useEsp32Monitor } from './src/hooks/useEsp32Monitor';
 import { AppPreferencesProvider, useAppPreferences } from './src/context/AppPreferencesContext';
-import { AppColors } from './src/theme';
+import { AppColors, colorWithAlpha } from './src/theme';
 import {
   addNotificationResponseListener,
   consumeInitialCentralDestination,
@@ -93,6 +93,26 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   const activeTabRef = useRef<Tab>('CENTRAL');
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const monitor = useEsp32Monitor();
+  const deviceBatteryAvailable = monitor.conectado
+    && monitor.bateriaPercentual != null
+    && Number.isFinite(monitor.bateriaPercentual);
+  const deviceBatteryPercent = deviceBatteryAvailable
+    ? Math.round(monitor.bateriaPercentual!)
+    : null;
+  const deviceBatteryColor = deviceBatteryPercent != null && deviceBatteryPercent <= 10
+    ? colors.dangerRed
+    : deviceBatteryPercent != null && deviceBatteryPercent <= 20
+      ? colors.warningYellow
+      : monitor.bateriaCarregando
+        ? colors.primaryBlue
+        : colors.safeGreen;
+  const deviceBatteryIcon: keyof typeof Ionicons.glyphMap = monitor.bateriaCarregando
+    ? 'battery-charging'
+    : deviceBatteryPercent != null && deviceBatteryPercent <= 10
+      ? 'battery-dead'
+      : deviceBatteryPercent != null && deviceBatteryPercent <= 50
+        ? 'battery-half'
+        : 'battery-full';
 
   const changeTab = useCallback((newTab: Tab) => {
     if (newTab === activeTabRef.current) return;
@@ -180,9 +200,20 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
             <Text style={styles.brandSubtitle}>PROTÓTIPO ACADÊMICO</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.avatar} activeOpacity={0.75} onPress={() => changeTab('SYSTEM')}>
-          <Text style={styles.avatarText}>{userInitials}</Text>
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          {deviceBatteryPercent != null && (
+            <View
+              style={[styles.batteryIndicator, { borderColor: colorWithAlpha(deviceBatteryColor, 0.4) }]}
+              accessibilityLabel={`Bateria do dispositivo em ${deviceBatteryPercent} por cento${monitor.bateriaCarregando ? ', carregando' : ''}`}
+            >
+              <Ionicons name={deviceBatteryIcon} size={18} color={deviceBatteryColor} />
+              <Text style={[styles.batteryIndicatorText, { color: deviceBatteryColor }]}>{deviceBatteryPercent}%</Text>
+            </View>
+          )}
+          <TouchableOpacity style={styles.avatar} activeOpacity={0.75} onPress={() => changeTab('SYSTEM')}>
+            <Text style={styles.avatarText}>{userInitials}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
@@ -239,6 +270,12 @@ function createStyles(colors: AppColors) {
     logo: { width: 40, height: 40, resizeMode: 'contain', borderRadius: 12 },
     brandName: { color: colors.textPrimary, fontSize: 17, fontWeight: '800', letterSpacing: 0.7 },
     brandSubtitle: { color: colors.textMuted, fontSize: 9, fontWeight: '700', letterSpacing: 1.2, marginTop: 2 },
+    headerActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    batteryIndicator: {
+      minHeight: 34, flexDirection: 'row', alignItems: 'center', gap: 4,
+      paddingHorizontal: 9, borderRadius: 18, borderWidth: 1, backgroundColor: colors.cardBg,
+    },
+    batteryIndicatorText: { fontSize: 12, fontWeight: '800' },
     avatar: {
       width: 39, height: 39, borderRadius: 20, alignItems: 'center', justifyContent: 'center',
       backgroundColor: colors.primarySoft, borderWidth: 1, borderColor: colors.cardBorder,

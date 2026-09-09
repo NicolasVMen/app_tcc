@@ -27,6 +27,7 @@ import {
 import {
   dismissEmergencyNotification,
   prepareNotifications,
+  showBatteryNotification,
   showEmergencyNotification,
 } from '../services/notificationService';
 
@@ -36,6 +37,10 @@ const MONITORING_INTENT_STORAGE_KEY = '@escolta_monitoring_intent';
 const MAX_SAVED_ALERTS = 200;
 const RECONNECT_INTERVAL_MS = 8000;
 const EMERGENCY_GRACE_MS = 5000;
+// Bloqueio temporario solicitado durante os testes de autonomia.
+// Os estados e registros continuam funcionando, mas nenhuma saida de alerta
+// (sirene, vibracao, notificacao critica ou e-mail) deve ser disparada.
+const ALERT_OUTPUTS_ENABLED = false;
 
 export type NivelSinal = 'seguro' | 'aviso' | 'panico' | 'desconectado';
 
@@ -52,6 +57,10 @@ export interface Esp32MonitorState {
   somCarregado: boolean;
   rssiAtual: number;
   distanciaEstimada: number | null;
+  bateriaPercentual: number | null;
+  bateriaTensao: number | null;
+  bateriaCarregando: boolean;
+  dispositivoUsbConectado: boolean;
   modoPanico: boolean;
   nivelSinal: NivelSinal;
   conectado: boolean;
@@ -131,6 +140,10 @@ export function useEsp32Monitor() {
     somCarregado: false,
     rssiAtual: 0,
     distanciaEstimada: null,
+    bateriaPercentual: null,
+    bateriaTensao: null,
+    bateriaCarregando: false,
+    dispositivoUsbConectado: false,
     modoPanico: false,
     nivelSinal: 'desconectado',
     conectado: false,
@@ -161,9 +174,15 @@ export function useEsp32Monitor() {
   const standbyRef = useRef(false);
   const standbyTransitionRef = useRef(false);
   const desiredMonitoringActiveRef = useRef(true);
+  const batteryAlertLevelRef = useRef<0 | 10 | 20>(0);
+  const telemetryReceivedRef = useRef(false);
   const [monitoringIntentReady, setMonitoringIntentReady] = useState(false);
 
   const restoreBackgroundEmergencyState = useCallback(async () => {
+    if (!ALERT_OUTPUTS_ENABLED) {
+      await cancelBackgroundEmergency().catch(() => false);
+      return false;
+    }
     const active = await isBackgroundEmergencyActive().catch(() => false);
     if (!active || !mountedRef.current) return false;
     emergencyRef.current = true;
@@ -199,6 +218,7 @@ export function useEsp32Monitor() {
   }, []);
 
   const startLocalAlarm = useCallback(() => {
+    if (!ALERT_OUTPUTS_ENABLED) return;
     if (preferencesRef.current.vibrationEnabled) {
       Vibration.vibrate([0, 500, 200, 500, 200, 500], true);
     }
@@ -206,6 +226,7 @@ export function useEsp32Monitor() {
   }, []);
 
   const notifyEmergencyContact = useCallback(async (reason: string) => {
+    if (!ALERT_OUTPUTS_ENABLED) return;
     if (!preferencesRef.current.notificationsEnabled) return;
     try {
       const raw = await AsyncStorage.getItem(PROFILE_STORAGE_KEY);
@@ -273,10 +294,10 @@ export function useEsp32Monitor() {
         `Verifique ${childNameRef.current} imediatamente.`
       ).catch(() => {});
     }
-    if (preferencesRef.current.notificationsEnabled && !notificationHandledNatively) {
+    if (ALERT_OUTPUTS_ENABLED && preferencesRef.current.notificationsEnabled && !notificationHandledNatively) {
       showEmergencyNotification(childNameRef.current, reason).catch(() => {});
     }
-    notifyEmergencyContact(reason);
+    if (ALERT_OUTPUTS_ENABLED) notifyEmergencyContact(reason);
   }, [addAlert, notifyEmergencyContact, startLocalAlarm]);
 
   const conectar = useCallback(async () => {
@@ -532,22 +553,54 @@ export function useEsp32Monitor() {
 
   useEffect(() => {
     const onStatusUpdate = (data: Esp32Status) => {
+      const firstValidStatus = !telemetryReceivedRef.current;
+      telemetryReceivedRef.current = true;
       const deviceStandby = data.monitoramento_ativo === false;
       const shouldResumeAutomatically = deviceStandby
         && desiredMonitoringActiveRef.current
         && !standbyTransitionRef.current;
       standbyRef.current = deviceStandby;
       const measuredLevel = nivelDoEstado(data.estado, data.rssi);
+      const batteryPercent = typeof data.bateria_pct === 'number'
+        ? Math.max(0, Math.min(100, Math.round(data.bateria_pct)))
+        : null;
       const deviceEmergency = !deviceStandby && (data.panico_ativo || measuredLevel === 'panico');
       isConnectedRef.current = true;
       wasConnectedRef.current = true;
 
-      if (deviceEmergency) {
-        activateEmergency(data.panico_ativo
+      if (deviceEmergency && !emergencyRef.current) {
+        const reason = data.panico_ativo
           ? 'O dispositivo acionou o protocolo de emergência.'
-          : 'A estimativa de proximidade ultrapassou o limite configurado.');
+          : 'A estimativa de proximidade ultrapassou o limite configurado.';
+        // O serviço nativo toca mesmo com o app minimizado ou a tela bloqueada.
+        // A UI e o registro são ativados imediatamente para impedir duplicidade.
+        activateEmergency(reason, true);
+        if (ALERT_OUTPUTS_ENABLED) {
+          armBackgroundEmergency(
+            childNameRef.current,
+            0,
+            preferencesRef.current.notificationsEnabled,
+            preferencesRef.current.vibrationEnabled
+          ).then(started => {
+            if (started) return;
+            startLocalAlarm();
+            if (preferencesRef.current.notificationsEnabled) {
+              showEmergencyNotification(childNameRef.current, reason).catch(() => {});
+            }
+          }).catch(() => {
+            startLocalAlarm();
+            if (preferencesRef.current.notificationsEnabled) {
+              showEmergencyNotification(childNameRef.current, reason).catch(() => {});
+            }
+          });
+        } else {
+          cancelBackgroundEmergency().catch(() => {});
+          dismissEmergencyNotification().catch(() => {});
+        }
       } else if (measuredLevel === 'aviso' && previousNivelRef.current === 'seguro') {
-        if (preferencesRef.current.vibrationEnabled) Vibration.vibrate([0, 250, 120, 250]);
+        if (ALERT_OUTPUTS_ENABLED && preferencesRef.current.vibrationEnabled) {
+          Vibration.vibrate([0, 250, 120, 250]);
+        }
         addAlert({
           type: 'aviso',
           title: 'Alcance reduzido',
@@ -561,16 +614,44 @@ export function useEsp32Monitor() {
         });
       }
 
+      if (batteryPercent != null) {
+        if (data.carregando === true || batteryPercent > 25) {
+          batteryAlertLevelRef.current = 0;
+        } else {
+          const nextLevel: 0 | 10 | 20 = batteryPercent <= 10 ? 10 : batteryPercent <= 20 ? 20 : 0;
+          const shouldNotify = nextLevel !== 0
+            && (batteryAlertLevelRef.current === 0 || nextLevel < batteryAlertLevelRef.current);
+          if (shouldNotify) {
+            batteryAlertLevelRef.current = nextLevel;
+            const critical = nextLevel === 10;
+            addAlert({
+              type: 'aviso',
+              title: critical ? 'Bateria crítica' : 'Bateria baixa',
+              desc: critical
+                ? `O dispositivo está com cerca de ${batteryPercent}%. Recarregue agora para evitar a interrupção do monitoramento.`
+                : `O dispositivo está com cerca de ${batteryPercent}%. Recarregue-o assim que possível.`,
+            });
+            if (ALERT_OUTPUTS_ENABLED && preferencesRef.current.notificationsEnabled) {
+              showBatteryNotification(batteryPercent, critical).catch(() => {});
+            }
+          }
+        }
+      }
+
       previousNivelRef.current = emergencyRef.current ? 'panico' : measuredLevel;
       setState(previous => ({
         ...previous,
         somHabilitado: data.som_on,
         rssiAtual: data.rssi,
         distanciaEstimada: typeof data.distancia_m === 'number' ? data.distancia_m : null,
+        bateriaPercentual: batteryPercent,
+        bateriaTensao: typeof data.bateria_v === 'number' ? data.bateria_v : null,
+        bateriaCarregando: data.carregando === true,
+        dispositivoUsbConectado: data.usb_conectado === true,
         modoPanico: deviceStandby ? false : emergencyRef.current,
         nivelSinal: deviceStandby ? 'desconectado' : emergencyRef.current ? 'panico' : measuredLevel,
         emEspera: deviceStandby && !shouldResumeAutomatically,
-        sincronizandoProtecao: shouldResumeAutomatically || previous.sincronizandoProtecao,
+        sincronizandoProtecao: shouldResumeAutomatically,
         conectado: true,
         reconectando: false,
         aguardandoConfirmacao: emergencyRef.current,
@@ -579,6 +660,12 @@ export function useEsp32Monitor() {
         isScanning: false,
         scanError: null,
       }));
+      if (firstValidStatus && !deviceEmergency && !deviceStandby) {
+        updateBackgroundSentinel(
+          'Sentinela ativa',
+          'Monitorando o vínculo com o dispositivo Escolta'
+        ).catch(() => {});
+      }
       if (deviceStandby && !standbyTransitionRef.current) {
         emergencyRef.current = false;
         wasConnectedRef.current = false;
@@ -598,6 +685,7 @@ export function useEsp32Monitor() {
       const hadConnection = wasConnectedRef.current;
       isConnectedRef.current = connected;
       if (connected) {
+        telemetryReceivedRef.current = false;
         notifyBackgroundConnectionRestored().catch(() => {});
         wasConnectedRef.current = true;
         reconnectingRef.current = false;
@@ -615,20 +703,22 @@ export function useEsp32Monitor() {
         setState(previous => ({
           ...previous,
           conectado: true,
+          sincronizandoProtecao: !emergencyRef.current,
           reconectando: false,
           isScanning: false,
           scanError: null,
           segurancaConfirmadaSemVinculo: false,
         }));
         updateBackgroundSentinel(
-          emergencyRef.current ? 'Vínculo restabelecido' : 'Sentinela ativa',
+          emergencyRef.current ? 'Vínculo restabelecido' : 'Sentinela sincronizando',
           emergencyRef.current
             ? 'A conexão voltou. Confirme presencialmente a segurança da criança.'
-            : 'Monitorando o vínculo com o dispositivo Escolta'
+            : 'Aguardando a primeira atualização válida do dispositivo Escolta'
         ).catch(() => {});
         return;
       }
 
+      telemetryReceivedRef.current = false;
       setState(previous => ({
         ...previous,
         conectado: false,
@@ -645,12 +735,17 @@ export function useEsp32Monitor() {
         'Vínculo interrompido',
         'A Sentinela está tentando reconectar ao dispositivo Escolta'
       ).catch(() => {});
-      armBackgroundEmergency(
-        childNameRef.current,
-        EMERGENCY_GRACE_MS,
-        preferencesRef.current.notificationsEnabled,
-        preferencesRef.current.vibrationEnabled
-      ).catch(() => {});
+      if (ALERT_OUTPUTS_ENABLED) {
+        armBackgroundEmergency(
+          childNameRef.current,
+          EMERGENCY_GRACE_MS,
+          preferencesRef.current.notificationsEnabled,
+          preferencesRef.current.vibrationEnabled
+        ).catch(() => {});
+      } else {
+        cancelBackgroundEmergency().catch(() => {});
+        dismissEmergencyNotification().catch(() => {});
+      }
       addAlert({
         type: 'aviso',
         title: 'Vínculo interrompido',
@@ -664,7 +759,7 @@ export function useEsp32Monitor() {
         if (!isConnectedRef.current) {
           activateEmergency(
             'Não foi possível restabelecer o vínculo após a tentativa automática.',
-            preferencesRef.current.notificationsEnabled
+            ALERT_OUTPUTS_ENABLED && preferencesRef.current.notificationsEnabled
           );
         }
       }, EMERGENCY_GRACE_MS);
@@ -736,7 +831,13 @@ export function useEsp32Monitor() {
   }, [addAlert, conectar, stopLocalAlarm]);
 
   const continuarEmAlerta = useCallback(() => {
-    if (emergencyRef.current) startLocalAlarm();
+    if (!ALERT_OUTPUTS_ENABLED) return;
+    if (!emergencyRef.current) return;
+    // Se o serviço nativo já mantém a sirene, iniciar também o áudio do Expo
+    // sobreporia dois sons. O fallback local só é usado quando ele não está ativo.
+    isBackgroundEmergencyActive()
+      .then(active => { if (!active) startLocalAlarm(); })
+      .catch(() => startLocalAlarm());
   }, [startLocalAlarm]);
 
   const limparAlertas = useCallback(async () => {
@@ -745,6 +846,9 @@ export function useEsp32Monitor() {
   }, []);
 
   const testarAlertaLocal = useCallback(async () => {
+    if (!ALERT_OUTPUTS_ENABLED) {
+      throw new Error('Os disparos estão temporariamente desativados durante o teste de autonomia.');
+    }
     if (emergencyRef.current) {
       throw new Error('Finalize a emergência ativa antes de executar um teste controlado.');
     }

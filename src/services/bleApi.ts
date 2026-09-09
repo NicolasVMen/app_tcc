@@ -20,6 +20,10 @@ export interface Esp32Status {
   rssi_filtrado?: number;   // RSSI filtrado com casa decimal
   distancia_m?: number;     // distância estimada (metros)
   estado?: EstadoEsp32;     // decisão de estado feita na própria placa
+  bateria_pct?: number;     // percentual estimado pela tensão da Li-Po
+  bateria_v?: number;       // tensão medida pelo ADC interno da XIAO
+  carregando?: boolean;     // estado indicado pelo circuito carregador
+  usb_conectado?: boolean;  // presença física de alimentação USB na XIAO
   // ---- Preparado para GPS (evolução futura) ----
   gps_fix?: boolean;
   lat?: number;

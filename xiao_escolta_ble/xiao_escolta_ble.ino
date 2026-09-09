@@ -19,12 +19,20 @@
 
 #include <ArduinoBLE.h>
 #include <math.h>
+#include <nrf.h>
 
 // ============================================================
 //   PINOS
 // ============================================================
 const uint8_t PINO_BUZZER = D3;
 const uint8_t PINO_BOTAO_EMERGENCIA = D1;
+const uint8_t PINO_LEITURA_BATERIA = PIN_VBAT;  // índice 6 -> P0.31 / AIN7_BAT
+const uint8_t PINO_CORRENTE_CARGA = 21;         // índice 21 -> P0.13 / HICHG
+const uint8_t PINO_STATUS_CARGA = 22;           // índice 22 -> P0.17 / ~CHG
+
+// Bloqueio temporario solicitado durante o teste de autonomia. A placa ainda
+// calcula e transmite os estados, mas o buzzer permanece sempre desligado.
+const bool SAIDAS_DE_ALARME_ATIVAS = false;
 
 // ============================================================
 //   UUIDs BLE — idênticos aos usados pelo aplicativo
@@ -37,8 +45,8 @@ const char* CHAR_RSSI_UUID = "e5c1f4a4-1234-4b5c-9abc-def012345678";
 const char* CHAR_CONTROLE_UUID = "e5c1f4a5-1234-4b5c-9abc-def012345678";
 const char* NOME_DISPOSITIVO = "ESCOLTA_BLE";
 
-// O JSON atual ocupa menos de 200 bytes. O limite de 244 bytes cabe
-// em uma notificação BLE após a negociação de MTU feita pelo app.
+// O JSON da XIAO não inclui GPS, pois esta placa não possui esse sensor.
+// Mantê-lo abaixo de 244 bytes garante uma notificação BLE completa.
 BLEService escoltaService(SERVICE_UUID);
 BLEStringCharacteristic statusCharacteristic(
   CHAR_STATUS_UUID,
@@ -74,6 +82,11 @@ bool escoltaAtivada = false;
 bool pausaIntencional = false;
 bool modoPanico = false;
 bool somHabilitado = true;
+float tensaoBateria = 0.0f;
+uint8_t percentualBateria = 0;
+bool bateriaCarregando = false;
+bool usbConectado = false;
+bool leituraBateriaIniciada = false;
 
 // ============================================================
 //   FILTRAGEM DE SINAL — EMA + histerese + debounce
@@ -81,6 +94,19 @@ bool somHabilitado = true;
 enum Estado { SEGURO, ATENCAO, PERIGO };
 Estado estadoAtual = SEGURO;
 Estado candidatoEstado = SEGURO;
+
+// ============================================================
+//   LED RGB INTERNO — LOW acende, HIGH apaga
+// ============================================================
+void definirLedRgb(bool vermelho, bool verde, bool azul) {
+  digitalWrite(LED_RED, vermelho ? LOW : HIGH);
+  digitalWrite(LED_GREEN, verde ? LOW : HIGH);
+  digitalWrite(LED_BLUE, azul ? LOW : HIGH);
+}
+
+bool pulsoLedAtivo(uint32_t periodoMs, uint32_t duracaoMs) {
+  return millis() % periodoMs < duracaoMs;
+}
 
 const float EMA_ALFA = 0.30f;
 const uint32_t INTERVALO_AMOSTRA = 500;
@@ -116,6 +142,63 @@ bool pressionamentoBotaoValido = false;
 bool acionamentoBotaoRegistrado = false;
 const uint32_t DEBOUNCE_BOTAO_MS = 50;
 const uint32_t TEMPO_ACIONAMENTO_BOTAO_MS = 1500;
+
+// ============================================================
+//   BATERIA — leitura interna da XIAO e estimativa por tensão
+// ============================================================
+uint8_t estimarPercentualBateria(float volts) {
+  // Curva aproximada de uma célula Li-Po em repouso. Sob carga, o valor pode
+  // oscilar; por isso o aplicativo identifica o resultado como estimativa.
+  const float tensoes[] = {3.30f, 3.50f, 3.60f, 3.70f, 3.75f, 3.79f, 3.83f, 3.87f, 3.92f, 3.98f, 4.08f, 4.20f};
+  const uint8_t percentuais[] = {0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+  const size_t quantidade = sizeof(tensoes) / sizeof(tensoes[0]);
+
+  if (volts <= tensoes[0]) return 0;
+  if (volts >= tensoes[quantidade - 1]) return 100;
+
+  for (size_t i = 1; i < quantidade; i++) {
+    if (volts <= tensoes[i]) {
+      float proporcao = (volts - tensoes[i - 1]) / (tensoes[i] - tensoes[i - 1]);
+      float estimativa = percentuais[i - 1]
+        + proporcao * (percentuais[i] - percentuais[i - 1]);
+      return (uint8_t)round(estimativa);
+    }
+  }
+
+  return 100;
+}
+
+void atualizarLeituraBateria() {
+  // P0.14 em LOW habilita o divisor interno de leitura da bateria.
+  digitalWrite(PIN_VBAT_ENABLE, LOW);
+  delay(10);
+
+  uint32_t soma = 0;
+  const uint8_t amostras = 16;
+  for (uint8_t i = 0; i < amostras; i++) {
+    soma += analogRead(PINO_LEITURA_BATERIA);
+    delayMicroseconds(250);
+  }
+
+  float mediaAdc = (float)soma / amostras;
+  float tensaoAdc = mediaAdc * 2.4f / 4095.0f;
+  // Divisor da placa: 1 MOhm no ramo superior e 510 kOhm no inferior.
+  float novaTensao = tensaoAdc * (1510.0f / 510.0f);
+  if (!leituraBateriaIniciada) {
+    tensaoBateria = novaTensao;
+    leituraBateriaIniciada = true;
+  } else {
+    // Suaviza pequenas oscilações do ADC e da carga instantânea do circuito.
+    tensaoBateria = 0.20f * novaTensao + 0.80f * tensaoBateria;
+  }
+
+  uint8_t percentualCalculado = estimarPercentualBateria(tensaoBateria);
+  // Passos de 5% representam melhor a precisão real de uma estimativa por tensão.
+  percentualBateria = min(100, ((percentualCalculado + 2) / 5) * 5);
+
+  usbConectado = (NRF_POWER->USBREGSTATUS & POWER_USBREGSTATUS_VBUSDETECT_Msk) != 0;
+  bateriaCarregando = usbConectado && digitalRead(PINO_STATUS_CARGA) == LOW;
+}
 
 // ============================================================
 //   FUNÇÕES DE ESTADO
@@ -238,6 +321,12 @@ void atualizarBuzzer() {
   static uint32_t ultimoPulso = 0;
   static bool ligado = false;
 
+  if (!SAIDAS_DE_ALARME_ATIVAS) {
+    digitalWrite(PINO_BUZZER, LOW);
+    ligado = false;
+    return;
+  }
+
   if (!escoltaAtivada || (!somHabilitado && !modoPanico)) {
     digitalWrite(PINO_BUZZER, LOW);
     ligado = false;
@@ -260,6 +349,36 @@ void atualizarBuzzer() {
     digitalWrite(PINO_BUZZER, ligado ? HIGH : LOW);
     ultimoPulso = millis();
   }
+}
+
+void atualizarLedStatus() {
+  // Vermelho é reservado exclusivamente para emergência.
+  if (modoPanico) {
+    definirLedRgb(pulsoLedAtivo(300, 150), false, false);
+    return;
+  }
+
+  // Espera intencional: lembrete azul muito discreto.
+  if (pausaIntencional) {
+    definirLedRgb(false, false, pulsoLedAtivo(5000, 100));
+    return;
+  }
+
+  // Sem vínculo: pulso azul indica que o dispositivo está procurando.
+  if (!clienteConectado) {
+    definirLedRgb(false, false, pulsoLedAtivo(1500, 120));
+    return;
+  }
+
+  // Amarelo (vermelho + verde) indica alcance reduzido.
+  if (estadoAtual == ATENCAO) {
+    bool ligado = pulsoLedAtivo(1000, 200);
+    definirLedRgb(ligado, ligado, false);
+    return;
+  }
+
+  // Protegido: pulso verde curto para economizar a bateria.
+  definirLedRgb(false, pulsoLedAtivo(3000, 100), false);
 }
 
 void lerBotaoEmergencia() {
@@ -404,15 +523,19 @@ void enviarStatus() {
   float distancia = estimarDistancia(rssiFiltrado);
 
   String json;
-  json.reserve(220);
+  json.reserve(210);
   json += "{\"rssi\":" + String(rssiMostrar);
   json += ",\"rssi_raw\":" + String(ultimoRssiCru);
   json += ",\"distancia_m\":" + String(distancia, 1);
   json += ",\"estado\":\"" + String(nomeEstado()) + "\"";
-  json += ",\"som_on\":" + String(somHabilitado ? "true" : "false");
+  json += ",\"som_on\":" + String((SAIDAS_DE_ALARME_ATIVAS && somHabilitado) ? "true" : "false");
   json += ",\"monitoramento_ativo\":" + String(escoltaAtivada ? "true" : "false");
   json += ",\"panico_ativo\":" + String(modoPanico ? "true" : "false");
-  json += ",\"gps_fix\":false,\"lat\":0.000000,\"lng\":0.000000}";
+  json += ",\"bateria_pct\":" + String(percentualBateria);
+  json += ",\"bateria_v\":" + String(tensaoBateria, 2);
+  json += ",\"carregando\":" + String(bateriaCarregando ? "true" : "false");
+  json += ",\"usb_conectado\":" + String(usbConectado ? "true" : "false");
+  json += "}";
 
   if (json.length() > 244) {
     Serial.println("[ERRO] Status BLE excedeu 244 bytes.");
@@ -427,14 +550,30 @@ void enviarStatus() {
 //   SETUP
 // ============================================================
 void setup() {
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+  definirLedRgb(false, false, false);
+
   pinMode(PINO_BUZZER, OUTPUT);
   digitalWrite(PINO_BUZZER, LOW);
   pinMode(PINO_BOTAO_EMERGENCIA, INPUT_PULLUP);
 
   // A XIAO permite selecionar 50 mA ou 100 mA para o carregamento.
-  // Mantemos 50 mA como escolha conservadora para a bateria de 180 mAh.
-  pinMode(P0_13, OUTPUT);
-  digitalWrite(P0_13, HIGH);
+  // Entrada em alta impedância seleciona cerca de 50 mA, escolha conservadora
+  // para a bateria de 180 mAh. LOW selecionaria cerca de 100 mA.
+  pinMode(PINO_CORRENTE_CARGA, INPUT);
+
+  // Habilita com segurança o divisor interno que leva a bateria ao ADC.
+  pinMode(PIN_VBAT_ENABLE, OUTPUT);
+  digitalWrite(PIN_VBAT_ENABLE, LOW);
+  pinMode(PINO_LEITURA_BATERIA, INPUT);
+  // A saída ~CHG do carregador é open-drain. O pull-up evita leitura falsa
+  // de "carregando" quando o USB está desconectado.
+  pinMode(PINO_STATUS_CARGA, INPUT_PULLUP);
+  analogReadResolution(12);
+  analogReference(AR_INTERNAL2V4);
+  atualizarLeituraBateria();
 
   Serial.begin(115200);
   uint32_t esperaSerial = millis();
@@ -510,5 +649,12 @@ void loop() {
     enviarStatus();
   }
 
+  static uint32_t ultimaLeituraBateria = 0;
+  if (millis() - ultimaLeituraBateria >= 5000) {
+    ultimaLeituraBateria = millis();
+    atualizarLeituraBateria();
+  }
+
   atualizarBuzzer();
+  atualizarLedStatus();
 }
