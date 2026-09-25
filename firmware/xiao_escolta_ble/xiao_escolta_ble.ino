@@ -30,9 +30,9 @@ const uint8_t PINO_LEITURA_BATERIA = PIN_VBAT;  // índice 6 -> P0.31 / AIN7_BAT
 const uint8_t PINO_CORRENTE_CARGA = 21;         // índice 21 -> P0.13 / HICHG
 const uint8_t PINO_STATUS_CARGA = 22;           // índice 22 -> P0.17 / ~CHG
 
-// Bloqueio temporario solicitado durante o teste de autonomia. A placa ainda
-// calcula e transmite os estados, mas o buzzer permanece sempre desligado.
-const bool SAIDAS_DE_ALARME_ATIVAS = false;
+// Operacao normal: atenção é visual; o buzzer fica reservado ao pânico,
+// à perda sustentada do vínculo e ao botão de emergência.
+const bool SAIDAS_DE_ALARME_ATIVAS = true;
 
 // ============================================================
 //   UUIDs BLE — idênticos aos usados pelo aplicativo
@@ -110,7 +110,11 @@ bool pulsoLedAtivo(uint32_t periodoMs, uint32_t duracaoMs) {
 
 const float EMA_ALFA = 0.30f;
 const uint32_t INTERVALO_AMOSTRA = 500;
-const uint8_t DEBOUNCE_ESTADO_AMOSTRAS = 6;
+// Atenção é apenas informativa; perigo precisa permanecer estável por mais
+// tempo para que uma oscilação comum do RSSI não dispare uma emergência.
+const uint8_t DEBOUNCE_ATENCAO_AMOSTRAS = 8;  // aproximadamente 4 s
+const uint8_t DEBOUNCE_PERIGO_AMOSTRAS = 16; // aproximadamente 8 s
+const uint8_t DEBOUNCE_RETORNO_AMOSTRAS = 4; // aproximadamente 2 s
 const uint8_t DEBOUNCE_DESCONEXAO_AMOSTRAS = 10;
 const uint32_t INTERVALO_NOTIFY = 1000;
 
@@ -304,7 +308,13 @@ void processarSinal(int rssiCru, bool conectado) {
     contadorEstado = 1;
   }
 
-  if (contadorEstado >= DEBOUNCE_ESTADO_AMOSTRAS) {
+  uint8_t amostrasNecessarias = candidatoEstado == PERIGO
+    ? DEBOUNCE_PERIGO_AMOSTRAS
+    : candidatoEstado == ATENCAO
+      ? DEBOUNCE_ATENCAO_AMOSTRAS
+      : DEBOUNCE_RETORNO_AMOSTRAS;
+
+  if (contadorEstado >= amostrasNecessarias) {
     estadoAtual = candidatoEstado;
     contadorEstado = 0;
     if (estadoAtual == PERIGO) {
@@ -327,22 +337,15 @@ void atualizarBuzzer() {
     return;
   }
 
-  if (!escoltaAtivada || (!somHabilitado && !modoPanico)) {
+  // A faixa amarela não aciona o buzzer: RSSI varia naturalmente com posição,
+  // corpo, móveis e interferência. O som fica reservado à emergência latched.
+  if (!escoltaAtivada || !modoPanico) {
     digitalWrite(PINO_BUZZER, LOW);
     ligado = false;
     return;
   }
 
-  uint32_t periodo;
-  if (modoPanico) {
-    periodo = 150;
-  } else if (estadoAtual == ATENCAO) {
-    periodo = 600;
-  } else {
-    digitalWrite(PINO_BUZZER, LOW);
-    ligado = false;
-    return;
-  }
+  const uint32_t periodo = 150;
 
   if (millis() - ultimoPulso >= periodo) {
     ligado = !ligado;

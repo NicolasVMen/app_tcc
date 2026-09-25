@@ -8,10 +8,11 @@ from docx.shared import Pt, RGBColor
 from docx.oxml.ns import qn
 
 
-ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE = ROOT / "CICTED" / "Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx"
-OUTPUT_IDENTIFIED = ROOT / "CICTED" / "Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx"
-OUTPUT_ANONYMOUS = ROOT / "CICTED" / "Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx"
+ROOT = Path(__file__).resolve().parents[2]
+CICTED_DIR = ROOT / "docs" / "cicted"
+TEMPLATE = CICTED_DIR / "Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx"
+OUTPUT_IDENTIFIED = CICTED_DIR / "Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx"
+OUTPUT_ANONYMOUS = CICTED_DIR / "Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx"
 
 TITLE = (
     "ESCOLTA UNITAU: PROTÓTIPO VESTÍVEL PARA MONITORAMENTO DE "

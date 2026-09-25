@@ -46,3 +46,10 @@ Não foi realizado descarregamento forçado até o corte da proteção da bateri
 3. Medir separadamente o consumo/autonomia no modo de espera.
 4. Restaurar as saídas de alerta e medir o consumo durante emergências em
    intervalos curtos e supervisionados.
+
+## Encerramento do modo de ensaio
+
+Em 17/09/2026, o bloqueio temporário das saídas foi removido. O aplicativo e o
+firmware da XIAO voltaram à operação normal, com buzzer, sirene, vibração e
+notificações habilitados conforme os estados e as preferências do sistema. Os
+próximos ensaios de alerta devem ser curtos e supervisionados.

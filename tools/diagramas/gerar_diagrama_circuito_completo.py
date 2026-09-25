@@ -2,8 +2,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-ROOT = Path(r"C:\Users\Nicolas Venciguerra\Desktop\app_tcc")
-OUT = ROOT / "docs" / "imagens_montagem" / "02-circuito-completo.png"
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "docs" / "produto" / "imagens_montagem" / "02-circuito-completo.png"
 
 W, H = 2000, 1250
 BG = "#F7F9FC"

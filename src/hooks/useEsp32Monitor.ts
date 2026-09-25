@@ -37,10 +37,9 @@ const MONITORING_INTENT_STORAGE_KEY = '@escolta_monitoring_intent';
 const MAX_SAVED_ALERTS = 200;
 const RECONNECT_INTERVAL_MS = 8000;
 const EMERGENCY_GRACE_MS = 5000;
-// Bloqueio temporario solicitado durante os testes de autonomia.
-// Os estados e registros continuam funcionando, mas nenhuma saida de alerta
-// (sirene, vibracao, notificacao critica ou e-mail) deve ser disparada.
-const ALERT_OUTPUTS_ENABLED = false;
+// Operacao normal: sirene, vibracao, notificacao critica e canal experimental
+// de e-mail acompanham os estados de alerta conforme as preferencias do app.
+const ALERT_OUTPUTS_ENABLED = true;
 
 export type NivelSinal = 'seguro' | 'aviso' | 'panico' | 'desconectado';
 

@@ -10,7 +10,7 @@ O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel 
 
 ## Estado atual
 
-_Atualizado em 9 de setembro de 2026._
+_Atualizado em 24 de setembro de 2026._
 
 - Aplicativo React Native com Expo SDK 54 e TypeScript.
 - Autenticação de acesso com Firebase.
@@ -29,9 +29,9 @@ O hardware vestível já utiliza a **Seeed Studio XIAO nRF52840 Sense**. O circu
 
 A bateria LiPo 3,7 V/180 mAh com proteção PCM/BMS já está ligada por conector, alimenta a XIAO e pode ser recarregada pela USB-C da placa. A leitura interna foi comparada com multímetro e apresentou diferença de apenas 0,01 V. O primeiro ensaio registrou 11 h 10 min de funcionamento entre 90% e 5%, com autonomia total preliminar projetada próxima de 13 horas.
 
-A próxima etapa é projetar e imprimir em 3D uma estrutura compacta que permita testar o protótipo no braço, usando passantes laterais para elástico ou velcro e mantendo acesso à USB-C, botão, LED, saída acústica e região da antena. O motor de vibração foi retirado do escopo atual para reduzir volume, consumo e complexidade de montagem.
+A primeira estrutura foi impressa e usada para revisar encaixes, passantes e retenções. A revisão atual da caixa compacta mantém acesso à USB-C, botão, LED, saída acústica e região da antena, e está pronta para uma nova impressão de validação. O motor de vibração foi retirado do escopo atual para reduzir volume, consumo e complexidade de montagem.
 
-> Durante o ensaio de autonomia, as saídas automáticas de alerta estão temporariamente bloqueadas no aplicativo e no firmware. Estados, LEDs, conexão, registros e telemetria continuam ativos. Esse bloqueio deverá ser removido antes dos ensaios finais de segurança.
+> O bloqueio temporário usado no ensaio de autonomia foi removido em 17 de setembro de 2026. O aplicativo e o firmware voltaram à operação normal, com buzzer, sirene, vibração e notificações de emergência ativos conforme o estado e as preferências.
 
 ### Situação do hardware
 
@@ -45,8 +45,9 @@ A próxima etapa é projetar e imprimir em 3D uma estrutura compacta que permita
 - [x] Executar o primeiro ensaio alimentado somente pela bateria.
 - [ ] Repetir o ensaio de autonomia para calcular média e variação.
 - [ ] Medir separadamente a autonomia em espera.
-- [ ] Definir dimensões e encaixes da estrutura vestível.
-- [ ] Imprimir e validar os modelos de pulseira e/ou broche.
+- [x] Definir dimensões e encaixes da estrutura vestível.
+- [x] Realizar a primeira impressão e registrar as correções necessárias.
+- [ ] Imprimir e validar a revisão compacta da caixa vestível.
 
 ## Navegação
 
@@ -67,34 +68,32 @@ flowchart LR
 
 O Telegram não integra mais o fluxo ativo porque um token dentro do aplicativo seria extraível. Uma evolução profissional de contatos de confiança deverá usar backend autenticado e notificações push.
 
-## Estrutura principal
+## Estrutura do repositório
 
 ```text
-src/
-├── context/
-│   └── AppPreferencesContext.tsx
-├── hooks/
-│   └── useEsp32Monitor.ts
-├── screens/
-│   ├── AlertsScreen.tsx
-│   ├── AuthScreen.tsx
-│   ├── DashboardScreen.tsx
-│   ├── ManualScreen.tsx
-│   ├── PatrolScreen.tsx       # Telemetria preservada, fora da navegação
-│   └── SettingsScreen.tsx
-├── services/
-│   ├── bleApi.ts
-│   └── firebaseConfig.ts
-└── theme.ts
+├── src/                         # Aplicativo React Native/Expo
+├── modules/escolta-sentinela/   # Serviço Android nativo de monitoração
+├── firmware/                    # Firmwares atual e legado
+│   ├── xiao_escolta_ble/
+│   └── esp32_escolta_ble/
+├── hardware/case_3d/            # Fonte OpenSCAD e STL atuais
+├── docs/
+│   ├── cicted/                  # Resumos e revisões do evento
+│   ├── produto/                 # Especificação, fluxos e diagramas
+│   ├── prototipo/               # Fotografias do hardware
+│   ├── tcc/                     # Texto acadêmico e modelos
+│   └── testes/                  # Relatórios e ensaios
+└── tools/                       # Utilitários de documentos e diagramas
 ```
 
 Os fluxos e critérios de experiência estão documentados em:
 
-- [`docs/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md`](docs/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md)
-- [`docs/FLUXOS_CENTRAL_SENTINELA.md`](docs/FLUXOS_CENTRAL_SENTINELA.md)
-- [`docs/imagens_montagem/01-transistor-resistores.png`](docs/imagens_montagem/01-transistor-resistores.png)
-- [`docs/imagens_montagem/02-circuito-completo.png`](docs/imagens_montagem/02-circuito-completo.png)
-- [`docs/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md`](docs/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md)
+- [`docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md`](docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md)
+- [`docs/produto/FLUXOS_CENTRAL_SENTINELA.md`](docs/produto/FLUXOS_CENTRAL_SENTINELA.md)
+- [`docs/produto/imagens_montagem/01-transistor-resistores.png`](docs/produto/imagens_montagem/01-transistor-resistores.png)
+- [`docs/produto/imagens_montagem/02-circuito-completo.png`](docs/produto/imagens_montagem/02-circuito-completo.png)
+- [`docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md`](docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md)
+- [`hardware/case_3d/PARA_IMPRIMIR_AGORA/`](hardware/case_3d/PARA_IMPRIMIR_AGORA/)
 
 ## Execução
 

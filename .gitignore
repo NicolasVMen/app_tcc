@@ -19,3 +19,11 @@ veda
 *.sln
 *.sw?
 .codex-canva-review/
+/local_tools/
+**/__pycache__/
+*.py[cod]
+/firmware/**/build*/
+/hardware/case_3d/historico/
+/hardware/case_3d/verificacoes/imagens/
+/hardware/case_3d/verificacoes/malhas/
+**/.conferencia_*.png
