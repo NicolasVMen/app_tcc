@@ -1,0 +1,58 @@
+[
+  {
+    "resource": "/Image48",
+    "shape": 55,
+    "pixels": [
+      4000,
+      3000
+    ]
+  },
+  {
+    "resource": "/Image49",
+    "shape": 57,
+    "pixels": [
+      4000,
+      3000
+    ]
+  },
+  {
+    "resource": "/Image43",
+    "shape": 44,
+    "pixels": [
+      821,
+      1599
+    ]
+  },
+  {
+    "resource": "/Image44",
+    "shape": 47,
+    "pixels": [
+      820,
+      1600
+    ]
+  },
+  {
+    "resource": "/Image45",
+    "shape": 50,
+    "pixels": [
+      816,
+      1600
+    ]
+  },
+  {
+    "resource": "/Image50",
+    "shape": 60,
+    "pixels": [
+      1168,
+      1347
+    ]
+  },
+  {
+    "resource": "/Image51",
+    "shape": 63,
+    "pixels": [
+      1086,
+      1448
+    ]
+  }
+]

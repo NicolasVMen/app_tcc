@@ -4,8 +4,23 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
 class EscoltaSentinelaModule : Module() {
+  private val heartbeatCallback: (Long) -> Unit = { emittedAt ->
+    sendEvent("onProtectionHeartbeat", mapOf("emittedAt" to emittedAt))
+  }
+
   override fun definition() = ModuleDefinition {
     Name("EscoltaSentinela")
+    Events("onProtectionHeartbeat")
+    Constant("protectionHeartbeatAvailable") {
+      appContext.reactContext?.let { ValidatedMonitorPolicy.isEnabled(it) } == true
+    }
+    OnStartObserving {
+      if (appContext.reactContext?.let { ValidatedMonitorPolicy.isEnabled(it) } == true) {
+        EscoltaSentinelaService.heartbeatCallback = heartbeatCallback
+      }
+    }
+    OnStopObserving { releaseHeartbeatCallback() }
+    OnDestroy { releaseHeartbeatCallback() }
 
     AsyncFunction("startAsync") { title: String, body: String ->
       val context = appContext.reactContext
@@ -26,7 +41,7 @@ class EscoltaSentinelaModule : Module() {
     }
 
     AsyncFunction("armEmergencyAsync") {
-        childName: String, delayMs: Long, alertsEnabled: Boolean, vibrationEnabled: Boolean ->
+        childName: String, delayMs: Long, alertsEnabled: Boolean, vibrationEnabled: Boolean, reason: String ->
       val context = appContext.reactContext
         ?: throw IllegalStateException("Contexto Android indisponível")
       EscoltaSentinelaService.armEmergency(
@@ -34,7 +49,8 @@ class EscoltaSentinelaModule : Module() {
         childName,
         delayMs,
         alertsEnabled,
-        vibrationEnabled
+        vibrationEnabled,
+        reason
       )
     }
 
@@ -56,6 +72,16 @@ class EscoltaSentinelaModule : Module() {
 
     AsyncFunction<Boolean>("isEmergencyActiveAsync") {
       return@AsyncFunction EscoltaSentinelaService.emergencyActive
+    }
+
+    AsyncFunction<Boolean>("isAlarmPlayingAsync") {
+      return@AsyncFunction EscoltaSentinelaService.alarmPlaying
+    }
+  }
+
+  private fun releaseHeartbeatCallback() {
+    if (EscoltaSentinelaService.heartbeatCallback === heartbeatCallback) {
+      EscoltaSentinelaService.heartbeatCallback = null
     }
   }
 }

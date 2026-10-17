@@ -2,7 +2,8 @@
   "expo": {
     "name": "Escolta UNITAU",
     "slug": "escolta-unitau",
-    "version": "1.0.0",
+    "scheme": "escolta",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -20,17 +21,17 @@
     },
     "plugins": [
       [
-        "@config-plugins/react-native-ble-plx",
+        "react-native-ble-plx",
         {
           "isBackgroundEnabled": true,
           "modes": [
-            "peripheral",
             "central"
           ],
           "bluetoothAlwaysPermission": "O app precisa de Bluetooth para conectar ao Escolta UNITAU"
         }
       ],
       "expo-font",
+      "./tools/plugins/with-test-build.cjs",
       [
         "expo-notifications",
         {
@@ -41,11 +42,18 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Se você ativar essa opção, o protótipo poderá incluir a localização deste celular no início de uma emergência."
+          "locationWhenInUsePermission": "Se você ativar essa opção, o Escolta poderá incluir a localização deste celular no início de uma emergência."
         }
       ]
     ],
     "android": {
+      "versionCode": 2,
+      "allowBackup": false,
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0F172A"

@@ -1,0 +1,1028 @@
+{
+  "date": "2026-10-17",
+  "scope": "fontes de entrada e src; não prova execução em aparelho",
+  "files": [
+    {
+      "file": "App.tsx",
+      "lines": 330,
+      "sha256": "56cbc282110777be20a1477740afb2e06b402b557ea0683fcce901bede46f8b0",
+      "localImports": [
+        {
+          "specifier": "./src/services/nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "./src/services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "./src/services/firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "./src/screens/AuthScreen",
+          "resolved": "src/screens/AuthScreen.tsx"
+        },
+        {
+          "specifier": "./src/screens/DashboardScreen",
+          "resolved": "src/screens/DashboardScreen.tsx"
+        },
+        {
+          "specifier": "./src/screens/ManualScreen",
+          "resolved": "src/screens/ManualScreen.tsx"
+        },
+        {
+          "specifier": "./src/screens/AlertsScreen",
+          "resolved": "src/screens/AlertsScreen.tsx"
+        },
+        {
+          "specifier": "./src/screens/SettingsScreen",
+          "resolved": "src/screens/SettingsScreen.tsx"
+        },
+        {
+          "specifier": "./src/screens/ProximityTrialModal",
+          "resolved": "src/screens/ProximityTrialModal.tsx"
+        },
+        {
+          "specifier": "./src/hooks/useEsp32Monitor",
+          "resolved": "src/hooks/useEsp32Monitor.ts"
+        },
+        {
+          "specifier": "./src/hooks/usePersistentEsp32Monitor",
+          "resolved": "src/hooks/usePersistentEsp32Monitor.ts"
+        },
+        {
+          "specifier": "./src/context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "./src/theme",
+          "resolved": "src/theme.ts"
+        },
+        {
+          "specifier": "./src/services/notificationService",
+          "resolved": "src/services/notificationService.ts"
+        },
+        {
+          "specifier": "./assets/icon.png",
+          "resolved": "assets/icon.png"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "expo-font",
+        "firebase/auth",
+        "react",
+        "react-native",
+        "react-native-safe-area-context"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/context/AppPreferencesContext.tsx",
+      "lines": 131,
+      "sha256": "4fdd2a54b82aa7eb53bd821badc32ef8876302ffde5161f74237e4c1c9555466",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../services/firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "firebase/auth",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/hooks/useEsp32Monitor.ts",
+      "lines": 1100,
+      "sha256": "b167232bce84e11368421fdc1ba6e7839e72bd99927edaae88ccbd09f44ccaa8",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../utils/telemetry",
+          "resolved": "src/utils/telemetry.ts"
+        },
+        {
+          "specifier": "../utils/asyncTimeout",
+          "resolved": "src/utils/asyncTimeout.ts"
+        },
+        {
+          "specifier": "../services/emergencyEmail",
+          "resolved": "src/services/emergencyEmail.ts"
+        },
+        {
+          "specifier": "../services/blePermissions",
+          "resolved": "src/services/blePermissions.ts"
+        },
+        {
+          "specifier": "../services/nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "../utils/safetyConfirmation",
+          "resolved": "src/utils/safetyConfirmation.ts"
+        },
+        {
+          "specifier": "../services/bleApi",
+          "resolved": "src/services/bleApi.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../utils/monitorScope",
+          "resolved": "src/utils/monitorScope.ts"
+        },
+        {
+          "specifier": "../services/backgroundSentinel",
+          "resolved": "src/services/backgroundSentinel.ts"
+        },
+        {
+          "specifier": "../services/notificationService",
+          "resolved": "src/services/notificationService.ts"
+        },
+        {
+          "specifier": "../../assets/alert_tone.wav",
+          "resolved": "assets/alert_tone.wav"
+        }
+      ],
+      "externalImports": [
+        "expo-av",
+        "expo-location",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/hooks/usePersistentEsp32Monitor.ts",
+      "lines": 16,
+      "sha256": "e69dcc38f9e36256b8e85eaa0568871e176e098e0a691d0b29508da6757b80d0",
+      "localImports": [
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../services/persistentMonitor",
+          "resolved": "src/services/persistentMonitor.ts"
+        }
+      ],
+      "externalImports": [
+        "react"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/AlertsScreen.tsx",
+      "lines": 208,
+      "sha256": "cde2fabf8ec7fb8bdbf227b76a20a5dbe87301dcff617303077ba2222eb9d822",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../hooks/useEsp32Monitor",
+          "resolved": "src/hooks/useEsp32Monitor.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/AuthScreen.tsx",
+      "lines": 234,
+      "sha256": "0923c70825d91976b3949549c50909a2e92927ba4b27cc1d3dd106caf6a652ec",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../services/firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        },
+        {
+          "specifier": "../utils/authValidation",
+          "resolved": "src/utils/authValidation.ts"
+        },
+        {
+          "specifier": "../services/googleAuth",
+          "resolved": "src/services/googleAuth.ts"
+        },
+        {
+          "specifier": "../services/nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "../../assets/icon.png",
+          "resolved": "assets/icon.png"
+        },
+        {
+          "specifier": "../../assets/google-g.png",
+          "resolved": "assets/google-g.png"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "firebase/auth",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/DashboardScreen.tsx",
+      "lines": 408,
+      "sha256": "2cfdb384f298db182547946f9d341ffe2c5e86659d4a3b98966d5fd378c0ede3",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../hooks/useEsp32Monitor",
+          "resolved": "src/hooks/useEsp32Monitor.ts"
+        },
+        {
+          "specifier": "../services/bleApi",
+          "resolved": "src/services/bleApi.ts"
+        },
+        {
+          "specifier": "../services/nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/ManualScreen.tsx",
+      "lines": 139,
+      "sha256": "7fc48624ed1849e6afdfc18f4ded5687b1e451934295c172f41446071141ab8c",
+      "localImports": [
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/PatrolScreen.tsx",
+      "lines": 203,
+      "sha256": "17f465626cfb43e6c018eb8b0fb72cdc3da941fd60a732f09f735a499140e554",
+      "localImports": [
+        {
+          "specifier": "../hooks/useEsp32Monitor",
+          "resolved": "src/hooks/useEsp32Monitor.ts"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": false
+    },
+    {
+      "file": "src/screens/ProximityTrialModal.tsx",
+      "lines": 341,
+      "sha256": "2e0f8dc5cab6116f1a0027ae715c0e385fd76e55636a6151aa7987a7762293ac",
+      "localImports": [
+        {
+          "specifier": "../services/trialHistory",
+          "resolved": "src/services/trialHistory.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        },
+        {
+          "specifier": "../services/bleApi",
+          "resolved": "src/services/bleApi.ts"
+        },
+        {
+          "specifier": "../services/proximityExport",
+          "resolved": "src/services/proximityExport.ts"
+        },
+        {
+          "specifier": "../utils/proximityExport",
+          "resolved": "src/utils/proximityExport.ts"
+        },
+        {
+          "specifier": "../utils/asyncTimeout",
+          "resolved": "src/utils/asyncTimeout.ts"
+        },
+        {
+          "specifier": "../utils/proximityTrial",
+          "resolved": "src/utils/proximityTrial.ts"
+        }
+      ],
+      "externalImports": [
+        "react",
+        "react-native",
+        "react-native-safe-area-context"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/SettingsScreen.tsx",
+      "lines": 630,
+      "sha256": "581cd04120b0c5161a39bfe98ff1d04046acabdec9990baad9cf931588515b03",
+      "localImports": [
+        {
+          "specifier": "../services/accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../services/firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        },
+        {
+          "specifier": "../utils/authValidation",
+          "resolved": "src/utils/authValidation.ts"
+        },
+        {
+          "specifier": "../services/emergencyEmail",
+          "resolved": "src/services/emergencyEmail.ts"
+        },
+        {
+          "specifier": "../services/googleAuth",
+          "resolved": "src/services/googleAuth.ts"
+        },
+        {
+          "specifier": "../services/nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "./SystemDiagnosticsModal",
+          "resolved": "src/screens/SystemDiagnosticsModal.tsx"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "firebase/auth",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/screens/SystemDiagnosticsModal.tsx",
+      "lines": 463,
+      "sha256": "d307e3cb710f1b8edf2f94c2985b6cdee04fa0150771df732477fb9cac21ab4c",
+      "localImports": [
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../services/notificationService",
+          "resolved": "src/services/notificationService.ts"
+        },
+        {
+          "specifier": "../theme",
+          "resolved": "src/theme.ts"
+        }
+      ],
+      "externalImports": [
+        "@expo/vector-icons",
+        "expo-location",
+        "expo-notifications",
+        "react",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/accountStorage.ts",
+      "lines": 102,
+      "sha256": "8429c88102b3817d3e3b84a12c305b54fe2d9d98696b3c39096c5307ff786583",
+      "localImports": [],
+      "externalImports": [
+        "@react-native-async-storage/async-storage"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/backgroundSentinel.ts",
+      "lines": 127,
+      "sha256": "55d5b0d91f49397c3db8ba7411932c928ccbb93caa3e19936b229408c339e9c3",
+      "localImports": [
+        {
+          "specifier": "../utils/asyncTimeout",
+          "resolved": "src/utils/asyncTimeout.ts"
+        },
+        {
+          "specifier": "./blePermissions",
+          "resolved": "src/services/blePermissions.ts"
+        },
+        {
+          "specifier": "./nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        }
+      ],
+      "externalImports": [
+        "expo-modules-core",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/bleApi.ts",
+      "lines": 419,
+      "sha256": "db3752a2615e6927fe42f2803f3e3916d16895e57a0cbf6ff8f2512cdd4c972b",
+      "localImports": [
+        {
+          "specifier": "../utils/proximityTrial",
+          "resolved": "src/utils/proximityTrial.ts"
+        },
+        {
+          "specifier": "../utils/telemetry",
+          "resolved": "src/utils/telemetry.ts"
+        },
+        {
+          "specifier": "../utils/asyncTimeout",
+          "resolved": "src/utils/asyncTimeout.ts"
+        },
+        {
+          "specifier": "./blePermissions",
+          "resolved": "src/services/blePermissions.ts"
+        },
+        {
+          "specifier": "./backgroundSentinel",
+          "resolved": "src/services/backgroundSentinel.ts"
+        },
+        {
+          "specifier": "./nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "../utils/safetyConfirmation",
+          "resolved": "src/utils/safetyConfirmation.ts"
+        }
+      ],
+      "externalImports": [
+        "buffer",
+        "react-native",
+        "react-native-ble-plx"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/blePermissions.ts",
+      "lines": 40,
+      "sha256": "5776ff374eb8c4a0eb8a3a35172a71c1bf5749706f68d5fc7f58525a13562c7f",
+      "localImports": [],
+      "externalImports": [
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/emergencyEmail.ts",
+      "lines": 30,
+      "sha256": "57ab51d318fdf7db5a621657f079f8bd614c81388ee68d033c7b38f8cb472fdf",
+      "localImports": [
+        {
+          "specifier": "../utils/authValidation",
+          "resolved": "src/utils/authValidation.ts"
+        }
+      ],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/firebaseConfig.ts",
+      "lines": 37,
+      "sha256": "b4f4453e5945f2f8033b0165c72814f49e31e54a65e8ca0b84b4f67197a145cb",
+      "localImports": [
+        {
+          "specifier": "./nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "./firebaseEnvironment",
+          "resolved": "src/services/firebaseEnvironment.ts"
+        }
+      ],
+      "externalImports": [
+        "@react-native-async-storage/async-storage",
+        "firebase/app",
+        "firebase/auth"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/firebaseEnvironment.ts",
+      "lines": 31,
+      "sha256": "affba86c6df714c685661b6b95622c5369e294ef04008c107ae22b222163fe28",
+      "localImports": [],
+      "externalImports": [
+        "firebase/app"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/googleAuth.ts",
+      "lines": 34,
+      "sha256": "adf5672430038c520f06058aca8fb00e6b94c0f1892b9a17537dececfb1de27e",
+      "localImports": [
+        {
+          "specifier": "./firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "./nativeIdentity",
+          "resolved": "src/services/nativeIdentity.ts"
+        },
+        {
+          "specifier": "./firebaseEnvironment",
+          "resolved": "src/services/firebaseEnvironment.ts"
+        }
+      ],
+      "externalImports": [
+        "firebase/auth",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/nativeIdentity.ts",
+      "lines": 20,
+      "sha256": "e83766cc6da3735ae8ecae3e29ed868f4b6a871b85e2db9a2b6ab98205eb4268",
+      "localImports": [],
+      "externalImports": [
+        "expo-modules-core"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/notificationService.ts",
+      "lines": 161,
+      "sha256": "69735f4c6c3639f83c9ee9c3201394cb75ba1b834319fec015669e14bb221ca7",
+      "localImports": [],
+      "externalImports": [
+        "expo-notifications",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/persistentMonitor.ts",
+      "lines": 74,
+      "sha256": "6b59e331e7197750e620463e116a0666d659d9b30014cb14c2f88775cc836040",
+      "localImports": [
+        {
+          "specifier": "./firebaseConfig",
+          "resolved": "src/services/firebaseConfig.ts"
+        },
+        {
+          "specifier": "./accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../context/AppPreferencesContext",
+          "resolved": "src/context/AppPreferencesContext.tsx"
+        },
+        {
+          "specifier": "../hooks/useEsp32Monitor",
+          "resolved": "src/hooks/useEsp32Monitor.ts"
+        },
+        {
+          "specifier": "../utils/monitorScope",
+          "resolved": "src/utils/monitorScope.ts"
+        }
+      ],
+      "externalImports": [
+        "firebase/auth"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/proximityExport.ts",
+      "lines": 51,
+      "sha256": "60b0c87c1226b816b3a35d13da25bcfeac740f56b5fa507321a53d51b81069a4",
+      "localImports": [
+        {
+          "specifier": "../utils/asyncTimeout",
+          "resolved": "src/utils/asyncTimeout.ts"
+        },
+        {
+          "specifier": "../utils/proximityExport",
+          "resolved": "src/utils/proximityExport.ts"
+        },
+        {
+          "specifier": "../utils/proximityTrial",
+          "resolved": "src/utils/proximityTrial.ts"
+        }
+      ],
+      "externalImports": [
+        "expo-file-system/legacy",
+        "expo-modules-core",
+        "expo-sharing",
+        "react-native"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/services/trialHistory.ts",
+      "lines": 31,
+      "sha256": "aaca875b348e7b665bea425175ecfa01f1c5bdb73648218a3cca6831eb6fa580",
+      "localImports": [
+        {
+          "specifier": "./accountStorage",
+          "resolved": "src/services/accountStorage.ts"
+        },
+        {
+          "specifier": "../utils/proximityTrial",
+          "resolved": "src/utils/proximityTrial.ts"
+        }
+      ],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/theme.ts",
+      "lines": 90,
+      "sha256": "5fae7ec8d7bd2da2801c3b44f47612f3e43fbbd3fadcec1ff0f8f4b8b5297b7f",
+      "localImports": [],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/asyncTimeout.ts",
+      "lines": 12,
+      "sha256": "e40d90bc4351c63669b58bb33e91d224bdd15538534dcdda03d9897e2d7c357d",
+      "localImports": [],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/authValidation.ts",
+      "lines": 49,
+      "sha256": "fc666e882a3bbbf96a25982a2b3152825c48ae19c92a3b65419909c182a7ac7c",
+      "localImports": [],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/monitorScope.ts",
+      "lines": 135,
+      "sha256": "99a18197edfd89a61d24bf45a915fef2bc62c88765521fa27f4f68e2a18d84a5",
+      "localImports": [],
+      "externalImports": [
+        "react"
+      ],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/proximityExport.ts",
+      "lines": 64,
+      "sha256": "f390d08f5f3601167f14c3321b4a696c83f94689ff82d8d32298807d653ecc44",
+      "localImports": [
+        {
+          "specifier": "./proximityTrial",
+          "resolved": "src/utils/proximityTrial.ts"
+        }
+      ],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/proximityTrial.ts",
+      "lines": 157,
+      "sha256": "f2f6470cbc2819579b2e5e8e7c8016406a9acca860e4d7af77cd39487efd66f0",
+      "localImports": [],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/safetyConfirmation.ts",
+      "lines": 32,
+      "sha256": "a4e0e973c76eee63dc67f105220a71c1f90b56f2335cc2de22361bda3c61ca27",
+      "localImports": [
+        {
+          "specifier": "../services/bleApi",
+          "resolved": "src/services/bleApi.ts"
+        }
+      ],
+      "externalImports": [],
+      "reachableFromApp": true
+    },
+    {
+      "file": "src/utils/telemetry.ts",
+      "lines": 13,
+      "sha256": "fae1436fe51244bf454861dd8438764a163c700c18ee50d665301f2c02c84145",
+      "localImports": [],
+      "externalImports": [],
+      "reachableFromApp": true
+    }
+  ],
+  "counts": {
+    "sources": 33,
+    "reachable": 32
+  },
+  "supportingFiles": [
+    {
+      "file": "android/app/build.gradle",
+      "bytes": 10838,
+      "sha256": "eadc5d0edbe7bfb245b0bbc1aa1c9e2d3397aadc06337e5e364bb62f049d3895"
+    },
+    {
+      "file": "android/app/src/main/AndroidManifest.xml",
+      "bytes": 3146,
+      "sha256": "f0831a7d8cc9f4a903c9708ddb662d9a6e64056aa77cf9ed3f30ade3baaf2d53"
+    },
+    {
+      "file": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainActivity.kt",
+      "bytes": 2199,
+      "sha256": "808a7d386bfd0cae5b406ff432fa5356cbb15f130c5478ad028c9c3858d3605e"
+    },
+    {
+      "file": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainApplication.kt",
+      "bytes": 2042,
+      "sha256": "22600486e93f763b510260fef6093d42008b6541630c040dc66bf78eb6e32647"
+    },
+    {
+      "file": "app.json",
+      "bytes": 2053,
+      "sha256": "8bd388ed53020034bed6c0ae95511de00c9ccd26bb71eb918586cbc320930d08"
+    },
+    {
+      "file": "assets/alert_tone.wav",
+      "bytes": 88244,
+      "sha256": "9f5ffd851c96f007e38d28856fe8af4f38e8052031d27e657176e7dd3c2bc3bf"
+    },
+    {
+      "file": "assets/google-g.png",
+      "bytes": 33661,
+      "sha256": "d1ce9c2af0b10a7333abc99bc706f9a6a199e5b65bf3e3009624f076b8638e6a"
+    },
+    {
+      "file": "assets/icon.png",
+      "bytes": 793120,
+      "sha256": "525b2886128a6d6e569035d046f027ae5b4ba16e62ec8c19e21260920cb231da"
+    },
+    {
+      "file": "babel.config.js",
+      "bytes": 107,
+      "sha256": "2a9be300c5e2ebad50c695a426a52af66db224a092e1308cf2689daf4061acb9"
+    },
+    {
+      "file": "eas.json",
+      "bytes": 635,
+      "sha256": "a62b7afe1ff436233fb9eb17223872ee56fc6a15ad4d97b0e5c5a8e4de5b6219"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/CommunicationWatchdog.h",
+      "bytes": 697,
+      "sha256": "c5bcd9073e0552752f9717f6b19c7fd33bd405e7c982acab1bfc1623f1027bd3"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/ProximityDistance.h",
+      "bytes": 1478,
+      "sha256": "d7ac7c38fda8a75c3f5d48a47f03287754dd62386cac75edcc96f689c2c42d83"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/ProximitySignal.h",
+      "bytes": 7015,
+      "sha256": "ffc4473056143647e2be1de95d603e3ffd9398547380dddaad09d2ee9c4ab892"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/RadioDiagnosticAddress.h",
+      "bytes": 876,
+      "sha256": "ea4f8e568816e55c60fe024c6d4368ea79bbca3a3980f31dc2bf92aaf69bac13"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/RadioDiagnostics.h",
+      "bytes": 3588,
+      "sha256": "52ecc7113f3ca8d007efb8a526cc7a2cb54522d598a8c5842420673e73eb5775"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/RadioPowerExperiment.h",
+      "bytes": 3804,
+      "sha256": "7cc502ddf1bab6d161ef750975c35926b78741992996f2d6ae145a59684f19c3"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/RadioPowerPolicy.h",
+      "bytes": 546,
+      "sha256": "08e0f11f873798ef3e5b6b85ec5e4dde743dde3aab61f58b2e84771043569d5c"
+    },
+    {
+      "file": "firmware/xiao_escolta_ble/xiao_escolta_ble.ino",
+      "bytes": 25859,
+      "sha256": "fdecc264909835cac7bcc525bb6f10e7ad6cb1658155a34ab55db227746272b0"
+    },
+    {
+      "file": "modules/escolta-auth/android/build.gradle",
+      "bytes": 537,
+      "sha256": "5bf08d0949824418bd28e16a01f2403f03746f38ec4586312098863ddfdaa30d"
+    },
+    {
+      "file": "modules/escolta-auth/android/src/main/AndroidManifest.xml",
+      "bytes": 72,
+      "sha256": "343d5be1ac17cdd45d1a2f2ddc616c509290e655869125a9422a96d88aa66066"
+    },
+    {
+      "file": "modules/escolta-auth/android/src/main/java/expo/modules/escoltaauth/EscoltaAuthModule.kt",
+      "bytes": 4247,
+      "sha256": "1b8bada893c3273275e1fa73d47e76d96eb2b796da6195ec182558770da56c8a"
+    },
+    {
+      "file": "modules/escolta-auth/expo-module.config.json",
+      "bytes": 107,
+      "sha256": "a49b11d217a2a881e7ae4e80396f2be905abe643a1ca503c4e3f7ec50b98a6e4"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/build.gradle",
+      "bytes": 252,
+      "sha256": "b46ba88970af1a50412c09e8bd45e924263192c5cf2bd7306fe59f0231ec9a7e"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/src/main/AndroidManifest.xml",
+      "bytes": 803,
+      "sha256": "7f87913407bae5aaec246906a74d03c49db48409510ed7df9b8a6fb8392cc0be"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaModule.kt",
+      "bytes": 3014,
+      "sha256": "778a73eafdb6689b79aa1e42aabd4d32e3eb73fd3d636b0c2c8136a8a07cd15a"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt",
+      "bytes": 18317,
+      "sha256": "060e41241799e33bc76ca6e38bc363ae78362b17ad9fdc0d6a5ad748730c3d17"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/ValidatedMonitorPolicy.kt",
+      "bytes": 571,
+      "sha256": "f503697839c6b75d440b1a2480bdc318545fc4206947793e0b31d9e6256b201e"
+    },
+    {
+      "file": "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav",
+      "bytes": 88244,
+      "sha256": "9f5ffd851c96f007e38d28856fe8af4f38e8052031d27e657176e7dd3c2bc3bf"
+    },
+    {
+      "file": "modules/escolta-sentinela/expo-module.config.json",
+      "bytes": 123,
+      "sha256": "787f17f60bcaad7eca24029c88201c69989b2c9bb381b14fca1a7070e5b5a14c"
+    },
+    {
+      "file": "package-lock.json",
+      "bytes": 375930,
+      "sha256": "b13976a2ac5e14898d8cadf101aaab4fd4a78f801b8cd1e63a141022f0338f27"
+    },
+    {
+      "file": "package.json",
+      "bytes": 1378,
+      "sha256": "d8c4df7a72269acc4cbb75a10a87fb92717fa6a728fd8892d45406cbd8d48e83"
+    },
+    {
+      "file": "tools/android/standalone-test/AndroidManifest.xml",
+      "bytes": 414,
+      "sha256": "072c30c838ec24051b1f91f03c09b9d2d9762d215ba249122de372bb35dc8786"
+    },
+    {
+      "file": "tools/auditoria/verificar_candidato_android.cjs",
+      "bytes": 6456,
+      "sha256": "d3bc66a1758698438d5b1e59120f19b824828cff7ccc502e5a5d9c22ed77d3aa"
+    },
+    {
+      "file": "tools/build-android.ps1",
+      "bytes": 4051,
+      "sha256": "d2d26371668baf7a9f9b33a2fc27f3f434dfdd77e62881c5bc25504bd2e57433"
+    },
+    {
+      "file": "tools/plugins/with-test-build.cjs",
+      "bytes": 4897,
+      "sha256": "aa6ddeef8f1f15025bd937e5b1ae2e0dbcf788db7d093cb3ad3851be69a27091"
+    },
+    {
+      "file": "tsconfig.json",
+      "bytes": 85,
+      "sha256": "712583ff9cdb4b4e4f9b000a4a56d68db8dc1921cbfbc36d490a3a9f2be3dd72"
+    }
+  ],
+  "unresolved": [],
+  "promotion": {
+    "method": "inspeção estática das condições Kotlin; não executa Android",
+    "nativeStillTestOnly": false,
+    "matrix": [
+      {
+        "testPackage": false,
+        "validatedMetadata": false,
+        "jsValidated": false,
+        "nativeHeartbeatAccordingToCurrentGuard": false
+      },
+      {
+        "testPackage": false,
+        "validatedMetadata": true,
+        "jsValidated": true,
+        "nativeHeartbeatAccordingToCurrentGuard": true
+      },
+      {
+        "testPackage": true,
+        "validatedMetadata": false,
+        "jsValidated": true,
+        "nativeHeartbeatAccordingToCurrentGuard": true
+      },
+      {
+        "testPackage": true,
+        "validatedMetadata": true,
+        "jsValidated": true,
+        "nativeHeartbeatAccordingToCurrentGuard": true
+      }
+    ]
+  },
+  "firmwareStaleSignal": {
+    "method": "inspeção de ligação W1; comportamento temporal testado em C++ separado, não emula rádio",
+    "optInOnly": true,
+    "beforeMissingReadReturn": true,
+    "variant": "xiao-p5-r4-d1-k2-w1",
+    "timeoutMs": 8000
+  },
+  "trialWriteAccountRace": {
+    "method": "callback finish, TrialHistoryStore e accountStorage reais; contas e atraso simulados",
+    "originAccount": "A",
+    "accountBeforeQueueDrain": "B",
+    "actualStoredKey": "@escolta_proximity_trials_v1:uid:A",
+    "crossedAccount": false
+  }
+}
+

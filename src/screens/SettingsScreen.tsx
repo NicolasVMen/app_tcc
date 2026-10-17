@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,18 +13,23 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage, { subscribeAccountStorage } from '../services/accountStorage';
 import { signOut } from 'firebase/auth';
 
 import { auth } from '../services/firebaseConfig';
 import { AppPreferences, useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha, ThemeMode } from '../theme';
+import { isValidEmail, normalizeEmail } from '../utils/authValidation';
+import { canSendEmergencyEmail, sendExperimentalEmail } from '../services/emergencyEmail';
+import { clearGoogleCredentialState } from '../services/googleAuth';
+import { APP_DISPLAY_NAME, INTERNAL_TOOLS_ENABLED } from '../services/nativeIdentity';
 import SystemDiagnosticsModal, { DiagnosticsMonitorSnapshot } from './SystemDiagnosticsModal';
 
 interface UserProfile {
   nomeResponsavel: string;
   nomeCrianca: string;
   emailEmergencia?: string;
+  emailAlertsEnabled?: boolean;
   [key: string]: unknown;
 }
 
@@ -32,6 +37,7 @@ const EMPTY_PROFILE: UserProfile = {
   nomeResponsavel: '',
   nomeCrianca: '',
   emailEmergencia: '',
+  emailAlertsEnabled: false,
 };
 
 export default function SettingsScreen({
@@ -45,6 +51,7 @@ export default function SettingsScreen({
   onResumeMonitoring,
   diagnosticsMonitor,
   onTestLocalAlert,
+  onOpenProximityTrial,
 }: {
   onProfileUpdated?: (profile: UserProfile) => void;
   onBeforeLogout?: () => Promise<void>;
@@ -56,6 +63,7 @@ export default function SettingsScreen({
   onResumeMonitoring: () => Promise<void>;
   diagnosticsMonitor: DiagnosticsMonitorSnapshot;
   onTestLocalAlert: () => Promise<void>;
+  onOpenProximityTrial: () => void;
 }) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -68,6 +76,9 @@ export default function SettingsScreen({
   const [nameInput, setNameInput] = useState('');
   const [childInput, setChildInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
+  const [testingEmail, setTestingEmail] = useState(false);
+  const [emailTestStatus, setEmailTestStatus] = useState('');
+  const emailTestBusy = useRef(false);
   const [versionTaps, setVersionTaps] = useState(0);
   const [showAcademic, setShowAcademic] = useState(false);
   const [showDiagnostics, setShowDiagnostics] = useState(false);
@@ -76,8 +87,13 @@ export default function SettingsScreen({
     try {
       const raw = await AsyncStorage.getItem('@escolta_user_profile');
       if (raw) {
-        const parsed = JSON.parse(raw) as UserProfile;
-        const normalized = { ...EMPTY_PROFILE, ...parsed };
+        const parsed = JSON.parse(raw);
+        const normalized: UserProfile = { ...EMPTY_PROFILE, ...parsed,
+          nomeResponsavel: typeof parsed?.nomeResponsavel === 'string' ? parsed.nomeResponsavel : '',
+          nomeCrianca: typeof parsed?.nomeCrianca === 'string' ? parsed.nomeCrianca : '',
+          emailEmergencia: typeof parsed?.emailEmergencia === 'string' ? parsed.emailEmergencia : '',
+          emailAlertsEnabled: parsed?.emailAlertsEnabled === true,
+        };
         setProfile(normalized);
         setNameInput(normalized.nomeResponsavel || '');
         setChildInput(normalized.nomeCrianca || '');
@@ -87,7 +103,10 @@ export default function SettingsScreen({
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadProfile(); }, [loadProfile]);
+  useEffect(() => {
+    loadProfile();
+    return subscribeAccountStorage((key) => { if (key === '@escolta_user_profile') loadProfile(); });
+  }, [loadProfile]);
 
   useEffect(() => {
     if (!showDiagnostics) return;
@@ -131,7 +150,58 @@ export default function SettingsScreen({
   };
 
   const saveContact = async () => {
-    if (await persistProfile({ emailEmergencia: emailInput.trim() })) setEditingContact(false);
+    const address = normalizeEmail(emailInput);
+    if (address && !isValidEmail(address)) {
+      Alert.alert('Confira o e-mail', 'Informe um endereço válido ou deixe em branco para remover.');
+      return;
+    }
+    const changed = address !== normalizeEmail(profile.emailEmergencia || '');
+    if (await persistProfile({ emailEmergencia: address,
+      emailAlertsEnabled: changed || !address ? false : profile.emailAlertsEnabled === true })) {
+      setEditingContact(false);
+      if (changed) setEmailTestStatus('');
+    }
+  };
+
+  const toggleEmailAlerts = (enabled: boolean) => {
+    if (saving || testingEmail) return;
+    if (!enabled) { void persistProfile({ emailAlertsEnabled: false }); return; }
+    if (!isValidEmail(normalizeEmail(profile.emailEmergencia || ''))) {
+      Alert.alert('Cadastre o contato', 'Salve um e-mail válido antes de ativar os avisos.');
+      return;
+    }
+    Alert.alert('Ativar avisos por e-mail?',
+      `Confirme que ${profile.emailEmergencia} é um contato que autorizou o recebimento. Durante um alerta, o nome cadastrado da criança e o motivo poderão ser enviados. A localização deste celular só será incluída se você a ativar. O envio exige internet e não garante entrega.`, [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Ativar', onPress: () => { void persistProfile({ emailAlertsEnabled: true }); } },
+      ]);
+  };
+
+  const testEmail = () => {
+    if (!INTERNAL_TOOLS_ENABLED) return;
+    if (saving || emailTestBusy.current || editingContact) return;
+    const address = profile.emailEmergencia || '';
+    if (!isValidEmail(normalizeEmail(address))) {
+      Alert.alert('Cadastre o contato', 'Salve um e-mail válido antes do teste.');
+      return;
+    }
+    Alert.alert('Enviar e-mail de teste?', `Uma mensagem sem dados de localização ou da criança será enviada para ${address}. Peça ao contato para verificar também o spam.`, [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Enviar teste', onPress: async () => {
+        if (emailTestBusy.current) return;
+        emailTestBusy.current = true;
+        setTestingEmail(true);
+        try {
+          await sendExperimentalEmail({ recipient: address, childName: 'Teste',
+            message: 'TESTE — Escolta UNITAU. Esta mensagem é somente uma verificação do canal de e-mail, não um alerta real. Confirme o recebimento com quem solicitou o teste.' });
+          setEmailTestStatus('O serviço aceitou o teste. Confirme o recebimento com o contato.');
+          Alert.alert('Teste aceito pelo serviço', 'Isso não confirma entrega. Peça ao contato para conferir a caixa de entrada e o spam.');
+        } catch {
+          setEmailTestStatus('O envio do teste não foi confirmado. O alarme local não depende deste canal.');
+          Alert.alert('Envio não confirmado', 'Verifique a internet e a configuração do serviço de e-mail. O alarme local permanece independente.');
+        } finally { emailTestBusy.current = false; setTestingEmail(false); }
+      } },
+    ]);
   };
 
   const confirmCriticalToggle = <K extends keyof AppPreferences>(
@@ -169,6 +239,7 @@ export default function SettingsScreen({
     try {
       await onForceLogout?.();
       await signOut(auth);
+      await clearGoogleCredentialState().catch(() => {});
     } catch {
       Alert.alert('Falha ao sair', 'Não foi possível encerrar a sessão. Tente novamente.');
     }
@@ -178,6 +249,7 @@ export default function SettingsScreen({
     try {
       await onBeforeLogout?.();
       await signOut(auth);
+      await clearGoogleCredentialState().catch(() => {});
     } catch (error) {
       Alert.alert(
         'Placa não confirmou o modo de espera',
@@ -252,6 +324,7 @@ export default function SettingsScreen({
   };
 
   const handleVersionTap = () => {
+    if (!INTERNAL_TOOLS_ENABLED) return;
     const next = versionTaps + 1;
     if (next >= 5) {
       setShowAcademic(true);
@@ -271,7 +344,7 @@ export default function SettingsScreen({
     return <View style={styles.loading}><ActivityIndicator color={colors.primaryBlue} /></View>;
   }
 
-  if (showDiagnostics) {
+  if (INTERNAL_TOOLS_ENABLED && showDiagnostics) {
     return (
       <SystemDiagnosticsModal
         visible
@@ -290,7 +363,7 @@ export default function SettingsScreen({
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View style={styles.heading}>
-          <Text style={styles.eyebrow}>CONFIGURAÇÃO E COBERTURA</Text>
+          <Text style={styles.eyebrow}>PREFERÊNCIAS E MONITORAMENTO</Text>
           <Text style={styles.title}>Sistema</Text>
           <Text style={styles.subtitle}>Personalize a experiência sem perder de vista o impacto de cada escolha.</Text>
         </View>
@@ -338,7 +411,6 @@ export default function SettingsScreen({
           <View style={styles.separator} />
           <PreferenceSwitch colors={colors} styles={styles} icon="phone-portrait" title="Vibração" description="Usa padrões diferentes para atenção e emergência." value={preferences.vibrationEnabled} onChange={value => confirmCriticalToggle('vibrationEnabled', value, 'Desativar vibração?', 'O celular deixará de vibrar em situações de atenção e emergência. A sirene crítica continuará ativa.')} />
           <View style={styles.separator} />
-          <PreferenceSwitch colors={colors} styles={styles} icon="volume-medium" title="Sons informativos" description="Controla sons não críticos. Não silencia emergências." value={preferences.informationalSounds} onChange={value => setPreference('informationalSounds', value)} />
           <View style={styles.separator} />
           <PreferenceSwitch colors={colors} styles={styles} icon="accessibility" title="Reduzir animações" description="Mantém cores e estados, com movimentos mais discretos." value={preferences.reduceMotion} onChange={value => setPreference('reduceMotion', value)} />
         </View>
@@ -359,6 +431,7 @@ export default function SettingsScreen({
           />
         </View>
 
+        {INTERNAL_TOOLS_ENABLED && <>
         <SectionTitle colors={colors} title="Diagnóstico e confiabilidade" />
         <View style={styles.card}>
           <SettingsRow
@@ -369,30 +442,48 @@ export default function SettingsScreen({
             detail="Analisa conexão, permissões, alertas e funcionamento em segundo plano"
             onPress={() => setShowDiagnostics(true)}
           />
+          <View style={styles.separator} />
+          <SettingsRow
+            colors={colors}
+            styles={styles}
+            icon="flask"
+            title="Ensaio de proximidade"
+            detail="Compare distâncias medidas com trena e leituras Bluetooth; exporte os resultados"
+            onPress={onOpenProximityTrial}
+          />
         </View>
+        </>}
 
         <SectionTitle colors={colors} title="Privacidade e localização" />
         <View style={styles.card}>
           <PreferenceSwitch colors={colors} styles={styles} icon="location" title="Compartilhar localização deste celular" description="Usada somente no início de uma emergência. Não representa a posição exata da criança." value={preferences.shareLocation} onChange={handleLocationToggle} />
         </View>
 
-        <SectionTitle colors={colors} title="Contatos de confiança" />
+        <SectionTitle colors={colors} title="E-mail para alertas" />
         <View style={styles.card}>
           <View style={styles.experimentalBanner}>
-            <Ionicons name="flask-outline" size={19} color={colors.warningYellow} />
-            <Text style={styles.experimentalText}>Canal experimental do protótipo. A futura Rede de Proteção exigirá notificações push e um backend autenticado.</Text>
+            <Ionicons name="information-circle-outline" size={19} color={colors.warningYellow} />
+            <Text style={styles.experimentalText}>Aviso adicional para um contato de confiança. Exige internet: cadastrar o endereço ou enviar uma mensagem não garante o recebimento. O alarme local funciona de forma independente.</Text>
           </View>
           <View style={styles.separator} />
           {editingContact ? (
             <View style={styles.editor}>
-              <Text style={styles.fieldLabel}>E-mail de emergência</Text>
-              <TextInput style={styles.input} value={emailInput} onChangeText={setEmailInput} autoCapitalize="none" keyboardType="email-address" placeholder="contato@exemplo.com" placeholderTextColor={colors.textMuted} />
-              <Text style={styles.editorHelp}>O envio por e-mail é experimental e não substitui o alarme local do protótipo.</Text>
+              <Text style={styles.fieldLabel}>E-mail do contato de confiança</Text>
+              <TextInput style={styles.input} value={emailInput} onChangeText={setEmailInput} editable={!saving && !testingEmail} maxLength={254} autoCapitalize="none" autoCorrect={false} keyboardType="email-address" placeholder="contato@exemplo.com" placeholderTextColor={colors.textMuted} />
+              <Text style={styles.editorHelp}>Use um contato que autorizou receber avisos. Ao mudar o endereço, será necessário ativar o envio novamente. Deixe em branco para remover.</Text>
               <EditorActions styles={styles} onCancel={() => setEditingContact(false)} onSave={saveContact} saving={saving} />
             </View>
           ) : (
-            <SettingsRow colors={colors} styles={styles} icon="people" title={profile.emailEmergencia ? 'Canal experimental configurado' : 'Configurar canal experimental'} detail={profile.emailEmergencia || 'E-mail para ensaios controlados'} onPress={() => setEditingContact(true)} />
+            <SettingsRow colors={colors} styles={styles} icon="mail" title={profile.emailEmergencia ? 'Editar contato de confiança' : 'Cadastrar e-mail do contato'} detail={profile.emailEmergencia || 'Nenhum contato cadastrado; envio desativado'} onPress={() => { if (!testingEmail && !saving) setEditingContact(true); }} />
           )}
+          {!editingContact && <>
+            <View style={styles.separator} />
+            <PreferenceSwitch colors={colors} styles={styles} icon="mail-outline" title="Enviar avisos por e-mail" description={canSendEmergencyEmail(profile) ? 'Ativado para alertas. A entrega não é garantida.' : 'Desativado. O contato só receberá tentativas após sua ativação.'} value={profile.emailAlertsEnabled === true} onChange={toggleEmailAlerts} />
+            {INTERNAL_TOOLS_ENABLED && <>
+              <View style={styles.separator} />
+              <SettingsRow colors={colors} styles={styles} icon="paper-plane-outline" title={testingEmail ? 'Enviando teste…' : 'Enviar e-mail de teste'} detail={emailTestStatus || 'Mensagem de teste, sem localização ou nome da criança'} onPress={testEmail} />
+            </>}
+          </>}
         </View>
 
         <SectionTitle colors={colors} title="Emergência" />
@@ -405,7 +496,7 @@ export default function SettingsScreen({
           </TouchableOpacity>
         </View>
 
-        {showAcademic && (
+        {INTERNAL_TOOLS_ENABLED && showAcademic && (
           <>
             <SectionTitle colors={colors} title="Área acadêmica" />
             <View style={styles.cardPadded}>
@@ -424,9 +515,9 @@ export default function SettingsScreen({
           <SettingsRow colors={colors} styles={styles} icon="log-out" title="Sair da conta" detail="Encerra a sessão e o monitoramento" onPress={handleLogout} danger />
         </View>
 
-        <TouchableOpacity style={styles.versionArea} onPress={handleVersionTap} activeOpacity={0.65}>
-          <Text style={styles.version}>Escolta UNITAU v1.0.0</Text>
-          <Text style={styles.prototype}>PROTÓTIPO ACADÊMICO FUNCIONAL</Text>
+        <TouchableOpacity style={styles.versionArea} disabled={!INTERNAL_TOOLS_ENABLED} onPress={handleVersionTap} activeOpacity={0.65}>
+          <Text style={styles.version}>{APP_DISPLAY_NAME} v1.0.0</Text>
+          <Text style={styles.prototype}>MONITORAMENTO DE PROXIMIDADE</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

@@ -1,10 +1,12 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { INTERNAL_TOOLS_ENABLED } from './nativeIdentity';
 
 const MONITORING_CHANNEL = 'escolta_monitoramento';
 const EMERGENCY_CHANNEL = 'escolta_emergencias_v3';
 const DIAGNOSTIC_CHANNEL = 'escolta_diagnosticos';
-const BATTERY_CHANNEL = 'escolta_bateria_v1';
+const BATTERY_CHANNEL = 'escolta_bateria_v2';
+const BATTERY_VIBRATION_CHANNEL = 'escolta_bateria_vibracao_v2';
 let emergencyNotificationId: string | null = null;
 let channelsPrepared = false;
 let permissionRequestedThisSession = false;
@@ -42,7 +44,7 @@ export async function prepareNotifications(requestPermission = true) {
       showBadge: true,
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
     });
-    await Notifications.setNotificationChannelAsync(DIAGNOSTIC_CHANNEL, {
+    if (INTERNAL_TOOLS_ENABLED) await Notifications.setNotificationChannelAsync(DIAGNOSTIC_CHANNEL, {
       name: 'Testes do Escolta',
       description: 'Notificações controladas da verificação de prontidão.',
       importance: Notifications.AndroidImportance.HIGH,
@@ -56,11 +58,17 @@ export async function prepareNotifications(requestPermission = true) {
       name: 'Bateria do dispositivo Escolta',
       description: 'Avisos para recarregar a bateria do dispositivo vestível.',
       importance: Notifications.AndroidImportance.DEFAULT,
-      vibrationPattern: [0, 220],
-      sound: 'default',
-      enableVibrate: true,
+      vibrationPattern: null,
+      sound: null,
+      enableVibrate: false,
       showBadge: true,
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+    });
+    await Notifications.setNotificationChannelAsync(BATTERY_VIBRATION_CHANNEL, {
+      name: 'Bateria do Escolta — com vibração',
+      importance: Notifications.AndroidImportance.DEFAULT,
+      vibrationPattern: [0, 250, 120, 250], sound: null, enableVibrate: true,
+      showBadge: true, lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
     });
     channelsPrepared = true;
   }
@@ -78,7 +86,7 @@ export async function prepareNotifications(requestPermission = true) {
   return requested.granted;
 }
 
-export async function showBatteryNotification(percent: number, critical: boolean) {
+export async function showBatteryNotification(percent: number, critical: boolean, vibrationEnabled = false) {
   await prepareNotifications(false);
   return Notifications.scheduleNotificationAsync({
     content: {
@@ -86,14 +94,15 @@ export async function showBatteryNotification(percent: number, critical: boolean
       body: critical
         ? `Restam cerca de ${percent}%. Recarregue o dispositivo agora para evitar a interrupção do monitoramento.`
         : `Restam cerca de ${percent}%. Recarregue o dispositivo Escolta assim que possível.`,
-      sound: 'default',
+      sound: false,
       priority: critical
         ? Notifications.AndroidNotificationPriority.HIGH
         : Notifications.AndroidNotificationPriority.DEFAULT,
       color: critical ? '#EF4444' : '#F59E0B',
       data: { destino: 'CENTRAL', tipo: critical ? 'bateria_critica' : 'bateria_baixa' },
     },
-    trigger: Platform.OS === 'android' ? { channelId: BATTERY_CHANNEL } : null,
+    trigger: Platform.OS === 'android'
+      ? { channelId: vibrationEnabled ? BATTERY_VIBRATION_CHANNEL : BATTERY_CHANNEL } : null,
   });
 }
 
@@ -117,6 +126,7 @@ export async function showEmergencyNotification(childName: string, reason: strin
 
 /** Exibe uma notificação não emergencial para validar permissão e apresentação visual. */
 export async function showDiagnosticNotification() {
+  if (!INTERNAL_TOOLS_ENABLED) throw new Error('Ferramenta interna indisponível nesta versão.');
   const granted = await prepareNotifications(true);
   if (!granted) throw new Error('As notificações estão bloqueadas nas configurações do celular.');
   return Notifications.scheduleNotificationAsync({

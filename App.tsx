@@ -4,6 +4,7 @@ import {
   Animated,
   BackHandler,
   Image,
+  Linking,
   Platform,
   StatusBar,
   StyleSheet,
@@ -13,7 +14,9 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadAsync, useFonts } from 'expo-font';
+import { APP_DISPLAY_NAME, APP_SCHEME, INTERNAL_TOOLS_ENABLED, VALIDATED_MONITOR_ENABLED } from './src/services/nativeIdentity';
+import AsyncStorage, { subscribeAccountStorage } from './src/services/accountStorage';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
 import { auth } from './src/services/firebaseConfig';
@@ -22,7 +25,9 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import ManualScreen from './src/screens/ManualScreen';
 import AlertsScreen from './src/screens/AlertsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import ProximityTrialModal from './src/screens/ProximityTrialModal';
 import { useEsp32Monitor } from './src/hooks/useEsp32Monitor';
+import { usePersistentEsp32Monitor } from './src/hooks/usePersistentEsp32Monitor';
 import { AppPreferencesProvider, useAppPreferences } from './src/context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from './src/theme';
 import {
@@ -47,8 +52,10 @@ function getInitials(name: string): string {
 }
 
 function MainApp() {
+  const [fontsLoaded, fontError] = useFonts(Ionicons.font);
+  const [fontsRecovered, setFontsRecovered] = useState(false);
   const insets = useSafeAreaInsets();
-  const { colors, resolvedTheme, hydrated } = useAppPreferences();
+  const { colors, resolvedTheme, hydrated, accountUid } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [user, setUser] = useState<User | null>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -60,7 +67,15 @@ function MainApp() {
     setLoadingAuth(false);
   }), []);
 
-  if (loadingAuth || !hydrated) {
+  if (fontError && !fontsRecovered) {
+    return <View style={styles.loading}>
+      <Text style={{ color: colors.textPrimary, padding: 20 }}>Não foi possível carregar os ícones do aplicativo. Tente novamente. Se o problema persistir, feche e abra o Escolta.</Text>
+      <TouchableOpacity accessibilityRole="button" onPress={() => { void loadAsync(Ionicons.font).then(() => setFontsRecovered(true)).catch(() => {}); }}>
+        <Text style={{ color: colors.primaryBlue, padding: 20 }}>Tentar novamente</Text>
+      </TouchableOpacity>
+    </View>;
+  }
+  if ((!fontsLoaded && !fontsRecovered) || loadingAuth || !hydrated || accountUid !== (user?.uid ?? null)) {
     return (
       <View style={styles.loading}>
         <StatusBar barStyle={resolvedTheme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
@@ -78,7 +93,7 @@ function MainApp() {
     );
   }
 
-  return <AuthenticatedShell user={user} topPadding={topPadding} bottomPadding={bottomPadding} />;
+  return <AuthenticatedShell key={user.uid} user={user} topPadding={topPadding} bottomPadding={bottomPadding} />;
 }
 
 function AuthenticatedShell({ user, topPadding, bottomPadding }: {
@@ -89,10 +104,11 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   const { colors, resolvedTheme, preferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [activeTab, setActiveTab] = useState<Tab>('CENTRAL');
+  const [showProximityTrial, setShowProximityTrial] = useState(false);
   const [userInitials, setUserInitials] = useState('?');
   const activeTabRef = useRef<Tab>('CENTRAL');
   const fadeAnim = useRef(new Animated.Value(1)).current;
-  const monitor = useEsp32Monitor();
+  const monitor = VALIDATED_MONITOR_ENABLED ? usePersistentEsp32Monitor() : useEsp32Monitor();
   const deviceBatteryAvailable = monitor.conectado
     && monitor.bateriaPercentual != null
     && Number.isFinite(monitor.bateriaPercentual);
@@ -129,13 +145,18 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   }, [fadeAnim, preferences.reduceMotion]);
 
   useEffect(() => {
-    AsyncStorage.getItem('@escolta_user_profile').then(raw => {
-      if (!raw) return;
+    let active = true;
+    const update = (raw: string | null) => {
+      if (!active) return;
       try {
-        const profile = JSON.parse(raw);
-        setUserInitials(getInitials(profile.nomeResponsavel || ''));
+        const profile = raw ? JSON.parse(raw) : null;
+        const name = typeof profile?.nomeResponsavel === 'string' ? profile.nomeResponsavel : user.displayName || '';
+        setUserInitials(getInitials(name));
       } catch {}
-    }).catch(() => {});
+    };
+    AsyncStorage.getItem('@escolta_user_profile').then(update).catch(() => {});
+    const unsubscribe = subscribeAccountStorage((key, raw) => { if (key === '@escolta_user_profile') update(raw); });
+    return () => { active = false; unsubscribe(); };
   }, [activeTab, user.uid]);
 
   useEffect(() => {
@@ -150,7 +171,10 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   useEffect(() => {
     if (consumeInitialCentralDestination()) changeTab('CENTRAL');
     const subscription = addNotificationResponseListener(() => changeTab('CENTRAL'));
-    return () => subscription.remove();
+    const handleUrl = (url: string | null) => { if (url === `${APP_SCHEME}://central`) changeTab('CENTRAL'); };
+    Linking.getInitialURL().then(handleUrl).catch(() => {});
+    const linkSubscription = Linking.addEventListener('url', event => handleUrl(event.url));
+    return () => { subscription.remove(); linkSubscription.remove(); };
   }, [changeTab]);
 
   const renderScreen = () => {
@@ -160,7 +184,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       case 'RECORDS': return <AlertsScreen alertas={monitor.alertas} limparAlertas={monitor.limparAlertas} />;
       case 'SYSTEM': return (
         <SettingsScreen
-          onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || ''))}
+          onProfileUpdated={profile => setUserInitials(getInitials(profile.nomeResponsavel || user.displayName || ''))}
           onBeforeLogout={monitor.prepararLogoff}
           onForceLogout={monitor.encerrarMonitoramento}
           deviceStandby={monitor.emEspera}
@@ -174,11 +198,14 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
             reconnecting: monitor.reconectando,
             scanning: monitor.isScanning,
             soundReady: monitor.somCarregado,
+            dataReady: monitor.dadosValidos,
             notificationAuthorized: monitor.notificacoesAutorizadas,
             lastUpdate: monitor.ultimaAtualizacao,
             signalLevel: monitor.nivelSinal,
+            firmwareVersion: monitor.versaoFirmware,
           }}
           onTestLocalAlert={monitor.testarAlertaLocal}
+          onOpenProximityTrial={() => { if (INTERNAL_TOOLS_ENABLED) setShowProximityTrial(true); }}
         />
       );
     }
@@ -196,8 +223,8 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
         <TouchableOpacity style={styles.brand} activeOpacity={0.75} onPress={() => changeTab('CENTRAL')}>
           <Image source={require('./assets/icon.png')} style={styles.logo} />
           <View>
-            <Text style={styles.brandName}>ESCOLTA UNITAU</Text>
-            <Text style={styles.brandSubtitle}>PROTÓTIPO ACADÊMICO</Text>
+            <Text style={styles.brandName}>{APP_DISPLAY_NAME.toUpperCase()}</Text>
+            <Text style={styles.brandSubtitle}>SENTINELA DE PROXIMIDADE</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.headerActions}>
@@ -219,6 +246,13 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {renderScreen()}
       </Animated.View>
+      {INTERNAL_TOOLS_ENABLED && <ProximityTrialModal
+        visible={showProximityTrial}
+        onClose={() => setShowProximityTrial(false)}
+        connected={monitor.conectado}
+        standby={monitor.emEspera}
+        panic={monitor.modoPanico}
+      />}
 
       <View style={[styles.tabBar, { paddingBottom: bottomPadding }]}>
         {TABS.map(tab => {

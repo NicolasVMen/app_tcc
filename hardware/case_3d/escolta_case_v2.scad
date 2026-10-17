@@ -1,18 +1,16 @@
 // ============================================================================
-// ESCOLTA UNITAU - Caixa vestivel V2.4 compacta
+// ESCOLTA UNITAU - Caixa vestivel V2.8 (apoios inferiores do botao)
 // XIAO apoiada na borda longa, face dos componentes voltada para a parede.
 // Unidades: milimetros
 // ============================================================================
 
 $fn = 56;
-// Vista inicial alta para enxergar a bateria e a saida dos fios.
-$vpr = [15, 0, 0];
-$vpt = [30.5, 23, 10];
-$vpd = 160;
+// A camera fica livre para giro, zoom e enquadramento pelo OpenSCAD.
+// Nao fixe $vpr/$vpt/$vpd aqui: isso redefine a vista a cada F5.
 
 // Abra este arquivo e pressione F5. "assembly" mostra o conjunto completo;
 // "layout" esconde a tampa; as demais opcoes geram as pecas para impressao.
-part = "layout"; // [assembly,layout,battery_detail,tie_detail,buzzer_detail,button_detail,exploded,lid_top,base,lid,button_cap,button_retainer,button_set,closure_interference]
+part = "button_detail"; // [assembly,layout,battery_detail,tie_detail,buzzer_detail,button_detail,exploded,lid_top,base,lid,button_cap,button_retainer,button_set,closure_interference]
 show_components = true;
 show_battery_demo = true;
 
@@ -31,8 +29,9 @@ review_slot_width = 6;
 review_slot_height = 3;
 review_tie_width = 2.5;
 review_tie_thickness = 1.5;
-xiao_anchor_x = 8.6;
-xiao_anchor_length = 7.8;
+xiao_slot_width = 7.2;
+xiao_slot_height = 3.6;
+xiao_tie_width = 3.6;
 anchor_wall = 1.2;
 
 // ----------------------------- Corpo da caixa -------------------------------
@@ -86,10 +85,18 @@ xiao_antenna_start_y = xiao_front_y + 16;
 // ate a ponta mais distante dos pinos. Comprimento total com USB-C: 22 mm.
 xiao_depth_to_pin_tip = 13;
 xiao_total_length_with_usb = 22;
-xiao_guard_width_y = 3.4;
-xiao_guard_thickness = 1.2;
-xiao_front_guard_x = xiao_board_x - xiao_component_depth - 1.5;
-xiao_rear_guard_x = xiao_board_x + xiao_board_thickness + 0.4;
+xiao_guard_width_y = 4.2;
+xiao_guard_thickness = 3;
+xiao_guard_clearance = 0.8;
+xiao_guard_base_margin = 2;
+xiao_guard_base_top_z = 6.5;
+xiao_front_guard_x = xiao_board_x - xiao_component_depth
+    - xiao_guard_clearance - xiao_guard_thickness;
+xiao_rear_guard_x = xiao_board_x + xiao_board_thickness
+    + xiao_guard_clearance;
+xiao_anchor_x = xiao_front_guard_x - 0.1;
+xiao_anchor_length = xiao_rear_guard_x + xiao_guard_thickness
+    - xiao_anchor_x + 0.1;
 xiao_guard_top_z = xiao_bottom_z + xiao_height + 0.8;
 
 // USB-C na parede frontal (Y = 0). A placa na borda deixa o conector "em pe".
@@ -102,14 +109,12 @@ usb_opening_width = 5.4;
 usb_opening_bottom = 10.1;
 usb_opening_height = 10.5;
 
-// Na vista frontal oficial, os LEDs ficam a direita do USB-C e o reset fica a
-// esquerda. Ao apoiar a placa na borda, o lado direito vira o lado de cima.
-// Por isso a janela fica acima do USB-C na mesma parede frontal.
-xiao_led_y = xiao_front_y + 3.2;
-xiao_led_bottom = 21;
-xiao_led_window_center_x = 10.8;
-xiao_led_window_width = 3;
-xiao_led_window_height = 3.2;
+// Janela reposicionada conforme a marcacao na prova impressa de 30/09:
+// abaixo e a direita da USB-C na mesma parede frontal. A abertura circular
+// deixa 0,8 mm de material ate a aresta inferior da janela USB-C.
+xiao_led_window_center_x = 16.7;
+xiao_led_window_center_z = 8.1;
+xiao_led_window_diameter = 2.4;
 
 // ------------------------- Buzzer e bloco de fios ---------------------------
 // O tucho medido pelo usuario fica sob a prateleira do buzzer.
@@ -131,9 +136,10 @@ buzzer_hole_diameter = 1.8;
 buzzer_hole_pattern_radius = 3.2;
 
 // ------------------------------ Bateria --------------------------------------
-// +2,5 mm em X e +1 mm em Y para liberar os pinos de 13 mm e o parafuso.
-battery_x = 31.5;
-battery_y = 7.8;
+// A bateria fica centralizada no eixo Y da caixa, no sentido indicado na
+// vista superior. Em X permanece perto da parede direita, com saida de fios.
+battery_x = 34.5;
+battery_y = 15.8;
 battery_length = 21;
 battery_width = 14.5;
 battery_height = 5;
@@ -143,22 +149,19 @@ battery_deck_thickness = 2;
 battery_bottom_z = floor_thickness + battery_underpass + battery_deck_thickness;
 battery_rail = 1.6;
 battery_lip_height = 2.5;
-battery_tie_rest_gap = 0.6;
 battery_tray_x = battery_x - battery_clearance - battery_rail;
 battery_tray_y = battery_y - battery_clearance - battery_rail;
 battery_tray_length = battery_length + 2 * (battery_clearance + battery_rail);
 battery_tray_width = battery_width + 2 * (battery_clearance + battery_rail);
 battery_wire_gap = 6;
 
-// Conector branco completo, medido com 15 mm.
-connector_x = 36;
-connector_y = 30;
+// Conector branco completo, ilustrado solto sobre o piso.
+connector_x = 34;
+connector_y = 35;
 connector_length = 15;
 connector_width = 7;
 connector_height = 4.5;
-connector_underpass = 4.7;
-connector_bottom_z = floor_thickness + connector_underpass;
-connector_tie_x = connector_x + connector_length / 2;
+connector_bottom_z = floor_thickness;
 
 // ------------------------------- Botao ---------------------------------------
 button_center_x = 47;
@@ -166,22 +169,30 @@ button_center_y = 35;
 button_body = 5.5;
 button_body_height = 4;
 button_actuator_height = 1;
-// Espaco entre o topo do corpo e a tampa. Agora inclui a trava positiva do
-// prolongador sem eliminar o curso mecanico do botao.
-button_body_top_gap = 3.8;
+// A prova impressa mostrou que o corpo real e o prolongador precisam de
+// 0,8 mm adicionais. A folga de repouso deixa o atuador livre ao fechar.
+button_body_top_gap = 4.6;
+button_rest_gap = 0.5;
 button_pocket_clearance = 0.45;
 button_plunger_hole = 4.8;
+// O topo dos apoios, nao a face inferior deles, define onde o botao assenta.
+// Mantem o corpo em -8,6 mm e a folga aprovada de 0,5 mm sobre o atuador.
+button_seat_depth = button_body_height + button_body_top_gap;
+button_support_thickness = 1.8;
+button_support_lip = 1.2;
+button_pocket_wall = 1.4;
+button_pocket_total_depth = button_seat_depth + button_support_thickness;
 
 cap_head_diameter = 9;
 cap_head_height = 2.2;
-// Curso livre externo: a cabeca desce 0,4 mm ate encostar na tampa.
-cap_head_rest_gap = 0.4;
+// Curso externo de 1,0 mm: 0,5 mm ate tocar o botao e 0,5 mm para acioná-lo.
+cap_head_rest_gap = 1.0;
 cap_stem_diameter = 4.2;
 // Montagem pela tampa: haste -> canal da trava -> pino de contato.
 // A haste entra pelo lado externo e a trava em C e instalada pelo lado interno.
 cap_through_length = lid_thickness + cap_head_rest_gap;
 cap_groove_diameter = 3.2;
-cap_groove_height = 1.8;
+cap_groove_height = 2.1;
 // Ombro inferior menor que o furo: atravessa a tampa durante a montagem, mas
 // impede a trava de escorregar para o pino de contato depois de encaixada.
 cap_lower_shoulder_diameter = 4.2;
@@ -190,7 +201,8 @@ cap_contact_diameter = 3;
 cap_contact_height = button_body_top_gap
     - button_actuator_height
     - cap_groove_height
-    - cap_lower_shoulder_height;
+    - cap_lower_shoulder_height
+    - button_rest_gap;
 cap_stem_length = cap_through_length
     + cap_groove_height
     + cap_lower_shoulder_height
@@ -202,9 +214,21 @@ retainer_height = 1;
 retainer_slot_throat_width = 2.9;
 retainer_slot_mouth_width = 3.8;
 retainer_axial_clearance = cap_groove_height - retainer_height;
+groove_to_button_tip = button_body_top_gap - button_actuator_height
+    - cap_groove_height;
 
 assert(cap_contact_height > 0,
     "O pino de contato desapareceu: revise as alturas do conjunto do botao.");
+assert(button_support_thickness >= 1.8,
+    "Os apoios inferiores do botao precisam manter a espessura reforcada.");
+assert(abs(button_pocket_total_depth - button_support_thickness
+        - button_seat_depth) < 0.01,
+    "A face de apoio precisa coincidir com a base do botao ilustrado.");
+assert(button_body + 2 * button_pocket_clearance - 2 * button_support_lip >= 4,
+    "Preserve o vao central inferior para as pernas e soldas.");
+assert(abs(groove_to_button_tip - (cap_lower_shoulder_height
+        + cap_contact_height + button_rest_gap)) < 0.01,
+    "A distancia entre canal da trava C e botao deve incluir a folga livre.");
 assert(cap_stem_diameter < button_plunger_hole,
     "A haste precisa ser menor que o furo da tampa.");
 assert(retainer_outer_diameter > button_plunger_hole,
@@ -219,8 +243,11 @@ assert(retainer_axial_clearance >= cap_head_rest_gap,
     "A folga axial da trava precisa permitir todo o curso do botao.");
 assert(abs(button_body_top_gap
         - (button_actuator_height + cap_contact_height
-            + cap_lower_shoulder_height + cap_groove_height)) < 0.01,
-    "A pilha vertical do prolongador precisa fechar sobre o atuador.");
+            + cap_lower_shoulder_height + cap_groove_height
+            + button_rest_gap)) < 0.01,
+    "A pilha vertical deve deixar folga no atuador em repouso.");
+assert(cap_head_rest_gap - button_rest_gap >= 0.5,
+    "O prolongador precisa manter 0,5 mm de curso util apos tocar o botao.");
 assert(retainer_slot_mouth_width > cap_groove_diameter,
     "A boca da trava em C precisa admitir o canal da haste.");
 assert(retainer_slot_throat_width < cap_groove_diameter,
@@ -239,12 +266,25 @@ assert(buzzer_center_z + buzzer_diameter / 2 + review_tie_thickness <= base_heig
     "Buzzer e abracadeira precisam ficar abaixo da tampa.");
 assert(xiao_guard_top_z + 0.15 + review_tie_thickness <= base_height - 0.8,
     "A abracadeira da XIAO precisa ficar abaixo da tampa.");
+assert(xiao_tie_width <= xiao_guard_width_y,
+    "A cinta da XIAO nao deve ser mais larga que a zona protegida.");
+assert(xiao_tie_y + xiao_guard_width_y / 2 < xiao_antenna_start_y,
+    "A cinta da XIAO precisa terminar antes da antena.");
+assert(xiao_guard_base_top_z < xiao_bottom_z,
+    "A base reforcada das torres deve ficar abaixo da placa e dos pinos.");
+assert(xiao_guard_base_margin >= 1.8,
+    "O tunel da XIAO precisa deixar paredes laterais resistentes.");
 assert(wire_bundle_y - (xiao_front_y + xiao_length) >= 1.2,
     "A antena da XIAO precisa de separacao do tucho de fios.");
 assert(battery_tray_x - (xiao_board_x + xiao_depth_to_pin_tip) >= 2,
     "Os pinos da XIAO precisam de espaco antes do suporte da bateria.");
-assert((connector_y - 2) - (battery_tray_y + battery_tray_width) >= 2,
-    "Os suportes da bateria e do conector precisam de separacao.");
+assert(battery_x + battery_length + 3.4 <= outer_length - wall,
+    "Reserve espaco para a saida dos fios da bateria na parede direita.");
+assert(battery_tray_y >= screw_positions[1][1] + screw_boss_diameter / 2 + 1,
+    "O berco da bateria precisa liberar o parafuso frontal direito.");
+assert(battery_bottom_z + battery_height + review_tie_thickness + 0.8
+    <= base_height - button_body_height - button_body_top_gap,
+    "Bateria e alojamento do botao precisam ficar separados em altura.");
 
 // ----------------------------------------------------------------------------
 
@@ -311,16 +351,11 @@ module shell() {
             usb_opening_bottom
         ]) cube([usb_opening_width, wall + 0.5, usb_opening_height]);
 
-        // Janela do RGB acima do USB-C, na mesma parede frontal.
-        translate([
-            xiao_led_window_center_x - xiao_led_window_width / 2,
-            -0.2,
-            xiao_led_bottom
-        ]) cube([
-            xiao_led_window_width,
-            wall + 0.5,
-            xiao_led_window_height
-        ]);
+        // Visor circular do LED abaixo e a direita da USB-C.
+        translate([xiao_led_window_center_x, wall + 0.2,
+            xiao_led_window_center_z])
+            rotate([90, 0, 0])
+                cylinder(h = wall + 0.5, d = xiao_led_window_diameter);
 
         buzzer_holes();
         strap_slot_cuts();
@@ -352,9 +387,11 @@ module xiao_vertical_cradle() {
             cube([1.1, 3.2, support_h + 2.2]);
     }
 
-    // Torres abertas por cima: 0,3 mm antes dos componentes e 0,4 mm depois
-    // da face traseira. Ficam 0,8 mm acima da placa para receber a cinta.
-    for (px = [xiao_front_guard_x, xiao_rear_guard_x])
+    // Torres abertas por cima, com 0,8 mm de folga lateral. A cinta as
+    // aproxima depois da montagem; nao se deve encaixar a placa a pressao.
+    // Cada pe largo conserva 2 mm de material em AMBOS os lados do tunel.
+    // Na versao anterior o corte atravessava toda a base dos pilares finos.
+    for (px = [xiao_front_guard_x, xiao_rear_guard_x]) {
         translate([
             px,
             xiao_tie_y - xiao_guard_width_y / 2,
@@ -364,24 +401,34 @@ module xiao_vertical_cradle() {
             xiao_guard_width_y,
             xiao_guard_top_z - floor_thickness + 0.2
         ]);
-
-    // Passante inferior de 6 x 3 mm. A cinta sobe pelo lado externo das
-    // torres, atravessa o topo delas e nao toca os pinos soldados restantes.
-    difference() {
         translate([
-            xiao_anchor_x,
-            xiao_tie_y - review_slot_width / 2 - anchor_wall,
-            floor_thickness - 0.1
-        ])
-            cube([xiao_anchor_length, review_slot_width + 2 * anchor_wall,
-                review_slot_height + anchor_wall + 0.3]);
-        translate([
-            xiao_anchor_x - 0.2,
-            xiao_tie_y - review_slot_width / 2,
-            floor_thickness + 0.2
-        ])
-            cube([xiao_anchor_length + 0.4, review_slot_width, review_slot_height]);
+            px,
+            xiao_tie_y - xiao_slot_width / 2 - xiao_guard_base_margin,
+            floor_thickness - 0.2
+        ]) cube([
+            xiao_guard_thickness,
+            xiao_slot_width + 2 * xiao_guard_base_margin,
+            xiao_guard_base_top_z - floor_thickness + 0.2
+        ]);
     }
+
+    // Ponte inferior. O tunel e retirado da uniao final para que nenhum
+    // apoio ou torre volte a bloquear as duas entradas da abracadeira.
+    translate([
+        xiao_anchor_x,
+        xiao_tie_y - xiao_slot_width / 2 - anchor_wall,
+        floor_thickness - 0.1
+    ]) cube([xiao_anchor_length, xiao_slot_width + 2 * anchor_wall,
+        xiao_slot_height + anchor_wall + 0.3]);
+}
+
+module xiao_tie_cut() {
+    translate([
+        xiao_front_guard_x - 0.2,
+        xiao_tie_y - xiao_slot_width / 2,
+        floor_thickness + 0.2
+    ]) cube([xiao_rear_guard_x + xiao_guard_thickness
+        - xiao_front_guard_x + 0.4, xiao_slot_width, xiao_slot_height]);
 }
 
 module buzzer_tie_cuts() {
@@ -423,17 +470,9 @@ module buzzer_shelf() {
     }
 }
 
-module wire_bundle_guides() {
-    // Batentes baixos, fora do volume medido. O tucho entra por cima.
-    for (p = [
-        [wire_bundle_x + wire_bundle_length, wire_bundle_y],
-        [wire_bundle_x + wire_bundle_length, wire_bundle_y + wire_bundle_width - 3]
-    ]) translate([p[0], p[1], floor_thickness - 0.2]) cube([1.2, 3, 3]);
-}
-
 module battery_guides() {
-    // Plataforma integral: dois pes unidos por um tampo liso de 2 mm.
-    // A bateria entra por cima. Nao existe mais ponte removivel.
+    // Tampo de 2 mm sobre um perimetro vazado. A cinta atravessa o tunel
+    // inferior; as bordas baixas apenas impedem deslizamento lateral.
     difference() {
         union() {
             translate([battery_tray_x, battery_tray_y, floor_thickness - 0.2])
@@ -449,63 +488,35 @@ module battery_guides() {
                             battery_width + 2 * battery_clearance,
                             battery_lip_height + 0.8]);
                 }
-            // Ombros fixos recebem a cinta 0,6 mm acima da bolsa nominal.
-            for (py = [battery_tray_y,
-                battery_tray_y + battery_tray_width - battery_rail + 0.1])
-                translate([battery_x + battery_length / 2 - 4, py,
-                    battery_bottom_z - 0.2])
-                    cube([8, battery_rail - 0.1,
-                        battery_height + battery_tie_rest_gap + 0.2]);
         }
+        // Retira o miolo macico sob o tampo, mantendo apoios perimetrais.
+        translate([battery_tray_x + 1.8, battery_tray_y + 1.8,
+            floor_thickness + 0.1])
+            cube([battery_tray_length - 3.6, battery_tray_width - 3.6,
+                battery_underpass - 0.1]);
         // Canal de 6 x 3 mm, aberto na frente e atras da plataforma.
         translate([battery_x + battery_length / 2 - review_slot_width / 2,
             battery_tray_y - 0.2, floor_thickness + 0.2])
             cube([review_slot_width, battery_tray_width + 0.4, review_slot_height]);
-        // Saida de fios em +X, o lado oposto a XIAO. Mantem dois batentes.
-        // O recorte entra 0,2 mm no tampo para nao criar uma face coplanar
-        // degenerada exatamente em Z = battery_bottom_z na exportacao STL.
+        // Saida dos fios em +X e corredor ate a extremidade traseira do
+        // berco. Assim a celula nao precisa dobrar os fios contra a parede.
+        // O recorte entra 0,2 mm no tampo para evitar faces coplanares.
         translate([battery_x + battery_length + battery_clearance - 0.1,
             battery_y + battery_width / 2 - battery_wire_gap / 2,
             battery_bottom_z - 0.2])
-            cube([battery_rail + 0.3, battery_wire_gap,
+            cube([battery_rail + 0.3,
+                battery_tray_y + battery_tray_width + 0.5
+                    - (battery_y + battery_width / 2 - battery_wire_gap / 2),
                 battery_height + 1.2]);
-        // Rebaixo externo local: nao invade o envelope de 30 x 15 x 14 dos fios.
+        // O tucho real de 30 x 15 mm chega 1 mm sob o canto traseiro
+        // esquerdo do berco. Alivio local sem reduzir o apoio da bateria.
         translate([battery_tray_x - 0.1, wire_bundle_y - 0.5,
             floor_thickness - 0.3])
-            cube([wire_bundle_x + wire_bundle_length + 1.5 - battery_tray_x + 0.1,
-                4, battery_bottom_z + battery_lip_height + 1]);
-        // Alivio local para curvar os fios dos quatro pinos restantes. O
-        // corpo da bateria comeca em X=31,5 mm e nao perde apoio.
-        translate([battery_tray_x - 0.1, xiao_front_y + 3.2,
-            floor_thickness - 0.3])
-            cube([1.8, 8.2, battery_bottom_z + battery_lip_height + 1]);
-    }
-}
-
-// Trilhos elevam o conector ate o teto do passante (sem colisao com o corpo).
-// O passante central permite que uma abracadeira
-// entre de um lado, passe por baixo e saia do outro.
-module connector_cradle() {
-    rail = 1.4;
-    for (px = [connector_x, connector_x + connector_length - rail])
-        translate([px, connector_y, floor_thickness - 0.2])
-            cube([rail, connector_width, connector_underpass + 0.2]);
-
-    difference() {
-        translate([
-            connector_tie_x - (review_slot_width + 3) / 2,
-            connector_y - 2,
-            floor_thickness - 0.1
-        ]) cube([
-            review_slot_width + 3,
-            connector_width + 4,
-            connector_underpass + 0.1
-        ]);
-        translate([
-            connector_tie_x - review_slot_width / 2,
-            connector_y - 2.3,
-            floor_thickness + 0.2
-        ]) cube([review_slot_width, connector_width + 4.6, review_slot_height]);
+            cube([wire_bundle_x + wire_bundle_length + 0.8
+                    - battery_tray_x + 0.1,
+                battery_tray_y + battery_tray_width
+                    - (wire_bundle_y - 0.5) + 0.5,
+                battery_bottom_z + battery_lip_height + 1]);
     }
 }
 
@@ -516,11 +527,10 @@ module base() {
         screw_bosses();
         xiao_vertical_cradle();
         buzzer_shelf();
-        wire_bundle_guides();
         battery_guides();
-        connector_cradle();
       }
       buzzer_tie_cuts();
+      xiao_tie_cut();
     }
 }
 
@@ -545,41 +555,50 @@ module lid_rim() {
     }
 }
 
+module button_lower_supports() {
+    pocket = button_body + 2 * button_pocket_clearance;
+    // Duas abas continuas: deixam o centro e a entrada frontal abertos.
+    // A espessura cresce PARA BAIXO, sem elevar o botao nem encurtar seu curso.
+    // Cada aba invade 1,2 mm do bolso e se une a toda a parede de 1,4 mm.
+    translate([
+        button_center_x - pocket / 2 - button_pocket_wall,
+        button_center_y - pocket / 2,
+        -button_pocket_total_depth
+    ]) cube([button_pocket_wall + button_support_lip,
+        pocket, button_support_thickness]);
+    translate([
+        button_center_x + pocket / 2 - button_support_lip,
+        button_center_y - pocket / 2,
+        -button_pocket_total_depth
+    ]) cube([button_pocket_wall + button_support_lip,
+        pocket, button_support_thickness]);
+}
+
 module button_pocket() {
     pocket = button_body + 2 * button_pocket_clearance;
-    wall_t = 1.4;
-    depth = button_body_height + button_body_top_gap;
-    support_lip = 1.2;
+    wall_t = button_pocket_wall;
+    depth = button_seat_depth;
+    total_depth = button_pocket_total_depth;
 
     // O botao soldado desliza pela abertura frontal do alojamento em U.
     translate([
         button_center_x - pocket / 2 - wall_t,
         button_center_y - pocket / 2 - wall_t,
-        -depth
-    ]) cube([wall_t, pocket + 2 * wall_t, depth + 0.2]);
+        -total_depth
+    ]) cube([wall_t, pocket + 2 * wall_t, total_depth + 0.2]);
     translate([
         button_center_x + pocket / 2,
         button_center_y - pocket / 2 - wall_t,
-        -depth
-    ]) cube([wall_t, pocket + 2 * wall_t, depth + 0.2]);
+        -total_depth
+    ]) cube([wall_t, pocket + 2 * wall_t, total_depth + 0.2]);
     translate([
         button_center_x - pocket / 2,
         button_center_y + pocket / 2,
-        -depth
-    ]) cube([pocket, wall_t, depth + 0.2]);
+        -total_depth
+    ]) cube([pocket, wall_t, total_depth + 0.2]);
 
-    // Apoios inferiores ligados fisicamente as paredes laterais. A sobreposicao
-    // evita corpos apenas encostados, que alguns fatiadores tratariam separados.
-    translate([
-        button_center_x - pocket / 2 - wall_t,
-        button_center_y - pocket / 2,
-        -depth
-    ]) cube([wall_t + support_lip, pocket, 0.9]);
-    translate([
-        button_center_x + pocket / 2 - support_lip,
-        button_center_y - pocket / 2,
-        -depth
-    ]) cube([wall_t + support_lip, pocket, 0.9]);
+    // As abas sao parte da tampa, nao pecas soltas nem um encaixe por pressao.
+    button_lower_supports();
 
     // Ressaltos de retencao: entra com clique e nao volta sozinho.
     for (side = [-1, 1])
@@ -730,13 +749,12 @@ module mock_components(show_cap = true) {
                 + (usb_opening_height - usb_connector_major) / 2
         ]) cube([usb_connector_minor, 3, usb_connector_major]);
 
-    // RGB aproximado diante da janela lateral.
+    // Marcador visual no ponto da janela; nao representa o corpo do LED.
     color([0.15, 0.90, 0.30, 1])
-        translate([
-            xiao_board_x - xiao_component_depth - 0.1,
-            xiao_led_y - 1,
-            xiao_led_bottom + 0.6
-        ]) cube([0.7, 2, 2]);
+        translate([xiao_led_window_center_x, wall + 0.3,
+            xiao_led_window_center_z])
+            rotate([90, 0, 0])
+                cylinder(h = 0.6, d = 1.6);
 
     // Antena destacada apenas para mostrar a zona que deve ficar livre.
     color([0.86, 0.62, 0.14, 0.95])
@@ -754,17 +772,17 @@ module mock_components(show_cap = true) {
         tie_z0 = floor_thickness + 0.55;
         tie_ztop = xiao_guard_top_z + 0.15;
         translate([tie_outer_x0,
-            xiao_tie_y - review_tie_width / 2, tie_z0])
+            xiao_tie_y - xiao_tie_width / 2, tie_z0])
             cube([tie_outer_x1 - tie_outer_x0 + review_tie_thickness,
-                review_tie_width, review_tie_thickness]);
+                xiao_tie_width, review_tie_thickness]);
         translate([tie_outer_x0,
-            xiao_tie_y - review_tie_width / 2, tie_ztop])
+            xiao_tie_y - xiao_tie_width / 2, tie_ztop])
             cube([tie_outer_x1 - tie_outer_x0 + review_tie_thickness,
-                review_tie_width, review_tie_thickness]);
+                xiao_tie_width, review_tie_thickness]);
         for (px = [tie_outer_x0, tie_outer_x1])
             translate([px,
-                xiao_tie_y - review_tie_width / 2, tie_z0])
-                cube([review_tie_thickness, review_tie_width,
+                xiao_tie_y - xiao_tie_width / 2, tie_z0])
+                cube([review_tie_thickness, xiao_tie_width,
                     tie_ztop - tie_z0 + review_tie_thickness]);
     }
 
@@ -795,28 +813,15 @@ module mock_components(show_cap = true) {
             cube([review_tie_width, 14, review_tie_thickness]);
     }
 
-    // A cinta da XIAO foi retirada da ilustracao: seu trajeto anterior
-    // cruzaria o envelope real de 13 mm dos pinos. O passante existe,
-    // mas a retencao final da placa ainda precisa ser redesenhada.
+    // A cinta da XIAO e mostrada acima: passa na faixa sem pinos, antes da
+    // antena. A passagem inferior agora atravessa toda a base montada.
 
     battery_demo(false);
 
-    // Conector branco e sua abracadeira dedicada.
+    // Conector branco solto no piso; o berco dedicado foi retirado.
     color([0.94, 0.94, 0.90, 0.98])
         translate([connector_x, connector_y, connector_bottom_z])
             cube([connector_length, connector_width, connector_height]);
-    color([0.08, 0.08, 0.08, 0.92]) {
-        translate([
-            connector_tie_x - 1.25,
-            connector_y - 1.1,
-            connector_bottom_z + connector_height + 0.25
-        ]) cube([2.5, connector_width + 2.2, 0.7]);
-        translate([
-            connector_tie_x - 1.25,
-            connector_y - 1.1,
-            floor_thickness + 0.35
-        ]) cube([2.5, connector_width + 2.2, 0.7]);
-    }
 
     // Botao preso no alojamento em U sob a tampa.
     color([0.10, 0.10, 0.10, 0.96])
@@ -894,7 +899,7 @@ module battery_demo(show_connector = true) {
             cube([2, battery_width, battery_height]);
     tx = battery_x + battery_length / 2 - review_tie_width / 2;
     zlow = floor_thickness + 0.5;
-    ztop = battery_bottom_z + battery_height + battery_tie_rest_gap;
+    ztop = battery_bottom_z + battery_height + 0.2;
     color([1, 0.45, 0.04]) {
         translate([tx, battery_tray_y - review_tie_thickness, zlow])
             cube([review_tie_width, battery_tray_width + 2 * review_tie_thickness,
@@ -910,8 +915,11 @@ module battery_demo(show_connector = true) {
     for (k = [0, 1]) {
         points = [
             [battery_x + battery_length - 0.3, battery_y + battery_width / 2 + 1.3 * k, battery_bottom_z + 2],
-            [56.3 + 1.3 * k, battery_y + battery_width / 2 + 1.3 * k, battery_bottom_z + 2],
-            [56.3 + 1.3 * k, connector_y + 2 + 1.3 * k, connector_bottom_z + 2],
+            [outer_length - wall - 0.4 + 1.3 * k,
+                battery_y + battery_width / 2 + 1.3 * k,
+                battery_bottom_z + 2],
+            [outer_length - wall - 0.4 + 1.3 * k,
+                connector_y + 2 + 1.3 * k, connector_bottom_z + 2],
             [connector_x + connector_length, connector_y + 2 + 1.3 * k, connector_bottom_z + 2]
         ];
         color(k == 0 ? [0.8, 0.04, 0.03] : [0.08, 0.08, 0.08])
@@ -931,7 +939,6 @@ module battery_detail_view() {
         translate([battery_tray_x - 1, battery_tray_y - 1, 0])
             cube([battery_tray_length + 2, battery_tray_width + 2, floor_thickness]);
         battery_guides();
-        connector_cradle();
     }
     if (show_battery_demo) battery_demo();
 }
@@ -942,9 +949,9 @@ module tie_detail_view() {
     color([0.18, 0.48, 0.75]) buzzer_shelf();
     // Os volumes laranja mostram a fita com folga dentro das passagens.
     color([1, 0.55, 0.1, 0.65])
-        translate([xiao_anchor_x - 2, xiao_tie_y - review_tie_width / 2,
+        translate([xiao_anchor_x - 2, xiao_tie_y - xiao_tie_width / 2,
             floor_thickness + 0.5])
-            cube([xiao_anchor_length + 4, review_tie_width, review_tie_thickness]);
+            cube([xiao_anchor_length + 4, xiao_tie_width, review_tie_thickness]);
     for (py = [buzzer_center_y - 7.2, buzzer_center_y + 5.2])
         color([1, 0.55, 0.1, 0.65])
             translate([5.2 + (review_slot_width - review_tie_width) / 2,
@@ -970,9 +977,9 @@ module button_detail_view() {
         intersection() {
             lid_assembled();
             translate([button_center_x - 7, button_center_y - 7,
-                -button_body_top_gap - button_body_height - 0.5])
+                -button_pocket_total_depth - 0.5])
                 cube([14, 14,
-                    button_body_top_gap + button_body_height + lid_thickness + 1]);
+                    button_pocket_total_depth + lid_thickness + 1]);
         }
 
     color([0.10, 0.10, 0.10, 0.98])

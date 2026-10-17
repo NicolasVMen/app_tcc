@@ -19,6 +19,9 @@ import * as Notifications from 'expo-notifications';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { showDiagnosticNotification } from '../services/notificationService';
 import { AppColors, colorWithAlpha } from '../theme';
+import { RSSI_WATCHDOG_EXPERIMENT_AVAILABLE } from '../services/bleApi';
+import RssiWatchdogExperimentPanel from './RssiWatchdogExperimentPanel';
+import { INTERNAL_TOOLS_ENABLED } from '../services/nativeIdentity';
 
 type CheckStatus = 'approved' | 'warning' | 'informative';
 
@@ -36,9 +39,11 @@ export interface DiagnosticsMonitorSnapshot {
   reconnecting: boolean;
   scanning: boolean;
   soundReady: boolean;
+  dataReady: boolean;
   notificationAuthorized: boolean | null;
   lastUpdate: Date | null;
   signalLevel: string;
+  firmwareVersion?: string | null;
 }
 
 function SystemDiagnosticsModal({
@@ -65,6 +70,7 @@ function SystemDiagnosticsModal({
   const [lastRun, setLastRun] = useState<Date | null>(null);
 
   const runDiagnostics = useCallback(async () => {
+    if (!INTERNAL_TOOLS_ENABLED) return [];
     setRunning(true);
     try {
       const [notificationsPermission, bluetoothPermission, locationPermission] = await Promise.all([
@@ -79,19 +85,26 @@ function SystemDiagnosticsModal({
           id: 'device', title: 'Dispositivo Escolta', detail: 'Em espera por escolha do responsável.',
           status: 'informative', essential: false,
         }
-        : monitor.connected
+        : monitor.connected && monitor.dataReady
           ? {
             id: 'device', title: 'Dispositivo Escolta', detail: 'Conectado e enviando telemetria.',
             status: 'approved', essential: true,
           }
           : {
             id: 'device', title: 'Dispositivo Escolta',
-            detail: monitor.reconnecting || monitor.scanning ? 'Conexão em andamento.' : 'Sem vínculo no momento.',
+            detail: monitor.connected ? 'Conectado, mas sem leituras válidas recentes.' : monitor.reconnecting || monitor.scanning ? 'Conexão em andamento.' : 'Sem vínculo no momento.',
             status: 'warning', essential: true,
           };
 
       const nextChecks: DiagnosticCheck[] = [
         deviceCheck,
+        {
+          id: 'firmware', title: 'Firmware informado pela placa',
+          detail: monitor.firmwareVersion
+            ? `${monitor.firmwareVersion}. Identificação recebida pelo Bluetooth.`
+            : 'Versão não informada. Não é possível confirmar pelo app qual firmware foi gravado.',
+          status: 'informative', essential: false,
+        },
         {
           id: 'bluetooth', title: 'Permissões de Bluetooth',
           detail: bluetoothPermission ? 'Concedidas para localizar e conectar à placa.' : 'Uma ou mais permissões estão bloqueadas.',
@@ -133,9 +146,9 @@ function SystemDiagnosticsModal({
           essential: false,
         },
         {
-          id: 'external', title: 'Canal externo experimental',
-          detail: emergencyEmailConfigured ? 'E-mail de ensaio configurado.' : 'Não configurado; o alarme local permanece independente.',
-          status: emergencyEmailConfigured ? 'approved' : 'informative', essential: false,
+          id: 'external', title: 'E-mail para alertas (experimental)',
+          detail: emergencyEmailConfigured ? 'Endereço cadastrado. Isso não confirma ativação, envio ou recebimento; confira em Sistema.' : 'Nenhum endereço cadastrado; o alarme local permanece independente.',
+          status: 'informative', essential: false,
         },
         {
           id: 'battery', title: 'Bateria e segundo plano',
@@ -155,6 +168,8 @@ function SystemDiagnosticsModal({
     childName,
     emergencyEmailConfigured,
     monitor.connected,
+    monitor.dataReady,
+    monitor.firmwareVersion,
     monitor.reconnecting,
     monitor.scanning,
     monitor.soundReady,
@@ -163,7 +178,7 @@ function SystemDiagnosticsModal({
   ]);
 
   useEffect(() => {
-    if (visible) runDiagnostics();
+    if (INTERNAL_TOOLS_ENABLED && visible) runDiagnostics();
     // A verificação automática ocorre somente ao abrir. Atualizações frequentes
     // de telemetria não devem reconstruir a lista enquanto o usuário rola a tela.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,6 +189,7 @@ function SystemDiagnosticsModal({
   const allEssentialApproved = essentialChecks.length > 0 && approvedEssentials === essentialChecks.length;
 
   const testNotification = async () => {
+    if (!INTERNAL_TOOLS_ENABLED) return;
     setTesting('notification');
     try {
       await showDiagnosticNotification();
@@ -187,6 +203,7 @@ function SystemDiagnosticsModal({
   };
 
   const runAlertTest = async () => {
+    if (!INTERNAL_TOOLS_ENABLED) return;
     setConfirmingAlertTest(false);
     setTesting('alert');
     try {
@@ -237,6 +254,7 @@ function SystemDiagnosticsModal({
       `Resultado essencial: ${approvedEssentials}/${essentialChecks.length} verificações aprovadas`,
       `Última telemetria: ${formatDate(monitor.lastUpdate)}`,
       `Estado do sinal: ${monitor.signalLevel}`,
+      `Firmware informado pela placa: ${monitor.firmwareVersion || 'não informado'}`,
       '',
       reportChecks,
       '',
@@ -245,7 +263,7 @@ function SystemDiagnosticsModal({
     await Share.share({ title: 'Relatório de prontidão — Escolta UNITAU', message: report });
   };
 
-  if (!visible) return null;
+  if (!INTERNAL_TOOLS_ENABLED || !visible) return null;
 
   return (
       <View style={styles.safeArea}>
@@ -322,6 +340,8 @@ function SystemDiagnosticsModal({
             </View>
           )}
 
+          {RSSI_WATCHDOG_EXPERIMENT_AVAILABLE && <RssiWatchdogExperimentPanel colors={colors} />}
+
           <Text style={styles.sectionTitle}>CONFIABILIDADE E REGISTRO</Text>
           <View style={styles.card}>
             <SimpleActionRow colors={colors} styles={styles} icon="battery-charging-outline" title="Revisar bateria e segundo plano" detail="Abra os ajustes e remova restrições do Android." onPress={openBatterySettings} />
@@ -340,17 +360,7 @@ function SystemDiagnosticsModal({
   );
 }
 
-export default React.memo(SystemDiagnosticsModal, (previous, next) => (
-  previous.visible === next.visible
-  && previous.childName === next.childName
-  && previous.emergencyEmailConfigured === next.emergencyEmailConfigured
-  && previous.monitor.connected === next.monitor.connected
-  && previous.monitor.standby === next.monitor.standby
-  && previous.monitor.reconnecting === next.monitor.reconnecting
-  && previous.monitor.scanning === next.monitor.scanning
-  && previous.monitor.soundReady === next.monitor.soundReady
-  && previous.monitor.notificationAuthorized === next.monitor.notificationAuthorized
-));
+export default SystemDiagnosticsModal;
 
 async function checkBluetoothPermissions() {
   if (Platform.OS !== 'android') return true;

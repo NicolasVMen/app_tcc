@@ -2,9 +2,18 @@ node_modules/
 /android/
 /ios/
 .expo/
+/backups/releases/
+.env
+.env.local
+.env.*.local
+google-services.json
+GoogleService-Info.plist
+**/android/build/
 dist/
 npm-debug.*
 *.jks
+*.keystore
+credentials.json
 *.p8
 *.p12
 *.key
@@ -27,3 +36,7 @@ veda
 /hardware/case_3d/verificacoes/imagens/
 /hardware/case_3d/verificacoes/malhas/
 **/.conferencia_*.png
+
+# Dependências locais de geração do banner e capturas do console autenticado.
+/docs/cicted/banner/ferramentas/vendor/
+/docs/auditoria/FIREBASE_OFICIAL_*.png

@@ -1,0 +1,184 @@
+{
+  "pages": 1,
+  "size_cm": [
+    89.99643333333333,
+    120.00229999999999
+  ],
+  "fonts": [
+    {
+      "name": "/BCDGEE+Arial-BoldItalicMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDHEE+Arial-BoldItalicMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDIEE+ArialMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDJEE+Arial-BoldMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDFEE+Arial-BoldMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDEEE+ArialMT",
+      "embedded": true
+    },
+    {
+      "name": "/BCDFEE+Arial-BoldMT",
+      "embedded": true
+    }
+  ],
+  "images": [
+    {
+      "name": "/Image29",
+      "width": 287,
+      "height": 70,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image31",
+      "width": 524,
+      "height": 70,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image33",
+      "width": 728,
+      "height": 70,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image35",
+      "width": 288,
+      "height": 158,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image37",
+      "width": 525,
+      "height": 158,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image39",
+      "width": 729,
+      "height": 158,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image41",
+      "width": 479,
+      "height": 1004,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image43",
+      "width": 821,
+      "height": 1599,
+      "filter": "/DCTDecode"
+    },
+    {
+      "name": "/Image44",
+      "width": 820,
+      "height": 1600,
+      "filter": "/DCTDecode"
+    },
+    {
+      "name": "/Image45",
+      "width": 816,
+      "height": 1600,
+      "filter": "/DCTDecode"
+    },
+    {
+      "name": "/Image46",
+      "width": 479,
+      "height": 791,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image48",
+      "width": 4000,
+      "height": 3000,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image49",
+      "width": 4000,
+      "height": 3000,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image50",
+      "width": 1168,
+      "height": 1347,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image51",
+      "width": 1086,
+      "height": 1448,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image52",
+      "width": 646,
+      "height": 334,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image54",
+      "width": 195,
+      "height": 186,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image56",
+      "width": 1521,
+      "height": 153,
+      "filter": "/FlateDecode"
+    },
+    {
+      "name": "/Image58",
+      "width": 426,
+      "height": 153,
+      "filter": "/FlateDecode"
+    }
+  ],
+  "content_bytes": 47667,
+  "image_integrity": [
+    {
+      "shape": 55,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 57,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 44,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 47,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 50,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 60,
+      "preserved_exactly": true
+    },
+    {
+      "shape": 63,
+      "preserved_exactly": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "parts": [
+    {
+      "part": "base",
+      "filename": "01_base_v2_6.stl",
+      "valid_mesh": true,
+      "matches_current_export": true,
+      "log": "01_base_v2_6.stl\n  triângulos: 5260\n  limites: (0.0, -5.5, 0.0) até (61.0, 51.5, 28.0)\n  dimensões: (61.0, 57.0, 28.0) mm\n  volume: 21785.41 mm³\n  triângulos degenerados: 0\n  arestas inválidas: 0\n  corpos desconectados: 1\n  malha fechada: SIM\n"
+    },
+    {
+      "part": "lid",
+      "filename": "02_tampa_v2_8.stl",
+      "valid_mesh": true,
+      "matches_current_export": true,
+      "log": "02_tampa_v2_8.stl\n  triângulos: 3384\n  limites: (0.0, 0.0, 3.8147e-07) até (61.0, 46.0, 12.8)\n  dimensões: (61.0, 46.0, 12.8) mm\n  volume: 7254.08 mm³\n  triângulos degenerados: 0\n  arestas inválidas: 0\n  corpos desconectados: 1\n  malha fechada: SIM\n"
+    },
+    {
+      "part": "button_cap",
+      "filename": "03_botao_vermelho_v2_7.stl",
+      "valid_mesh": true,
+      "matches_current_export": true,
+      "log": "03_botao_vermelho_v2_7.stl\n  triângulos: 1116\n  limites: (-4.5, -4.5, 1.90735e-07) até (4.5, 4.5, 8.7)\n  dimensões: (9.0, 9.0, 8.7) mm\n  volume: 214.54 mm³\n  triângulos degenerados: 0\n  arestas inválidas: 0\n  corpos desconectados: 1\n  malha fechada: SIM\n"
+    },
+    {
+      "part": "button_retainer",
+      "filename": "04_trava_C_v2_5.stl",
+      "valid_mesh": true,
+      "matches_current_export": true,
+      "log": "04_trava_C_v2_5.stl\n  triângulos: 332\n  limites: (-2.8, -2.8, 0.0) até (2.16344, 2.8, 1.0)\n  dimensões: (4.963, 5.6, 1.0) mm\n  volume: 10.62 mm³\n  triângulos degenerados: 0\n  arestas inválidas: 0\n  corpos desconectados: 1\n  malha fechada: SIM\n"
+    }
+  ],
+  "closure_interference_empty": true,
+  "limits": "Geometria digital, não certificação de impressão ou montagem física"
+}

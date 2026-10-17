@@ -155,9 +155,10 @@ def main() -> int:
         case_dir = Path(__file__).resolve().parents[1]
         print_dir = case_dir / "PARA_IMPRIMIR_AGORA"
         paths = [
-            print_dir / "01_base_v2_4.stl",
-            print_dir / "02_tampa_v2_4.stl",
-            print_dir / "03_trava_C_v2_4.stl",
+            print_dir / "01_base_v2_6.stl",
+            print_dir / "02_tampa_v2_8.stl",
+            print_dir / "03_botao_vermelho_v2_7.stl",
+            print_dir / "04_trava_C_v2_5.stl",
         ]
     return 0 if all(validate(path) for path in paths) else 1
 

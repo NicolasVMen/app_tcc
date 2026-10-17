@@ -1,0 +1,2525 @@
+{
+  "scope": "Integridade estrutural; não valida conteúdo nem comportamento físico",
+  "checked": 298,
+  "errors": [],
+  "files": [
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/debugOptimized/AndroidManifest.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_launcher_background.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/rn_edit_text_material.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
+      "type": ".png",
+      "pixels": [
+        432,
+        432
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/splashscreen_logo.png",
+      "type": ".png",
+      "pixels": [
+        288,
+        288
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png",
+      "type": ".png",
+      "pixels": [
+        576,
+        576
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png",
+      "type": ".png",
+      "pixels": [
+        864,
+        864
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png",
+      "type": ".png",
+      "pixels": [
+        1152,
+        1152
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/values/colors.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "android/app/src/main/res/values-night/colors.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "app.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "assets/adaptive-icon.png",
+      "type": ".png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "assets/alert_tone.wav",
+      "type": ".wav",
+      "channels": 1,
+      "sample_rate": 44100,
+      "seconds": 1.0,
+      "status": "ok"
+    },
+    {
+      "path": "assets/favicon.png",
+      "type": ".png",
+      "pixels": [
+        1,
+        1
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "assets/icon.png",
+      "type": ".png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 5086,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/cad.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/catalogo.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/dependencias.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/integridade.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/inventario-inicial.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/movimentos.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/auditoria/preservacao.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/alinhar_banner.py",
+      "type": ".py",
+      "functions": [
+        "xw",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/auditar_impressao.py",
+      "type": ".py",
+      "functions": [
+        "inspect_resources",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3786,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pptx",
+      "type": ".pptx",
+      "members": 53,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA_preview.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2400
+      ],
+      "dpi": [
+        50.977799999999995,
+        50.977799999999995
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3627,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pptx",
+      "type": ".pptx",
+      "members": 53,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS_preview.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2400
+      ],
+      "dpi": [
+        50.977799999999995,
+        50.977799999999995
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/corrigir_parecer_professor.py",
+      "type": ".py",
+      "functions": [
+        "position",
+        "text",
+        "clone",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/equilibrar_banner.py",
+      "type": ".py",
+      "functions": [
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/finalizar_parecer_banner.py",
+      "type": ".py",
+      "functions": [],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cabecalho_original.png",
+      "type": ".png",
+      "pixels": [
+        2481,
+        296
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cabecalho_vetorial.svg",
+      "type": ".svg",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cad_perspectiva.png",
+      "type": ".png",
+      "pixels": [
+        4000,
+        3000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cad_superior.png",
+      "type": ".png",
+      "pixels": [
+        4000,
+        3000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_ALINHADO.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 4524,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 5086,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_powerpoint.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3877,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_powerpoint_final.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/marcacoes_professor_2026-10-02.png",
+      "type": ".png",
+      "pixels": [
+        2700,
+        3600
+      ],
+      "dpi": [
+        75.9968,
+        75.9968
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_app.png",
+      "type": ".png",
+      "pixels": [
+        1349,
+        2736
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_cabecalho.png",
+      "type": ".png",
+      "pixels": [
+        4200,
+        1266
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_pdfjs_equilibrado.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2401
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_tabela.png",
+      "type": ".png",
+      "pixels": [
+        1830,
+        1064
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/revisao_2_pdfjs.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2401
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/teste_pdfjs_alinhado.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2401
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/teste_pdfjs_final.png",
+      "type": ".png",
+      "pixels": [
+        1800,
+        2401
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_ALINHADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_REVISAO_2.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_final.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_ALINHADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_REVISAO_2.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_final.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 4524,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_ALTERACOES.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3864,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pptx",
+      "type": ".pptx",
+      "members": 56,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 3877,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "type": ".pdf",
+      "pages": 1,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 5086,
+      "rendered_pages": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "type": ".pptx",
+      "members": 50,
+      "xmls": 25,
+      "slides": 1,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_ALTERACOES.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_PREVIA.png",
+      "type": ".png",
+      "pixels": [
+        2701,
+        3601
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/equilibrio_vertical.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/grade_alinhamento.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_REVISAO_2.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_pdf.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_pdf_final.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/impressao/resolucao_recursos.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/inspecionar_marcacoes.py",
+      "type": ".py",
+      "functions": [],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/preparar_impressao.py",
+      "type": ".py",
+      "functions": [
+        "replace_image",
+        "add_svg",
+        "set_font",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/preservar_recursos_pdf.py",
+      "type": ".py",
+      "functions": [
+        "image_xobject",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/revisar_banner_esclarecido.py",
+      "type": ".py",
+      "functions": [
+        "italic_terms",
+        "build",
+        "balance"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/revisar_consideracoes.py",
+      "type": ".py",
+      "functions": [
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/banner/trocar_grafico_por_arquitetura.py",
+      "type": ".py",
+      "functions": [
+        "text_box",
+        "rectangle",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 6424,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 6424,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3223,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL_corrigido.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3457,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3519,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3519,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3208,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3208,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_RASCUNHO.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3240,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Revisao/.conferencia_cabecalho.png",
+      "type": ".png",
+      "pixels": [
+        2481,
+        296
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3749,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Escolta_resumo_sem_IA.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3309,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Revisado.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3749,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Revisado_Sem_Identificacao.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3438,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "type": ".docx",
+      "members": 17,
+      "xmls": 13,
+      "text_characters": 3223,
+      "status": "ok"
+    },
+    {
+      "path": "docs/cicted/WhatsApp Image 2026-08-28 at 15.55.39.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1149,
+        79
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/produto/imagens_montagem/01-transistor-resistores.png",
+      "type": ".png",
+      "pixels": [
+        1693,
+        929
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/produto/imagens_montagem/02-circuito-completo.png",
+      "type": ".png",
+      "pixels": [
+        2000,
+        1250
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/produto/imagens_montagem/03-estrutura-3d-conceito-explodido.png",
+      "type": ".png",
+      "pixels": [
+        1586,
+        992
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/10.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/11.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/12.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/13.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/14.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/2.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/20.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/3.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/30.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/35.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/4.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/5.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/6.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/8.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/9.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png",
+      "type": ".png",
+      "pixels": [
+        1536,
+        1024
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 17_20_24.png",
+      "type": ".png",
+      "pixels": [
+        1774,
+        887
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_06_47.png",
+      "type": ".png",
+      "pixels": [
+        1774,
+        887
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_17_06.png",
+      "type": ".png",
+      "pixels": [
+        1774,
+        887
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/placa_com_regua_3.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/placa_com_regua_4.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 16.58.53.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 21.58.32.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.08.41.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.40.25.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.23.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.24.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.01.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.03.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.04.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.05.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.25.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.26.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.27.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.28.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.43.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.44.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.46.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.45.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.46.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.59.59.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.19.14.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.28.10.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 16.49.19.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1200,
+        1600
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.53.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": [
+        96,
+        96
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.54.jpeg",
+      "type": ".jpeg",
+      "pixels": [
+        1600,
+        1200
+      ],
+      "dpi": [
+        96,
+        96
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.docx",
+      "type": ".docx",
+      "members": 15,
+      "xmls": 12,
+      "text_characters": 10692,
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.pdf",
+      "type": ".pdf",
+      "pages": 7,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 10952,
+      "rendered_pages": 7,
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/modelos/Template_TG2026.docx",
+      "type": ".docx",
+      "members": 11,
+      "xmls": 9,
+      "text_characters": 1428,
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/Projeto de Pesquisa -1 - Tcc.pdf",
+      "type": ".pdf",
+      "pages": 26,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 20805,
+      "rendered_pages": 26,
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.docx",
+      "type": ".docx",
+      "members": 20,
+      "xmls": 18,
+      "text_characters": 46969,
+      "status": "ok"
+    },
+    {
+      "path": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.pdf",
+      "type": ".pdf",
+      "pages": 30,
+      "encrypted": false,
+      "empty_pages": [],
+      "text_characters": 51104,
+      "rendered_pages": 30,
+      "status": "ok"
+    },
+    {
+      "path": "docs/testes/dados/proximidade-elevada-2026-10-06.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "eas.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/documentacao/imagens/revisao_bateria_pilares_v2_6.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/documentacao/imagens/revisao_pilares_perspectiva_v2_6.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/ferramentas/validate_stl.py",
+      "type": ".py",
+      "functions": [
+        "read_triangles",
+        "canonical",
+        "area2",
+        "signed_volume",
+        "validate",
+        "main",
+        "find",
+        "union"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/ferramentas/verificar_revisao_apoios.py",
+      "type": ".py",
+      "functions": [
+        "run",
+        "signature",
+        "export_and_check"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl",
+      "type": ".stl",
+      "triangles": 3384,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl",
+      "type": ".stl",
+      "triangles": 5196,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v1.stl",
+      "type": ".stl",
+      "triangles": 3064,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2.stl",
+      "type": ".stl",
+      "triangles": 4700,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl",
+      "type": ".stl",
+      "triangles": 4572,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_3.stl",
+      "type": ".stl",
+      "triangles": 4632,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_botao_v2.stl",
+      "type": ".stl",
+      "triangles": 444,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl",
+      "type": ".stl",
+      "triangles": 28,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v1.stl",
+      "type": ".stl",
+      "triangles": 992,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2.stl",
+      "type": ".stl",
+      "triangles": 2848,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl",
+      "type": ".stl",
+      "triangles": 2856,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl",
+      "type": ".stl",
+      "triangles": 340,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_v2.stl",
+      "type": ".stl",
+      "triangles": 420,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2.zip",
+      "type": ".zip",
+      "members": 12,
+      "xmls": 0,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_2.zip",
+      "type": ".zip",
+      "members": 7,
+      "xmls": 0,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_3.zip",
+      "type": ".zip",
+      "members": 6,
+      "xmls": 0,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_teste_botao_v2_2.zip",
+      "type": ".zip",
+      "members": 4,
+      "xmls": 0,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl",
+      "type": ".stl",
+      "triangles": 4572,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl",
+      "type": ".stl",
+      "triangles": 2856,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl",
+      "type": ".stl",
+      "triangles": 340,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/01_base_v2_3.stl",
+      "type": ".stl",
+      "triangles": 4572,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl",
+      "type": ".stl",
+      "triangles": 2856,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl",
+      "type": ".stl",
+      "triangles": 340,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl",
+      "type": ".stl",
+      "triangles": 28,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/01_base_v2_4.stl",
+      "type": ".stl",
+      "triangles": 5116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/02_tampa_v2_4.stl",
+      "type": ".stl",
+      "triangles": 3384,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl",
+      "type": ".stl",
+      "triangles": 332,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/botao_prolongador_v2_4_antigo.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/01_base_v2_6.stl",
+      "type": ".stl",
+      "triangles": 5260,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/02_tampa_v2_8.stl",
+      "type": ".stl",
+      "triangles": 3384,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/03_botao_vermelho_v2_7.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl",
+      "type": ".stl",
+      "triangles": 332,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/apoios_botao_v2_8.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1100
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/auditoria_folgas_corrigidas.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/auditoria_xiao_2_5mm.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png",
+      "type": ".png",
+      "pixels": [
+        1536,
+        1024
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/conceito_xiao_girada_v3.png",
+      "type": ".png",
+      "pixels": [
+        1538,
+        1023
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v1.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_base_interna_v1.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_base_superior_v1.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_botao_reforcado_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1100,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_botao_v2.png",
+      "type": ".png",
+      "pixels": [
+        900,
+        500
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_buzzer_suporte_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_explodido_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_explodido_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_lateral_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_superior_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_v2.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_v2_3.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_parede_led_buzzer_v2.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_protetor_bateria_v2_3.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        700
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_externa_v2.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        700
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_interna_v1.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_v2.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        700
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_bateria_fixa.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_botao.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_buzzer.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_completa.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_explodida.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_fechada.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_fixacao_xiao.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        650
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        650
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_layout_v2_5.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        900
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada_13mm.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_base_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_botao_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_tampa_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1400,
+        1000
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_trava_v2_2.png",
+      "type": ".png",
+      "pixels": [
+        1000,
+        800
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        800
+      ],
+      "dpi": [
+        72.009,
+        72.009
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.svg",
+      "type": ".svg",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/visualizar_botao_montado.png",
+      "type": ".png",
+      "pixels": [
+        1200,
+        850
+      ],
+      "dpi": null,
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_2026_09_30.stl",
+      "type": ".stl",
+      "triangles": 5140,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_v2_5_candidate.stl",
+      "type": ".stl",
+      "triangles": 5284,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl",
+      "type": ".stl",
+      "triangles": 5196,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_base.stl",
+      "type": ".stl",
+      "triangles": 5260,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_cap.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_retainer.stl",
+      "type": ".stl",
+      "triangles": 332,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl",
+      "type": ".stl",
+      "triangles": 3384,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_folgas.stl",
+      "type": ".stl",
+      "triangles": 5100,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_xiao.stl",
+      "type": ".stl",
+      "triangles": 5106,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_base_reexportada.stl",
+      "type": ".stl",
+      "triangles": 5100,
+      "format": "ascii",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_bateria_fixa.stl",
+      "type": ".stl",
+      "triangles": 5062,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_base.stl",
+      "type": ".stl",
+      "triangles": 5106,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_botao.stl",
+      "type": ".stl",
+      "triangles": 1116,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_tampa.stl",
+      "type": ".stl",
+      "triangles": 2888,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_trava_c.stl",
+      "type": ".stl",
+      "triangles": 332,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_fixacao_xiao.stl",
+      "type": ".stl",
+      "triangles": 5054,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada.stl",
+      "type": ".stl",
+      "triangles": 5026,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada_13mm.stl",
+      "type": ".stl",
+      "triangles": 4962,
+      "format": "binary",
+      "status": "ok"
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/auditar_apoio_botao.py",
+      "type": ".py",
+      "functions": [
+        "vertical_intersections",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/AndroidManifest.xml",
+      "type": ".xml",
+      "status": "ok"
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav",
+      "type": ".wav",
+      "channels": 1,
+      "sample_rate": 44100,
+      "seconds": 1.0,
+      "status": "ok"
+    },
+    {
+      "path": "modules/escolta-sentinela/expo-module.config.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "package-lock.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "package.json",
+      "type": ".json",
+      "status": "ok"
+    },
+    {
+      "path": "tools/auditoria/verificar_arquivos.py",
+      "type": ".py",
+      "functions": [
+        "paths",
+        "inspect",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/auditoria/verificar_cad.py",
+      "type": ".py",
+      "functions": [
+        "signature",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/cicted/anonymize_cicted.py",
+      "type": ".py",
+      "functions": [
+        "inspect",
+        "anonymize"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/cicted/apply_cicted_review.py",
+      "type": ".py",
+      "functions": [
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/cicted/gerar_resumo_cicted.py",
+      "type": ".py",
+      "functions": [
+        "set_font",
+        "format_paragraph",
+        "build_document"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/cicted/inspect_cicted_docx.py",
+      "type": ".py",
+      "functions": [
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/cicted/remove_ai_from_cicted.py",
+      "type": ".py",
+      "functions": [
+        "remove_text_preserving_runs",
+        "main"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tools/diagramas/gerar_diagrama_circuito_completo.py",
+      "type": ".py",
+      "functions": [
+        "font",
+        "rounded",
+        "line",
+        "node",
+        "label",
+        "resistor",
+        "resistor_v"
+      ],
+      "status": "ok"
+    },
+    {
+      "path": "tsconfig.json",
+      "type": ".json",
+      "status": "ok"
+    }
+  ]
+}

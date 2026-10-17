@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,12 +13,16 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { updateProfile } from 'firebase/auth';
+import { writeProfileForAccount } from '../services/accountStorage';
 import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from '../services/firebaseConfig';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors } from '../theme';
+import { authErrorMessage, isValidEmail, normalizeEmail, validateAuthInput } from '../utils/authValidation';
+import { googleAuthAvailable, signInWithGoogle } from '../services/googleAuth';
+import { APP_DISPLAY_NAME } from '../services/nativeIdentity';
 
 type AuthMode = 'login' | 'register';
 
@@ -29,56 +33,63 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const busy = useRef(false);
 
   const handleAuth = async () => {
-    const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail || !password) {
-      Alert.alert('Preencha os dados', 'Informe e-mail e senha para continuar.');
-      return;
-    }
-    if (mode === 'register' && !name.trim()) {
-      Alert.alert('Informe seu nome', 'O nome será usado para identificar o responsável.');
-      return;
-    }
-    if (password.length < 6) {
-      Alert.alert('Senha muito curta', 'Use pelo menos seis caracteres.');
+    if (busy.current) return;
+    const normalizedEmail = normalizeEmail(email);
+    const validation = validateAuthInput({ mode, name, email, password, confirmation });
+    if (validation) {
+      Alert.alert('Confira os dados', validation);
       return;
     }
 
+    busy.current = true;
     setLoading(true);
     try {
       if (mode === 'login') {
         await signInWithEmailAndPassword(auth, normalizedEmail, password);
       } else {
-        await createUserWithEmailAndPassword(auth, normalizedEmail, password);
-        await AsyncStorage.setItem('@escolta_user_profile', JSON.stringify({
-          nomeResponsavel: name.trim(),
-          nomeCrianca: '',
-          emailEmergencia: '',
-        }));
+        const credential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
+        try {
+          await writeProfileForAccount(credential.user.uid, {
+            nomeResponsavel: name.trim(), nomeCrianca: '', emailEmergencia: '', emailAlertsEnabled: false,
+          });
+          await updateProfile(credential.user, { displayName: name.trim() });
+        } catch {
+          Alert.alert('Conta criada', 'Seu acesso foi criado, mas não foi possível concluir o nome no perfil. Confira e ajuste em Sistema. Não crie a conta novamente.');
+        }
       }
       onLoginSuccess();
-    } catch (error: any) {
-      const messages: Record<string, string> = {
-        'auth/invalid-credential': 'E-mail ou senha inválidos.',
-        'auth/user-not-found': 'E-mail ou senha inválidos.',
-        'auth/wrong-password': 'E-mail ou senha inválidos.',
-        'auth/email-already-in-use': 'Este e-mail já possui uma conta.',
-        'auth/invalid-email': 'O formato do e-mail não é válido.',
-        'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.',
-        'auth/network-request-failed': 'Não foi possível acessar a internet.',
-      };
-      Alert.alert('Não foi possível continuar', messages[error?.code] || 'Verifique os dados e tente novamente.');
+    } catch (error: unknown) {
+      Alert.alert('Não foi possível continuar', authErrorMessage(error));
     } finally {
+      busy.current = false;
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    if (busy.current) return;
+    busy.current = true;
+    setLoading(true);
+    try {
+      if (await signInWithGoogle()) onLoginSuccess();
+    } catch (error) {
+      Alert.alert('Acesso com Google', authErrorMessage(error));
+    } finally {
+      busy.current = false;
       setLoading(false);
     }
   };
 
   const handleResetPassword = () => {
-    const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail) {
+    if (busy.current) return;
+    const normalizedEmail = normalizeEmail(email);
+    if (!isValidEmail(normalizedEmail)) {
       Alert.alert('Informe seu e-mail', 'Digite o e-mail da conta antes de solicitar a recuperação.');
       return;
     }
@@ -87,11 +98,17 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
       {
         text: 'Enviar',
         onPress: async () => {
+          if (busy.current) return;
+          busy.current = true;
+          setLoading(true);
           try {
             await sendPasswordResetEmail(auth, normalizedEmail);
-            Alert.alert('E-mail enviado', 'Verifique também a caixa de spam.');
+            Alert.alert('Solicitação concluída', 'Se houver uma conta com recuperação por senha para esse e-mail, você receberá as instruções. Verifique também o spam.');
           } catch {
             Alert.alert('Não foi possível enviar', 'Verifique o e-mail e a conexão com a internet.');
+          } finally {
+            busy.current = false;
+            setLoading(false);
           }
         },
       },
@@ -103,9 +120,9 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={styles.brandArea}>
           <View style={styles.logoWrap}><Image source={require('../../assets/icon.png')} style={styles.logo} /></View>
-          <Text style={styles.brand}>ESCOLTA UNITAU</Text>
+          <Text style={styles.brand}>{APP_DISPLAY_NAME.toUpperCase()}</Text>
           <Text style={styles.tagline}>Tecnologia de proteção infantil</Text>
-          <View style={styles.prototypeBadge}><Text style={styles.prototypeText}>PROTÓTIPO ACADÊMICO FUNCIONAL</Text></View>
+          <View style={styles.prototypeBadge}><Text style={styles.prototypeText}>MONITORAMENTO DE PROXIMIDADE</Text></View>
         </View>
 
         <View style={styles.card}>
@@ -113,9 +130,9 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
           <Text style={styles.formSubtitle}>{mode === 'login' ? 'Entre para iniciar a Sentinela.' : 'Dados adicionais serão configurados depois do acesso.'}</Text>
 
           {mode === 'register' && (
-            <InputField colors={colors} styles={styles} icon="person-outline" placeholder="Nome do responsável" value={name} onChange={setName} autoCapitalize="words" />
+            <InputField colors={colors} styles={styles} icon="person-outline" placeholder="Nome do responsável" value={name} onChange={setName} autoCapitalize="words" editable={!loading} maxLength={100} autoComplete="name" />
           )}
-          <InputField colors={colors} styles={styles} icon="mail-outline" placeholder="E-mail" value={email} onChange={setEmail} autoCapitalize="none" keyboardType="email-address" />
+          <InputField colors={colors} styles={styles} icon="mail-outline" placeholder="E-mail" value={email} onChange={setEmail} autoCapitalize="none" autoCorrect={false} keyboardType="email-address" autoComplete="email" editable={!loading} maxLength={254} />
 
           <View style={styles.inputWrap}>
             <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />
@@ -127,6 +144,9 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
               autoCapitalize="none"
+              autoCorrect={false}
+              editable={!loading}
+              autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
               returnKeyType="done"
               onSubmitEditing={handleAuth}
             />
@@ -135,8 +155,13 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
             </TouchableOpacity>
           </View>
 
+          {mode === 'register' && <>
+            <InputField colors={colors} styles={styles} icon="lock-closed-outline" placeholder="Confirmar senha" value={confirmation} onChange={setConfirmation} autoCapitalize="none" autoCorrect={false} secureTextEntry={!showPassword} editable={!loading} autoComplete="new-password" onSubmitEditing={handleAuth} />
+            <Text style={styles.formHelp}>Use pelo menos oito caracteres. Sua senha não será salva no perfil do aplicativo.</Text>
+          </>}
+
           {mode === 'login' && (
-            <TouchableOpacity style={styles.forgotButton} onPress={handleResetPassword}><Text style={styles.forgotText}>Esqueci minha senha</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.forgotButton} onPress={handleResetPassword} disabled={loading}><Text style={styles.forgotText}>Esqueci minha senha</Text></TouchableOpacity>
           )}
 
           <TouchableOpacity style={styles.primaryButton} onPress={handleAuth} disabled={loading} activeOpacity={0.82}>
@@ -146,7 +171,13 @@ export default function AuthScreen({ onLoginSuccess }: { onLoginSuccess: () => v
             </>}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.modeButton} onPress={() => setMode(current => current === 'login' ? 'register' : 'login')}>
+          <TouchableOpacity style={[styles.googleButton, (loading || !googleAuthAvailable) && styles.googleDisabled]} onPress={handleGoogle} disabled={loading || !googleAuthAvailable} accessibilityRole="button" accessibilityLabel="Continuar com Google" accessibilityState={{ disabled: loading || !googleAuthAvailable }} activeOpacity={0.85}>
+            <Image source={require('../../assets/google-g.png')} style={styles.googleLogo} accessible={false} />
+            <Text style={styles.googleText}>Continuar com Google</Text>
+          </TouchableOpacity>
+          {!googleAuthAvailable && <Text style={styles.formHelp}>O acesso com Google está indisponível nesta instalação. Você pode entrar com e-mail e senha.</Text>}
+
+          <TouchableOpacity style={styles.modeButton} disabled={loading} onPress={() => { setMode(current => current === 'login' ? 'register' : 'login'); setPassword(''); setConfirmation(''); }}>
             <Text style={styles.modeText}>{mode === 'login' ? 'Primeiro acesso? ' : 'Já possui uma conta? '}<Text style={styles.modeAction}>{mode === 'login' ? 'Criar conta' : 'Entrar'}</Text></Text>
           </TouchableOpacity>
         </View>
@@ -189,6 +220,11 @@ function createStyles(colors: AppColors) {
     forgotText: { color: colors.primaryBlue, fontSize: 12, fontWeight: '700' },
     primaryButton: { minHeight: 52, borderRadius: 14, backgroundColor: colors.primaryBlue, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, marginTop: 4 },
     primaryText: { color: colors.white, fontSize: 13, fontWeight: '900', letterSpacing: 0.8 },
+    googleButton: { minHeight: 50, borderWidth: 1, borderColor: '#747775', backgroundColor: '#FFFFFF', borderRadius: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 12, paddingVertical: 10, marginTop: 14 },
+    googleLogo: { width: 20, height: 20, resizeMode: 'contain' },
+    googleText: { color: '#1F1F1F', fontSize: 14, fontWeight: '500' },
+    googleDisabled: { opacity: 0.55 },
+    formHelp: { color: colors.textMuted, fontSize: 11, lineHeight: 16, marginBottom: 10, marginTop: 4 },
     modeButton: { alignItems: 'center', paddingTop: 17, paddingBottom: 2 },
     modeText: { color: colors.textSecondary, fontSize: 13 },
     modeAction: { color: colors.primaryBlue, fontWeight: '800' },

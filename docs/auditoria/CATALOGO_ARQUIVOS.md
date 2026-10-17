@@ -1,0 +1,404 @@
+# Catálogo de arquivos
+
+Gerado por `tools/auditoria/catalogar_projeto.cjs`. Caminhos relativos à raiz.
+
+- `.gitignore` — Arquivo de apoio/configuração: configuracao-raiz
+- `.npmrc` — Arquivo de apoio/configuração: configuracao-raiz
+- `android/.gitignore` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/build.gradle` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/debug.keystore` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/proguard-rules.pro` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/debug/AndroidManifest.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/debugOptimized/AndroidManifest.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/AndroidManifest.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainActivity.kt` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainApplication.kt` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable-hdpi/splashscreen_logo.png` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable-mdpi/splashscreen_logo.png` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable/ic_launcher_background.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/drawable/rn_edit_text_material.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-hdpi/ic_launcher.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-mdpi/ic_launcher.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/values-night/colors.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/values/colors.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/values/strings.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/app/src/main/res/values/styles.xml` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/build.gradle` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/gradle.properties` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/gradle/wrapper/gradle-wrapper.jar` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/gradle/wrapper/gradle-wrapper.properties` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/gradlew` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/gradlew.bat` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `android/settings.gradle` — Projeto Android local gerado pelo Expo; não é a fonte persistente do módulo customizado.
+- `app.json` — Configuração Expo, identidade Android, permissões e plugins nativos.
+- `App.tsx` — Entrada React, autenticação, navegação e instância única do monitor.
+- `assets/adaptive-icon.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `assets/alert_tone.wav` — Áudio local de alerta; cópia em res/raw é intencional para o serviço Android.
+- `assets/favicon.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `assets/icon.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `babel.config.js` — Transformação Babel com preset Expo.
+- `CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx` — Cópia de entrega/anotação do usuário; pode divergir da pasta de impressão.
+- `CICTED/Banner_Escolta_CICTED_EQUILIBRADO.pptx` — Cópia de entrega/anotação do usuário; pode divergir da pasta de impressão.
+- `CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf` — Cópia de entrega/anotação do usuário; pode divergir da pasta de impressão.
+- `CICTED/Banner_Escolta_CICTED_REVISAO_2.pptx` — Cópia de entrega/anotação do usuário; pode divergir da pasta de impressão.
+- `CICTED/README.md` — Cópia de entrega/anotação do usuário; pode divergir da pasta de impressão.
+- `docs/cicted/banner/alinhar_banner.py` — Utilitário: alinhar_banner.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/auditar_impressao.py` — Utilitário: auditar_impressao.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA_preview.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS_preview.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/corrigir_parecer_professor.py` — Utilitário: corrigir_parecer_professor.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/equilibrar_banner.py` — Utilitário: equilibrar_banner.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/exportar_impressao.ps1` — Utilitário: exportar_impressao.ps1; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/finalizar_parecer_banner.py` — Utilitário: finalizar_parecer_banner.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/impressao/assets/cabecalho_original.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/cabecalho_vetorial.svg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/cad_perspectiva.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/cad_superior.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_ALINHADO.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_EQUILIBRADO.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_REVISAO_2.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/exportacao_powerpoint_final.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/exportacao_powerpoint.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/assets/marcacoes_professor_2026-10-02.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/prova_app.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/prova_cabecalho.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/prova_pdfjs_equilibrado.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/prova_tabela.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/revisao_2_pdfjs.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/teste_pdfjs_alinhado.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/assets/teste_pdfjs_final.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_ALINHADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_EQUILIBRADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_REVISAO_2.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_pdf_final.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_pdf.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_ALINHADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_EQUILIBRADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_REVISAO_2.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos_final.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/auditoria_textos.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_ALTERACOES.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_ALTERACOES.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_PREVIA.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pptx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/banner/impressao/equilibrio_vertical.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/grade_alinhamento.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/LEIA_ANTES_DE_IMPRIMIR.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_REVISAO_2.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/recursos_preservados_pdf_final.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/recursos_preservados_pdf.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/impressao/resolucao_recursos.json` — Arquivo de apoio/configuração: documentacao
+- `docs/cicted/banner/inspecionar_marcacoes.py` — Utilitário: inspecionar_marcacoes.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/preparar_impressao.py` — Utilitário: preparar_impressao.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/preservar_recursos_pdf.py` — Utilitário: preservar_recursos_pdf.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/cicted/banner/revisar_banner_esclarecido.py` — Utilitário: revisar_banner_esclarecido.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/revisar_consideracoes.py` — Utilitário: revisar_consideracoes.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/trocar_grafico_por_arquitetura.py` — Utilitário: trocar_grafico_por_arquitetura.py; conferir entradas/saídas antes de executar.
+- `docs/cicted/banner/verificar_pdfjs.mjs` — Utilitário: verificar_pdfjs.mjs; conferir entradas/saídas antes de executar.
+- `docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/PENDENCIAS_PARA_SUBMISSAO.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL_corrigido.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_RASCUNHO.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Revisao/.conferencia_cabecalho.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Revisao/CICTED_Escolta_resumo_sem_IA.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Revisao/CICTED_Revisado_Sem_Identificacao.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Revisao/CICTED_Revisado.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/cicted/WhatsApp Image 2026-08-28 at 15.55.39.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/produto/FLUXOS_CENTRAL_SENTINELA.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/produto/imagens_montagem/01-transistor-resistores.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/produto/imagens_montagem/02-circuito-completo.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/produto/imagens_montagem/03-estrutura-3d-conceito-explodido.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/10.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/11.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/12.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/13.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/14.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/2.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/20.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/3.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/30.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/35.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/4.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/5.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/6.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/8.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/9.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 17_20_24.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_06_47.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_17_06.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/placa_com_regua_3.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/placa_com_regua_4.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 16.58.53.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 21.58.32.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.08.41.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.40.25.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.23.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.24.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.01.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.03.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.04.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.05.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.25.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.26.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.27.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.28.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.43.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.44.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.46.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.45.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.46.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.59.59.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.19.14.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.28.10.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 16.49.19.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.53.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.54.jpeg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `docs/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/tcc/modelos/Template_TG2026.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/tcc/Projeto de Pesquisa -1 - Tcc.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.docx` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.pdf` — Artefato acadêmico; integridade estrutural verificada separadamente, conteúdo não certificado nesta auditoria.
+- `docs/testes/dados/proximidade-elevada-2026-10-06.json` — Dados/fixtures experimentais preservados; não sobrescrever com resultados simulados.
+- `docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/testes/ENSAIO_PROXIMIDADE_CAIXA_FECHADA.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/testes/RELATORIO_TESTES_S24_ULTRA_2026-07-31.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/testes/REVISAO_DISTANCIA_P2.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `docs/testes/REVISAO_PROXIMIDADE_P1.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `eas.json` — Perfis de compilação development/preview/production.
+- `firmware/esp32_escolta_ble/esp32_escolta_ble.ino` — Firmware legado, política antiga; não gravar na XIAO.
+- `firmware/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `firmware/xiao_escolta_ble/ProximityDistance.h` — Escala experimental p2 de RSSI para metros.
+- `firmware/xiao_escolta_ble/ProximitySignal.h` — Filtro mediana/EMA, histerese e confirmação temporal p1/p2.
+- `firmware/xiao_escolta_ble/xiao_escolta_ble.ino` — Firmware atual XIAO: GATT, bateria, botão, LED, buzzer e loop.
+- `hardware/case_3d/ABRIR_CAIXA_OPENSCAD.cmd` — Utilitário: ABRIR_CAIXA_OPENSCAD.cmd; conferir entradas/saídas antes de executar.
+- `hardware/case_3d/documentacao/imagens/revisao_bateria_pilares_v2_6.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/documentacao/imagens/revisao_pilares_perspectiva_v2_6.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/documentacao/INSTRUCOES_TESTE_BOTAO_V2_2.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/README_IMPRESSAO_V2_2.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/README_IMPRESSAO_V2_3.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/README_V2.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/REVISAO_ENCAIXE_2026-09-23.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/revisoes/AUDITORIA_DIMENSIONAL_V2_4.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/revisoes/REVISAO_APOIOS_BOTAO_2026-10-02.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/documentacao/revisoes/REVISAO_ENCAIXE_2026-09-30.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/escolta_case_v2.scad` — Fonte paramétrica atual da caixa e peças, com componentes ilustrativos.
+- `hardware/case_3d/ferramentas/validate_stl.py` — Utilitário: validate_stl.py; conferir entradas/saídas antes de executar.
+- `hardware/case_3d/ferramentas/verificar_revisao_apoios.py` — Utilitário: verificar_revisao_apoios.py; conferir entradas/saídas antes de executar.
+- `hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/antes_apoios_v2_8/escolta_case_v2.scad` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/antes_apoios_v2_8/LEIA-ME.md` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_base_v1.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_base_v2_3.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_base_v2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_botao_v2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_case_v1.scad` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_tampa_v1.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_v2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_2.zip` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_3.zip` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2.zip` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/kit_teste_botao_v2_2.zip` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/01_base_v2_3.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/LEIA-ME.md` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/v2_4/01_base_v2_4.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/v2_4/02_tampa_v2_4.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/historico/v2_4/botao_prolongador_v2_4_antigo.stl` — Histórico preservado; não selecionar para entrega atual.
+- `hardware/case_3d/PARA_IMPRIMIR_AGORA/01_base_v2_6.stl` — Entrega atual de impressão ou instruções; não mover sem atualizar referências.
+- `hardware/case_3d/PARA_IMPRIMIR_AGORA/02_tampa_v2_8.stl` — Entrega atual de impressão ou instruções; não mover sem atualizar referências.
+- `hardware/case_3d/PARA_IMPRIMIR_AGORA/03_botao_vermelho_v2_7.stl` — Entrega atual de impressão ou instruções; não mover sem atualizar referências.
+- `hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl` — Entrega atual de impressão ou instruções; não mover sem atualizar referências.
+- `hardware/case_3d/PARA_IMPRIMIR_AGORA/LEIA-ME.md` — Entrega atual de impressão ou instruções; não mover sem atualizar referências.
+- `hardware/case_3d/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `hardware/case_3d/verificacoes/imagens/apoios_botao_v2_8.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/auditoria_folgas_corrigidas.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/auditoria_xiao_2_5mm.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/conceito_xiao_girada_v3.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_3d_v1.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_3d_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_3d_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_base_interna_v1.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_base_superior_v1.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_botao_reforcado_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_botao_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_buzzer_suporte_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_explodido_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_explodido_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_lateral_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_layout_superior_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_layout_v2_3.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_layout_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_parede_led_buzzer_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_protetor_bateria_v2_3.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_tampa_externa_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_tampa_interna_v1.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/render_tampa_v2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_bateria_fixa.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_compacta_botao.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_compacta_buzzer.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_compacta_completa.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_compacta_explodida.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_compacta_fechada.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_fixacao_xiao.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_layout_v2_5.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada_13mm.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/verificacao_base_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/verificacao_botao_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/verificacao_tampa_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/verificacao_trava_v2_2.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.svg` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/imagens/visualizar_botao_montado.png` — Imagem/foto/recurso visual; não é fonte de firmware nem de aplicativo.
+- `hardware/case_3d/verificacoes/malhas/base_2026_09_30.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/base_v2_5_candidate.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/regressao_v2_8_base.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_cap.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_retainer.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/revisao_2026_09_30.csg` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_auditoria_folgas.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_auditoria_xiao.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_base_reexportada.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_bateria_fixa.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_compacta_base.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_compacta_botao.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_compacta_tampa.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_compacta_trava_c.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_fixacao_xiao.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_passantes.csg` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada_13mm.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada.stl` — Malha 3D; somente PARA_IMPRIMIR_AGORA define a entrega atual.
+- `hardware/case_3d/verificacoes/scripts/auditar_apoio_botao.py` — Utilitário: auditar_apoio_botao.py; conferir entradas/saídas antes de executar.
+- `hardware/case_3d/verificacoes/scripts/conferir_bateria_fixa.scad` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/scripts/verificar_apoios_v2_8.scad` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/scripts/verificar_stl.scad` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/scripts/visualizar_botao.scad` — Arquivo de apoio/configuração: hardware
+- `hardware/case_3d/verificacoes/scripts/visualizar_passantes.scad` — Arquivo de apoio/configuração: hardware
+- `hardware/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `modules/escolta-sentinela/android/build.gradle` — Arquivo de apoio/configuração: android-nativo-fonte
+- `modules/escolta-sentinela/android/src/main/AndroidManifest.xml` — Arquivo de apoio/configuração: android-nativo-fonte
+- `modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaModule.kt` — Métodos Expo que encaminham comandos ao serviço Android.
+- `modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt` — Serviço Android de primeiro plano, alarme nativo e tolerância por Handler; não lê GATT.
+- `modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav` — Áudio local de alerta; cópia em res/raw é intencional para o serviço Android.
+- `modules/escolta-sentinela/expo-module.config.json` — Arquivo de apoio/configuração: android-nativo-fonte
+- `package-lock.json` — Árvore travada de dependências npm.
+- `package.json` — Dependências e comandos npm; não contém servidor próprio.
+- `README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `src/context/AppPreferencesContext.tsx` — Preferências globais persistidas e tema.
+- `src/hooks/useEsp32Monitor.ts` — Orquestra BLE, estados, pausa, reconexão, alarmes, bateria e registros.
+- `src/screens/AlertsScreen.tsx` — Exibição, compartilhamento e limpeza confirmada de registros.
+- `src/screens/AuthScreen.tsx` — Login, criação de conta, perfil local e recuperação de senha.
+- `src/screens/DashboardScreen.tsx` — Central: estado, estimativa, bateria e prontidão.
+- `src/screens/ManualScreen.tsx` — Orientações e limites do protótipo.
+- `src/screens/PatrolScreen.tsx` — Tela legada, sem importação na navegação ativa.
+- `src/screens/ProximityTrialModal.tsx` — Interface de ensaio com trena e coleta de RSSI.
+- `src/screens/SettingsScreen.tsx` — Perfil, preferências, pausa e diagnóstico.
+- `src/screens/SystemDiagnosticsModal.tsx` — Checagens observáveis, relatório e testes manuais.
+- `src/services/backgroundSentinel.ts` — Ponte JS para serviço Android opcional.
+- `src/services/bleApi.ts` — GATT, permissões, scan, RSSI, comandos e observadores de ensaio.
+- `src/services/firebaseConfig.ts` — Inicialização e persistência Firebase Authentication.
+- `src/services/notificationService.ts` — Permissão, canais e notificações Expo locais.
+- `src/theme.ts` — Paletas, cores e helpers visuais.
+- `src/utils/proximityTrial.ts` — Regras puras de coleta, validação, estatística, CSV e histórico de ensaios.
+- `tools/auditoria/catalogar_projeto.cjs` — Utilitário: catalogar_projeto.cjs; conferir entradas/saídas antes de executar.
+- `tools/auditoria/inventario.cjs` — Utilitário: inventario.cjs; conferir entradas/saídas antes de executar.
+- `tools/auditoria/organizar_documentacao.cjs` — Utilitário: organizar_documentacao.cjs; conferir entradas/saídas antes de executar.
+- `tools/auditoria/verificar_arquivos.py` — Utilitário: verificar_arquivos.py; conferir entradas/saídas antes de executar.
+- `tools/auditoria/verificar_cad.py` — Utilitário: verificar_cad.py; conferir entradas/saídas antes de executar.
+- `tools/auditoria/verificar_dependencias.cjs` — Utilitário: verificar_dependencias.cjs; conferir entradas/saídas antes de executar.
+- `tools/auditoria/verificar_preservacao.cjs` — Utilitário: verificar_preservacao.cjs; conferir entradas/saídas antes de executar.
+- `tools/auditoria/verificar_testes.cjs` — Utilitário: verificar_testes.cjs; conferir entradas/saídas antes de executar.
+- `tools/cicted/anonymize_cicted.py` — Utilitário: anonymize_cicted.py; conferir entradas/saídas antes de executar.
+- `tools/cicted/apply_cicted_review.py` — Utilitário: apply_cicted_review.py; conferir entradas/saídas antes de executar.
+- `tools/cicted/gerar_resumo_cicted.py` — Utilitário: gerar_resumo_cicted.py; conferir entradas/saídas antes de executar.
+- `tools/cicted/inspect_cicted_docx.py` — Utilitário: inspect_cicted_docx.py; conferir entradas/saídas antes de executar.
+- `tools/cicted/remove_ai_from_cicted.py` — Utilitário: remove_ai_from_cicted.py; conferir entradas/saídas antes de executar.
+- `tools/diagramas/gerar_diagrama_circuito_completo.py` — Utilitário: gerar_diagrama_circuito_completo.py; conferir entradas/saídas antes de executar.
+- `tools/README.md` — Documento de apoio, instruções ou relatório; versões antigas não são especificação atual.
+- `tools/test-monitor-alerts.cjs` — Utilitário: test-monitor-alerts.cjs; conferir entradas/saídas antes de executar.
+- `tools/test-proximity-ble.cjs` — Utilitário: test-proximity-ble.cjs; conferir entradas/saídas antes de executar.
+- `tools/test-proximity-distance.cjs` — Utilitário: test-proximity-distance.cjs; conferir entradas/saídas antes de executar.
+- `tools/test-proximity-signal.cpp` — Arquivo de apoio/configuração: ferramentas
+- `tools/test-proximity-signal.ps1` — Utilitário: test-proximity-signal.ps1; conferir entradas/saídas antes de executar.
+- `tools/test-proximity-trial.cjs` — Utilitário: test-proximity-trial.cjs; conferir entradas/saídas antes de executar.
+- `tsconfig.json` — Configuração de tipagem TypeScript.

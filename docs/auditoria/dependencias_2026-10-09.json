@@ -1,0 +1,734 @@
+{
+  "exitCode": 1,
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 17,
+      "high": 27,
+      "critical": 0,
+      "total": 44
+    },
+    "dependencies": {
+      "prod": 732,
+      "dev": 42,
+      "optional": 23,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 785
+    }
+  },
+  "error": null,
+  "vulnerabilities": [
+    {
+      "name": "@expo/cli",
+      "severity": "high",
+      "direct": false,
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/code-signing-certificates",
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/metro",
+        "@expo/metro-config",
+        "@expo/prebuild-config",
+        "node-forge"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@expo/code-signing-certificates",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "node-forge"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "@expo/config",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || >=3.3.23-alpha.0",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/config-plugins"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@expo/config-plugins",
+      "severity": "moderate",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "xcode"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@expo/metro",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "metro",
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@expo/metro-config",
+      "severity": "high",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || >=0.1.49-alpha.0",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/config",
+        "@expo/metro",
+        "postcss"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@expo/ngrok",
+      "severity": "moderate",
+      "direct": true,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "uuid"
+      ],
+      "fixAvailable": false
+    },
+    {
+      "name": "@expo/prebuild-config",
+      "severity": "moderate",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/config",
+        "@expo/config-plugins"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "@firebase/firestore",
+      "severity": "high",
+      "direct": false,
+      "range": "1.3.1-0 - 1.3.1-canary.df1b588 || 1.3.2-0 - 1.3.3-canary.bc4a844 || 1.13.1-0 - 1.13.1-canary.ce3addba || 1.14.0-0 - 1.15.1 || 3.7.3-20221108184443 - 3.7.3-canary.fde5adf63 || >=3.8.0-20221206221533",
+      "advisories": [],
+      "viaPackages": [
+        "@grpc/grpc-js"
+      ],
+      "fixAvailable": {
+        "name": "firebase",
+        "version": "9.14.0",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@firebase/firestore-compat",
+      "severity": "high",
+      "direct": false,
+      "range": "<=0.0.900-exp.520ca39d0 || 0.2.3-20221108184443 - 0.2.3-canary.fde5adf63 || >=0.3.0-20221206221533",
+      "advisories": [],
+      "viaPackages": [
+        "@firebase/firestore"
+      ],
+      "fixAvailable": {
+        "name": "firebase",
+        "version": "9.14.0",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@grpc/grpc-js",
+      "severity": "high",
+      "direct": false,
+      "range": "<=1.13.5",
+      "advisories": [
+        {
+          "title": "@grpc/grpc-js: In certain configurations, getAuthContext can return unauthorized certificates as though they were authorized",
+          "url": "https://github.com/advisories/GHSA-m9gg-hp2v-232j",
+          "range": "<1.13.6"
+        },
+        {
+          "title": "@grpc/grpc-js: The server transmits some error messages thrown by method handlers to the client in status messages",
+          "url": "https://github.com/advisories/GHSA-f596-whhp-79r4",
+          "range": "<1.13.6"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "firebase",
+        "version": "9.14.0",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@istanbuljs/load-nyc-config",
+      "severity": "moderate",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "js-yaml"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@jest/environment",
+      "severity": "high",
+      "direct": false,
+      "range": "<=30.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "@jest/fake-timers"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "@jest/fake-timers",
+      "severity": "high",
+      "direct": false,
+      "range": "<=30.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "jest-message-util"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@jest/transform",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "babel-plugin-istanbul",
+        "jest-haste-map",
+        "micromatch"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "@react-native/community-cli-plugin",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "metro",
+        "metro-config"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "argparse",
+      "severity": "moderate",
+      "direct": false,
+      "range": "1.0.0 - 1.0.10",
+      "advisories": [],
+      "viaPackages": [
+        "sprintf-js"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "babel-jest",
+      "severity": "high",
+      "direct": false,
+      "range": ">=24.2.0-alpha.0",
+      "advisories": [],
+      "viaPackages": [
+        "@jest/transform",
+        "babel-plugin-istanbul"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "babel-plugin-istanbul",
+      "severity": "moderate",
+      "direct": false,
+      "range": ">=6.0.0-beta.0",
+      "advisories": [],
+      "viaPackages": [
+        "@istanbuljs/load-nyc-config"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "braces",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [
+        {
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "range": "<=3.0.3"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo",
+      "severity": "high",
+      "direct": true,
+      "range": ">=41.0.0-alpha.0",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/cli",
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/metro",
+        "@expo/metro-config",
+        "expo-asset",
+        "expo-constants"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo-asset",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 8.6.1 - 55.0.0-canary-20260223-05214f1 || 55.0.3-canary-20260128-67ce8d5 || 55.0.8-canary-20260424-7bedc9d - 55.0.8-canary-20260429-a5e59cf || 55.0.11-canary-20260327-0789fbc - 55.0.11-canary-20260402-9da566b || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d",
+      "advisories": [],
+      "viaPackages": [
+        "expo-constants"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo-constants",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 10.1.2 - 55.0.14 || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/config"
+      ],
+      "fixAvailable": {
+        "name": "expo-notifications",
+        "version": "57.0.22",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo-dev-client",
+      "severity": "moderate",
+      "direct": true,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 3.1.0 - 55.0.0-canary-20260223-05214f1 || 55.0.4-canary-20260128-67ce8d5 || 55.0.10-canary-20260424-7bedc9d - 55.0.10-canary-20260429-a5e59cf || 55.0.20-canary-20260327-0789fbc - 55.0.20-canary-20260402-9da566b || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d",
+      "advisories": [],
+      "viaPackages": [
+        "expo-dev-launcher",
+        "expo-manifests"
+      ],
+      "fixAvailable": {
+        "name": "expo-dev-client",
+        "version": "57.0.19",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo-dev-launcher",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 3.1.0 - 55.0.0-canary-20260223-05214f1 || 55.0.5-canary-20260128-67ce8d5 || 55.0.11-canary-20260424-7bedc9d - 55.0.11-canary-20260429-a5e59cf || 55.0.21-canary-20260327-0789fbc - 55.0.21-canary-20260402-9da566b || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d",
+      "advisories": [],
+      "viaPackages": [
+        "expo-manifests"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "expo-manifests",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 0.9.0 - 55.0.15 || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d",
+      "advisories": [],
+      "viaPackages": [
+        "@expo/config"
+      ],
+      "fixAvailable": {
+        "name": "expo-dev-client",
+        "version": "57.0.19",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "expo-notifications",
+      "severity": "moderate",
+      "direct": true,
+      "range": "<=0.0.1-canary-20240418-8d74597 || 0.11.4 - 55.0.0-canary-20260223-05214f1 || 55.0.5-canary-20260128-67ce8d5 || 55.0.11-canary-20260424-7bedc9d - 55.0.11-canary-20260429-a5e59cf || 55.0.15-canary-20260327-0789fbc - 55.0.15-canary-20260402-9da566b || 56.0.0-canary-20260212-4f61309 - 56.0.0-canary-20260506-964f25d || 56.0.15-canary-20260526-6cd5e37 - 56.0.15-canary-20260628-fc0d9b4 || 57.0.0-canary-20260526-13e89ca - 57.0.0-canary-20260623-1c70a78 || 58.0.0-canary-20260806-8c2d007 - 58.0.0-canary-20260909-ea7a89a",
+      "advisories": [],
+      "viaPackages": [
+        "expo-constants"
+      ],
+      "fixAvailable": {
+        "name": "expo-notifications",
+        "version": "57.0.22",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "firebase",
+      "severity": "high",
+      "direct": true,
+      "range": "0.900.22 || 6.0.2-0 - 6.0.2-canary.42eae23 || 6.0.3-0 - 6.0.4-canary.bc4a844 || 7.9.1-0 - 7.9.1-canary.0396117e || 7.13.2-0 - 7.13.2-canary.ce3addba || 7.14.0-0 - 7.15.1 || 8.10.0-20217172214 - 8.10.0-canary.f40c0db53 || 9.0.0-20217250818 - 9.0.0-canary.d0d3acb10 || 9.0.1-2021727231341 - 9.0.1-canary.e039e1472 || 9.0.2-2021891633 - 9.0.2-canary.ff9baf70c || 9.0.3-202181503543 - 9.1.0-canary.f7d8324a1 || 9.1.1-2021830195733 - 9.1.1-canary.e70de6201 || 9.1.2-20219523556 - 9.1.2-canary.fc1d36497 || 9.13.1-20221108184443 - 9.14.0-canary.fde5adf63 || >=9.15.0-20221206221533",
+      "advisories": [],
+      "viaPackages": [
+        "@firebase/firestore",
+        "@firebase/firestore-compat"
+      ],
+      "fixAvailable": {
+        "name": "firebase",
+        "version": "9.14.0",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "image-size",
+      "severity": "high",
+      "direct": false,
+      "range": "0.6.3 - 2.0.2",
+      "advisories": [
+        {
+          "title": "image-size: JXL and HEIF parsers allow denial of service through infinite loops",
+          "url": "https://github.com/advisories/GHSA-5p2g-fcmc-qvqq",
+          "range": ">=1.2.0 <=2.0.2"
+        },
+        {
+          "title": "image-size: ICNS parser allows denial of service through an infinite loop",
+          "url": "https://github.com/advisories/GHSA-w3rx-r6r6-pgpr",
+          "range": ">=0.6.3 <=2.0.2"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": true
+    },
+    {
+      "name": "jest-environment-node",
+      "severity": "high",
+      "direct": false,
+      "range": "24.2.0-alpha.0 - 30.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "@jest/environment",
+        "@jest/fake-timers"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "jest-haste-map",
+      "severity": "high",
+      "direct": false,
+      "range": "18.1.0 - 30.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "micromatch"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "jest-message-util",
+      "severity": "high",
+      "direct": false,
+      "range": "18.5.0-alpha.7da3df39 - 30.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "micromatch"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "js-yaml",
+      "severity": "moderate",
+      "direct": false,
+      "range": "3.2.7 - 3.15.2",
+      "advisories": [],
+      "viaPackages": [
+        "argparse"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "metro",
+      "severity": "high",
+      "direct": false,
+      "range": ">=0.71.0",
+      "advisories": [],
+      "viaPackages": [
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "metro-config",
+      "severity": "high",
+      "direct": false,
+      "range": ">=0.71.0",
+      "advisories": [],
+      "viaPackages": [
+        "metro"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "metro-file-map",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [],
+      "viaPackages": [
+        "micromatch"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "metro-transform-worker",
+      "severity": "high",
+      "direct": false,
+      "range": ">=0.71.0",
+      "advisories": [],
+      "viaPackages": [
+        "metro"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "micromatch",
+      "severity": "high",
+      "direct": false,
+      "range": ">=0.2.0",
+      "advisories": [],
+      "viaPackages": [
+        "braces"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "node-forge",
+      "severity": "high",
+      "direct": false,
+      "range": "*",
+      "advisories": [
+        {
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "range": "<=1.4.0"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "postcss",
+      "severity": "high",
+      "direct": false,
+      "range": "<=8.5.22",
+      "advisories": [
+        {
+          "title": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+          "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
+          "range": "<8.5.10"
+        },
+        {
+          "title": "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+          "url": "https://github.com/advisories/GHSA-6g55-p6wh-862q",
+          "range": "<=8.5.11"
+        },
+        {
+          "title": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+          "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+          "range": "<=8.5.22"
+        },
+        {
+          "title": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+          "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849",
+          "range": "<=8.5.17"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "react-native",
+      "severity": "high",
+      "direct": true,
+      "range": "<=0.0.0-ffdfbbec0 || >=0.71.0-rc.0",
+      "advisories": [],
+      "viaPackages": [
+        "@react-native/community-cli-plugin",
+        "babel-jest",
+        "jest-environment-node"
+      ],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "sprintf-js",
+      "severity": "moderate",
+      "direct": false,
+      "range": "*",
+      "advisories": [
+        {
+          "title": "sprintf-js vulnerable to denial of service through unbounded precision specifiers",
+          "url": "https://github.com/advisories/GHSA-hp3w-g68c-fv3c",
+          "range": "<=1.1.3"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "uuid",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<11.1.1",
+      "advisories": [
+        {
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "range": "<11.1.1"
+        }
+      ],
+      "viaPackages": [],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "xcode",
+      "severity": "moderate",
+      "direct": false,
+      "range": ">=0.9.2",
+      "advisories": [],
+      "viaPackages": [
+        "uuid"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    }
+  ]
+}

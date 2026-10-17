@@ -1,0 +1,5 @@
+USB aberto em COM8. Apenas leitura; sem comandos, reset a 1200 baud ou alteracao de potencia.
+[2026-10-15T00:50:38.9023318+00:00] [BATTERY_ADC] profile=p5-r4-adc40 requested_us=40 adc_mean=2380.63 unfiltered_v=4.1310 filtered_v=4.1301 display_top_v=4.10 pct=100 usb=1 charging=1
+[2026-10-15T00:50:43.9758688+00:00] [BATTERY_ADC] profile=p5-r4-adc40 requested_us=40 adc_mean=2380.00 unfiltered_v=4.1299 filtered_v=4.1300 display_top_v=4.10 pct=100 usb=1 charging=1
+[2026-10-15T00:50:48.9392961+00:00] [BATTERY_ADC] profile=p5-r4-adc40 requested_us=40 adc_mean=2380.56 unfiltered_v=4.1309 filtered_v=4.1302 display_top_v=4.10 pct=100 usb=1 charging=1
+Diagnostico de radio ainda nao recebido. Nao inferir potencia/PHY.

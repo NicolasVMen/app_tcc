@@ -12,10 +12,11 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage, { subscribeAccountStorage } from '../services/accountStorage';
 
 import { Esp32MonitorState } from '../hooks/useEsp32Monitor';
 import { resetarAlarmeBle } from '../services/bleApi';
+import { VALIDATED_MONITOR_ENABLED } from '../services/nativeIdentity';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from '../theme';
 
@@ -49,13 +50,18 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
   const pulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    AsyncStorage.getItem('@escolta_user_profile').then(raw => {
+    let active = true;
+    const update = (raw: string | null) => {
+      if (!active) return;
       if (!raw) return;
       try {
         const profile = JSON.parse(raw);
         if (profile.nomeCrianca?.trim()) setChildName(profile.nomeCrianca.trim());
       } catch {}
-    }).catch(() => {});
+    };
+    AsyncStorage.getItem('@escolta_user_profile').then(update).catch(() => {});
+    const unsubscribe = subscribeAccountStorage((key, raw) => { if (key === '@escolta_user_profile') update(raw); });
+    return () => { active = false; unsubscribe(); };
   }, []);
 
   useEffect(() => {
@@ -73,6 +79,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       ? 'uncovered'
     : monitor.reconectando
       ? 'reconnecting'
+      : monitor.conectado && !monitor.dadosValidos
+        ? 'synchronizing'
       : monitor.conectado && monitor.nivelSinal === 'aviso'
         ? 'attention'
         : monitor.conectado
@@ -98,7 +106,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
         description: 'O dispositivo continua sem vínculo. A Sentinela segue procurando.', icon: 'shield-outline', color: colors.warningYellow,
       };
       case 'emergency': return {
-        title: 'EMERGÊNCIA', childMessage: 'Não foi possível restabelecer o vínculo',
+        title: 'EMERGÊNCIA', childMessage: 'Alerta crítico ativo',
         description: `Verifique ${childName} imediatamente.`, icon: 'alert-circle', color: colors.dangerRed,
       };
       case 'standby': return {
@@ -107,7 +115,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       };
       case 'synchronizing': return {
         title: 'SINCRONIZANDO', childMessage: 'Retomando a proteção',
-        description: 'Confirmando o monitoramento com o dispositivo Escolta.', icon: 'sync', color: colors.primaryBlue,
+        description: monitor.falhaTecnica || 'Confirmando dados atuais e o monitoramento com o dispositivo Escolta.', icon: 'sync', color: colors.primaryBlue,
       };
       default: return {
         title: monitor.isScanning ? 'PROCURANDO' : 'AGUARDANDO VÍNCULO',
@@ -116,7 +124,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
         icon: monitor.isScanning ? 'scan' : 'bluetooth-outline', color: colors.primaryBlue,
       };
     }
-  }, [visualState, childName, colors, monitor.isScanning, monitor.scanError]);
+  }, [visualState, childName, colors, monitor.isScanning, monitor.scanError, monitor.falhaTecnica]);
 
   useEffect(() => {
     pulse.stopAnimation();
@@ -133,11 +141,6 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
   }, [visualState, preferences.reduceMotion, pulse]);
 
   const coreSize = Math.max(190, Math.min(260, width * 0.58));
-  const distance = !monitor.sincronizandoProtecao && monitor.conectado && monitor.distanciaEstimada != null && Number.isFinite(monitor.distanciaEstimada)
-    ? monitor.distanciaEstimada < 1
-      ? '< 1 m'
-      : `~${Math.round(monitor.distanciaEstimada)} m`
-    : '—';
   const deviceBatteryAvailable = monitor.bateriaPercentual != null && Number.isFinite(monitor.bateriaPercentual);
   const deviceBatteryDetail = deviceBatteryAvailable
     ? `${Math.round(monitor.bateriaPercentual!)}% estimados${monitor.bateriaTensao != null ? ` • ${monitor.bateriaTensao.toFixed(2)} V` : ''}${monitor.bateriaCarregando ? ' • Carregando' : monitor.dispositivoUsbConectado ? ' • USB conectado' : ''}`
@@ -146,9 +149,16 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
     ? Math.max(0, Math.floor((now - new Date(monitor.ultimaAtualizacao).getTime()) / 1000))
     : null;
   const updatedLabel = formatElapsedUpdate(secondsSinceUpdate);
+  const distance = !monitor.sincronizandoProtecao && !monitor.emEspera && monitor.conectado
+    && secondsSinceUpdate != null && secondsSinceUpdate <= 3
+    && monitor.distanciaEstimada != null && Number.isFinite(monitor.distanciaEstimada)
+    ? monitor.distanciaEstimada < 1
+      ? '< 1 m'
+      : `~${Math.round(monitor.distanciaEstimada)} m`
+    : '—';
 
   const soundReady = monitor.somCarregado !== false;
-  const essentialReady = monitor.conectado && soundReady && preferences.autoConnect;
+  const essentialReady = monitor.conectado && monitor.dadosValidos && soundReady && preferences.autoConnect;
   const notificationsReady = preferences.notificationsEnabled && monitor.notificacoesAutorizadas !== false;
   const hasCoverageWarning = essentialReady && !notificationsReady;
 
@@ -176,8 +186,10 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
             try {
               if (monitor.confirmarSeguranca) await monitor.confirmarSeguranca();
               else await resetarAlarmeBle();
-            } catch {
-              Alert.alert('Não foi possível confirmar', 'O dispositivo ainda não respondeu. Continue verificando a situação.');
+            } catch (error) {
+              Alert.alert('Não foi possível confirmar', VALIDATED_MONITOR_ENABLED && error instanceof Error
+                ? error.message
+                : 'O dispositivo ainda não respondeu. Continue verificando a situação.');
             }
           },
         },
@@ -232,6 +244,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
           <View style={styles.distanceBlock}>
             <Text style={styles.distanceLabel}>DISTÂNCIA ESTIMADA</Text>
             <Text style={styles.distanceValue}>{distance}</Text>
+            <Text style={styles.distanceHint}>Aproximação pelo sinal Bluetooth</Text>
             <Text style={styles.updatedText}>{updatedLabel}</Text>
           </View>
 
@@ -307,7 +320,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
           )}
         </TouchableOpacity>
 
-        <Text style={styles.prototypeNote}>Protótipo acadêmico funcional — Engenharia da Computação UNITAU</Text>
+        <Text style={styles.prototypeNote}>O Escolta complementa, mas não substitui, a supervisão do responsável.</Text>
       </ScrollView>
     </View>
   );
@@ -372,6 +385,7 @@ function createStyles(colors: AppColors) {
     distanceBlock: { alignItems: 'center', marginTop: 20, marginBottom: 18 },
     distanceLabel: { color: colors.textMuted, fontSize: 10, fontWeight: '800', letterSpacing: 1.25 },
     distanceValue: { color: colors.textPrimary, fontSize: 38, fontWeight: '300', marginTop: 3 },
+    distanceHint: { color: colors.textMuted, fontSize: 11, marginTop: 2, textAlign: 'center' },
     updatedText: { color: colors.textMuted, fontSize: 12, marginTop: 1 },
     primaryButton: {
       minHeight: 48, minWidth: 220, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9,

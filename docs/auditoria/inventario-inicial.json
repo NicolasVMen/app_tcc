@@ -1,0 +1,2896 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "path": ".gitignore",
+      "category": "configuracao-raiz",
+      "bytes": 374,
+      "sha256": "8ea9f1e2d474092fd38cbc1876ba2fad14a4cfad330c1871a6da5ad9ed54d9d0",
+      "lines": null
+    },
+    {
+      "path": ".npmrc",
+      "category": "configuracao-raiz",
+      "bytes": 22,
+      "sha256": "a093bb2fed59d699b7f9a62a5203cc196054c624e9c39c6d908c9e7db5dd2464",
+      "lines": null
+    },
+    {
+      "path": "android/.gitignore",
+      "category": "android-local-gerado",
+      "bytes": 129,
+      "sha256": "03263c9a1436e264a87c6e0547007488dc980efb2326724b5a85c0835bac34a7",
+      "lines": null
+    },
+    {
+      "path": "android/app/build.gradle",
+      "category": "android-local-gerado",
+      "bytes": 8163,
+      "sha256": "69c596b77b1663009429859a56a9b7b407919b28157085154b6697391013117c",
+      "lines": 183
+    },
+    {
+      "path": "android/app/debug.keystore",
+      "category": "android-local-gerado",
+      "bytes": 2257,
+      "sha256": "221e0a3106aa4c3ccc154e0a418b55020b3f9ea6e84f92e8749cd9e2f39f5e58",
+      "lines": null
+    },
+    {
+      "path": "android/app/proguard-rules.pro",
+      "category": "android-local-gerado",
+      "bytes": 562,
+      "sha256": "8bd4d7b69a1d78e8322b459b5e8d48234adce7481df04da34c0140d52ffb367a",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "category": "android-local-gerado",
+      "bytes": 374,
+      "sha256": "fb1795032c764d975376e1612ab7022058eca2268a45efbe731a47a5d3ac0f60",
+      "lines": 8
+    },
+    {
+      "path": "android/app/src/debugOptimized/AndroidManifest.xml",
+      "category": "android-local-gerado",
+      "bytes": 374,
+      "sha256": "fb1795032c764d975376e1612ab7022058eca2268a45efbe731a47a5d3ac0f60",
+      "lines": 8
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "category": "android-local-gerado",
+      "bytes": 2880,
+      "sha256": "828700177a190c2f4e37965d6f3810f974729d7917f4c7e7fdba9a59fbb18889",
+      "lines": 42
+    },
+    {
+      "path": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainActivity.kt",
+      "category": "android-local-gerado",
+      "bytes": 2199,
+      "sha256": "808a7d386bfd0cae5b406ff432fa5356cbb15f130c5478ad028c9c3858d3605e",
+      "lines": 62
+    },
+    {
+      "path": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainApplication.kt",
+      "category": "android-local-gerado",
+      "bytes": 2042,
+      "sha256": "22600486e93f763b510260fef6093d42008b6541630c040dc66bf78eb6e32647",
+      "lines": 57
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
+      "category": "android-local-gerado",
+      "bytes": 92618,
+      "sha256": "c10cc29b20828b04393b44d2d536bdee60f849595de12163ead12257281b460d",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/splashscreen_logo.png",
+      "category": "android-local-gerado",
+      "bytes": 44364,
+      "sha256": "a27e7d01c351977a81fddfc4b1486530a1a2c09cb39c30fd26089fe3edcd0873",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png",
+      "category": "android-local-gerado",
+      "bytes": 159444,
+      "sha256": "840b6785d1fc846f8d2a122a10bbdeda73083696988bc778443dbe1a0e271b51",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png",
+      "category": "android-local-gerado",
+      "bytes": 339100,
+      "sha256": "3b62b1bda450ccc964c302ca3a2bf9714665a04661afc842bf992b646716ffbf",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png",
+      "category": "android-local-gerado",
+      "bytes": 584574,
+      "sha256": "4c4e2cbc5b4c4203a9e01c41644131efe175b652cd0c7dec1449ca386a30a376",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_launcher_background.xml",
+      "category": "android-local-gerado",
+      "bytes": 245,
+      "sha256": "51fca95679d075ddbe2b9fe7ad2efb5ef545c5770a9ad6cafe8bf610c18c67be",
+      "lines": 6
+    },
+    {
+      "path": "android/app/src/main/res/drawable/rn_edit_text_material.xml",
+      "category": "android-local-gerado",
+      "bytes": 1917,
+      "sha256": "738e3aaad53180caba1419a6d5db8465a0742662fe59a4bbaf05f1061cbc3390",
+      "lines": 38
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "category": "android-local-gerado",
+      "bytes": 257,
+      "sha256": "03d70962a0beea2bb6ab1a838b015d90da6c33adb045ff85f7b198aca70df08d",
+      "lines": 5
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "category": "android-local-gerado",
+      "bytes": 257,
+      "sha256": "03d70962a0beea2bb6ab1a838b015d90da6c33adb045ff85f7b198aca70df08d",
+      "lines": 5
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp",
+      "category": "android-local-gerado",
+      "bytes": 29850,
+      "sha256": "cf9ddb469cce663a1c85e2d9f9b41720190feefd64098ec10273ab05decc9399",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
+      "category": "android-local-gerado",
+      "bytes": 8375,
+      "sha256": "6b3dadd25daf3ea944e14b67dc739190b063e12bc1e07652091cf1e55ab0927a",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.webp",
+      "category": "android-local-gerado",
+      "bytes": 7830,
+      "sha256": "f1b2799c9f80f30548bd032da0d8ee4c1fd71ca3a2e1cccdb2002112eb5d553e",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp",
+      "category": "android-local-gerado",
+      "bytes": 15430,
+      "sha256": "0798e7dae49f7a32b437393c07aaa82121e960a0aaf5f20920e48d511ce4da71",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
+      "category": "android-local-gerado",
+      "bytes": 4447,
+      "sha256": "21abb42f97bdaee9e6b1ae6de1097e4d48b288c1d8ccbadc4610c9058b3c72de",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.webp",
+      "category": "android-local-gerado",
+      "bytes": 4101,
+      "sha256": "aec4b8c21b646869772bd99c85c259549bed187afb8a55c4fd0f8098bff73f5c",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp",
+      "category": "android-local-gerado",
+      "bytes": 49265,
+      "sha256": "1085eca9a87407d7e1445197dd881660154dcbd568f057f314811f76e741f1f1",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
+      "category": "android-local-gerado",
+      "bytes": 13645,
+      "sha256": "60ed95e00407f75898013ecdaa79ba4649cd9e2ee6902a92b1f6fd95953a9f3f",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp",
+      "category": "android-local-gerado",
+      "bytes": 12775,
+      "sha256": "f6a97def1db2494e400dd8980148145c1b3a9570f250db1bad7c23a9f010ec45",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp",
+      "category": "android-local-gerado",
+      "bytes": 104581,
+      "sha256": "3652dbc735342f04bfffec9ca3a3ffabf16ebe5aa5a769898d782ced8ff16539",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
+      "category": "android-local-gerado",
+      "bytes": 25709,
+      "sha256": "4c5877a9826ceefce60ec9e723e4aa1d5e78abf6fe8e93f882b46136947c4343",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
+      "category": "android-local-gerado",
+      "bytes": 24511,
+      "sha256": "967eef82d2d1e6f06aa6fbe52f6b5bf7c475508e09c20024d8fe96199b9fc2ff",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp",
+      "category": "android-local-gerado",
+      "bytes": 179214,
+      "sha256": "0a945a35dfc6d159624226decb2e264615b81020d340b605067f202f1c17f64d",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp",
+      "category": "android-local-gerado",
+      "bytes": 42058,
+      "sha256": "6029bf2d1b21e5744d8c61d3ea85bcbd567a7a7123473fb5e189075edddd20f3",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+      "category": "android-local-gerado",
+      "bytes": 40521,
+      "sha256": "bb761ef479ed3f265a85351fe0a50495593e16c12c42b98fb6c776738db516a6",
+      "lines": null
+    },
+    {
+      "path": "android/app/src/main/res/values-night/colors.xml",
+      "category": "android-local-gerado",
+      "bytes": 12,
+      "sha256": "c30a9f37e6b34372e1db8c812d64a18719acf7c52c11ff2f7e5e5ed5e05c2072",
+      "lines": 1
+    },
+    {
+      "path": "android/app/src/main/res/values/colors.xml",
+      "category": "android-local-gerado",
+      "bytes": 221,
+      "sha256": "0637ed8361463a9e6fd184953201442a518e30b09d2cdbc8024484f6da43d96d",
+      "lines": 6
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "category": "android-local-gerado",
+      "bytes": 255,
+      "sha256": "f17c57d95cb7d4106ad54354cedc1315244a58217fd1e2ad2ae97f4504729cda",
+      "lines": 5
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "category": "android-local-gerado",
+      "bytes": 587,
+      "sha256": "b2eaa9766d43087c385ba50a66ba836da03c4f0dec18acdaa3c2a8cebe0ec2a5",
+      "lines": 11
+    },
+    {
+      "path": "android/build.gradle",
+      "category": "android-local-gerado",
+      "bytes": 556,
+      "sha256": "bdb916d3fe7085c9e9f3bb45bd5eacb97f5d2c5a2b2af965642f7d904739ca68",
+      "lines": 25
+    },
+    {
+      "path": "android/gradle.properties",
+      "category": "android-local-gerado",
+      "bytes": 2837,
+      "sha256": "7f0d59f23b81f0674ff7981775fdaaa820cbdf192e94cf7ac33ee3aa1e6d7507",
+      "lines": 66
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "category": "android-local-gerado",
+      "bytes": 43764,
+      "sha256": "7d3a4ac4de1c32b59bc6a4eb8ecb8e612ccd0cf1ae1e99f66902da64df296172",
+      "lines": null
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "category": "android-local-gerado",
+      "bytes": 253,
+      "sha256": "7e0821d895908883350587c74476b717016ab416320c44dc82a10def916c6fb5",
+      "lines": 8
+    },
+    {
+      "path": "android/gradlew",
+      "category": "android-local-gerado",
+      "bytes": 8744,
+      "sha256": "ee038d6f6b21501d34c5eac442aad930fd6b82191f9bb00f1780cc101ca14a68",
+      "lines": null
+    },
+    {
+      "path": "android/gradlew.bat",
+      "category": "android-local-gerado",
+      "bytes": 2937,
+      "sha256": "1d297e00bd21de3ace22b4d7f2de1f9dfa858883d66bbf7c1ccbecccec8f4f3b",
+      "lines": null
+    },
+    {
+      "path": "android/settings.gradle",
+      "category": "android-local-gerado",
+      "bytes": 1267,
+      "sha256": "b574501edbe824eb98a1eaff5cec641ec6537df6fef4b104ac379dadbd0c2bf9",
+      "lines": 40
+    },
+    {
+      "path": "app.json",
+      "category": "configuracao-raiz",
+      "bytes": 1811,
+      "sha256": "afedb3ec73e8568b03ceb9c726c304bb191ff20f183874a91786e20d2d448438",
+      "lines": 70
+    },
+    {
+      "path": "App.tsx",
+      "category": "configuracao-raiz",
+      "bytes": 12472,
+      "sha256": "9055548d71f87045d209a93e477df29eed08d48229728259aa38750395ebc1cb",
+      "lines": 307
+    },
+    {
+      "path": "assets/adaptive-icon.png",
+      "category": "recursos-app",
+      "bytes": 793120,
+      "sha256": "4ccc2096b8c48c841d61956a95aac82f95ddf6e36d88547ebda6674b91c6123e",
+      "lines": null
+    },
+    {
+      "path": "assets/alert_tone.wav",
+      "category": "recursos-app",
+      "bytes": 88244,
+      "sha256": "9f5ffd851c96f007e38d28856fe8af4f38e8052031d27e657176e7dd3c2bc3bf",
+      "lines": null
+    },
+    {
+      "path": "assets/favicon.png",
+      "category": "recursos-app",
+      "bytes": 70,
+      "sha256": "c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77",
+      "lines": null
+    },
+    {
+      "path": "assets/icon.png",
+      "category": "recursos-app",
+      "bytes": 793120,
+      "sha256": "525b2886128a6d6e569035d046f027ae5b4ba16e62ec8c19e21260920cb231da",
+      "lines": null
+    },
+    {
+      "path": "babel.config.js",
+      "category": "configuracao-raiz",
+      "bytes": 107,
+      "sha256": "2a9be300c5e2ebad50c695a426a52af66db224a092e1308cf2689daf4061acb9",
+      "lines": 7
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "category": "entrega-cicted-raiz",
+      "bytes": 5275221,
+      "sha256": "c256bc4a2f5d2c83dfd2de4a8ec64a8e4bafdc144190c34a2bca0b6faf98ab94",
+      "lines": null
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "category": "entrega-cicted-raiz",
+      "bytes": 6797651,
+      "sha256": "51862647375b9c00e3d325a73aea5428d51b05acbb7864f068fd8518c43b2cdd",
+      "lines": null
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "category": "entrega-cicted-raiz",
+      "bytes": 7107164,
+      "sha256": "93398a9578066ba3a69495b04420767b525e3723cd2aaa46b7f42f2c3a96b6b5",
+      "lines": null
+    },
+    {
+      "path": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "category": "entrega-cicted-raiz",
+      "bytes": 6798588,
+      "sha256": "b698815c64a0a5f5e892b598e1c4e8a638a6e2b8e393a09724f061768d7c27bf",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/alinhar_banner.py",
+      "category": "documentacao",
+      "bytes": 3319,
+      "sha256": "7b9477e255b851f05f7078ea95cec8a0418c0380b9a51c1f67194f2ca95f88b1",
+      "lines": 89
+    },
+    {
+      "path": "docs/cicted/banner/auditar_impressao.py",
+      "category": "documentacao",
+      "bytes": 3651,
+      "sha256": "1b2b2a90c3ddf7b6997409ed4da400061d6b7c2b55328c04cea862a83b220192",
+      "lines": 80
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA_preview.png",
+      "category": "documentacao",
+      "bytes": 1322080,
+      "sha256": "fc5504f2fc8147a7fb09d31dfc443a5ed875684bf37350c31bab345db97ef1da",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pdf",
+      "category": "documentacao",
+      "bytes": 890641,
+      "sha256": "a031613a9766b699539688552149868c1a10ecb8cd4e712d781dcffd859df1d7",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pptx",
+      "category": "documentacao",
+      "bytes": 5367182,
+      "sha256": "a1a276d6bed51a96ccaaf06fb9eaf5a7c25af02d18e668936d319408aafcb973",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS_preview.png",
+      "category": "documentacao",
+      "bytes": 1289511,
+      "sha256": "f60d241430772606432a4295e1a9754cecf527ceec8f08275cf9a3fd7bb4fa75",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pdf",
+      "category": "documentacao",
+      "bytes": 883377,
+      "sha256": "a0a828e065a1acc3cfa1383805aba85949db00909172903659b7b5c7423e2993",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pptx",
+      "category": "documentacao",
+      "bytes": 5367387,
+      "sha256": "47aff72c3246f11a56c7d304601ac173e7964af7050b95424c9e2d945ce5aa1e",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/corrigir_parecer_professor.py",
+      "category": "documentacao",
+      "bytes": 12244,
+      "sha256": "5b73a290f76acceb20fbf354fc18a11c05dcf1c4764a198bb2bd086b6fe81bdd",
+      "lines": 228
+    },
+    {
+      "path": "docs/cicted/banner/equilibrar_banner.py",
+      "category": "documentacao",
+      "bytes": 2834,
+      "sha256": "f36a9a111262a871582a21860a312e322dfda897aa4c01245ed506d448df8446",
+      "lines": 63
+    },
+    {
+      "path": "docs/cicted/banner/exportar_impressao.ps1",
+      "category": "documentacao",
+      "bytes": 2901,
+      "sha256": "d24c9e1bdf22297b1f2f5ac4ba1407c9301776c181fbf69d7089f3e43f29d0a0",
+      "lines": 60
+    },
+    {
+      "path": "docs/cicted/banner/finalizar_parecer_banner.py",
+      "category": "documentacao",
+      "bytes": 1968,
+      "sha256": "1b03c77ac1352d8e1f3105522c09b306edf00fb01be3466fb31ed2b197f07040",
+      "lines": 42
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cabecalho_original.png",
+      "category": "documentacao",
+      "bytes": 78517,
+      "sha256": "129a3dc83f22c23ea64575b2bb8a710763299572e58bd243f7ec54d820fd66f9",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cabecalho_vetorial.svg",
+      "category": "documentacao",
+      "bytes": 1584311,
+      "sha256": "fb0b526055e63cf19e69ea448cb74ae91676c9df3e324c1ba5a3f1fcf796f168",
+      "lines": 16123
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cad_perspectiva.png",
+      "category": "documentacao",
+      "bytes": 247019,
+      "sha256": "0a3c51ff726dffa7d9714e56333d19edabb6ee3080f13a52f3de8f58574f9c26",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/cad_superior.png",
+      "category": "documentacao",
+      "bytes": 59126,
+      "sha256": "9e5acb7e35517c4131bb1cfd35afb3afd8350f4ba40411015dad7067d5c702b3",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_ALINHADO.pdf",
+      "category": "documentacao",
+      "bytes": 1125734,
+      "sha256": "d1017b22e47b2b098e416bf404047bcc51293cad9c6f1233f0ea897a1cc75919",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "category": "documentacao",
+      "bytes": 1163438,
+      "sha256": "1ae2d473f9a9e7820ab156698d21026bcf11243392224bb3b259e93ff76ade6d",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "category": "documentacao",
+      "bytes": 1125698,
+      "sha256": "ec7fb7548f859578155c71a1c41fdcd51e11b7f26a7cb326ddc3a7cc26889475",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "category": "documentacao",
+      "bytes": 1174411,
+      "sha256": "c905b3f0d7c72870da906264fe0ed095160697a2c2576b9570707b738028787f",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_powerpoint_final.pdf",
+      "category": "documentacao",
+      "bytes": 1129956,
+      "sha256": "f99263dccf3fedbd67c4b79ac5a9912a15c613f057a4382dcbeba931cdd4df61",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/exportacao_powerpoint.pdf",
+      "category": "documentacao",
+      "bytes": 1129986,
+      "sha256": "63cc135830b0e088a6e8c1001197fa210b8a0b1ba36b0ad07cbe5eb4941e0b2c",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/marcacoes_professor_2026-10-02.png",
+      "category": "documentacao",
+      "bytes": 2752178,
+      "sha256": "843a67059a62afeee35efc83aae1e356d3bc45ce255f8360def781094cf58ce7",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_app.png",
+      "category": "documentacao",
+      "bytes": 157011,
+      "sha256": "cc2aa05ef82506ce062dc575ada1b6dc5a5e71fbac3b16b67f6fc8c0477abf67",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_cabecalho.png",
+      "category": "documentacao",
+      "bytes": 216393,
+      "sha256": "50737f213fa1694fac525c429b5b4eb1d638c8023c6311616d940ab40a3a5101",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_pdfjs_equilibrado.png",
+      "category": "documentacao",
+      "bytes": 1308348,
+      "sha256": "134703c98adeebf1b2676e51e27e94b52c15e43037f5aeba67861ffc5d91f712",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/prova_tabela.png",
+      "category": "documentacao",
+      "bytes": 148566,
+      "sha256": "fa56cec05934ab85a2f4e3edf3ce72fbe5a08944a867fbf5cbe66e104e703f88",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/revisao_2_pdfjs.png",
+      "category": "documentacao",
+      "bytes": 1463506,
+      "sha256": "862237be3af8f0dfba962a920e16da9076e9951476c07867bccb7a160a4f3290",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/teste_pdfjs_alinhado.png",
+      "category": "documentacao",
+      "bytes": 1312949,
+      "sha256": "c7530b46863c7bcf8b5b11a6db077061dcad901a9a1cb2ed1a17185d7e10ba39",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/assets/teste_pdfjs_final.png",
+      "category": "documentacao",
+      "bytes": 1317031,
+      "sha256": "db048c76c9addfb004330b3e965efc1aece2de21ef828d454fd066e70df5b91f",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_ALINHADO.json",
+      "category": "documentacao",
+      "bytes": 3434,
+      "sha256": "509d952028295f1d7aa4648114e4ecc875cef95d39cfe1e61a92c844d57e0e42",
+      "lines": 184
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "category": "documentacao",
+      "bytes": 3821,
+      "sha256": "286ab1167286028e01daed71d935a71d59eba8acbd835af68e14fc58528427c4",
+      "lines": 204
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "category": "documentacao",
+      "bytes": 3434,
+      "sha256": "2fe8c947a977bb1b2bf42d2b3ee8bf35e928e20d22d6f5a017b62afb6a903ab5",
+      "lines": 184
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_REVISAO_2.json",
+      "category": "documentacao",
+      "bytes": 3704,
+      "sha256": "2cc10a4b725a70bdbb6b53a72c61353d7c4c66069611ac961e06ab54fef72af4",
+      "lines": 198
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf_final.json",
+      "category": "documentacao",
+      "bytes": 3551,
+      "sha256": "2bf2aebbdbe0cdc2780bfa64f789dd38ddfb86457fc52c603403194e8f631882",
+      "lines": 190
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_pdf.json",
+      "category": "documentacao",
+      "bytes": 3551,
+      "sha256": "3829a5378da02a849829e90aaff2aeceec0a85b7335093025f1c57baf634789c",
+      "lines": 190
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_ALINHADO.json",
+      "category": "documentacao",
+      "bytes": 21507,
+      "sha256": "b344476350a5ef99d9a9fc8525a4c1b997fff543e23996a5299ba9691f4eab9b",
+      "lines": 699
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "category": "documentacao",
+      "bytes": 23191,
+      "sha256": "7bea646707506661643b264ad842e411b616b040af900c438074b92723e6961a",
+      "lines": 735
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "category": "documentacao",
+      "bytes": 21537,
+      "sha256": "f184ef3bc6e62ab09da9d7cc348fb4466ca52975f396d09cfb8bfdfaa7bee6c9",
+      "lines": 699
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_REVISAO_2.json",
+      "category": "documentacao",
+      "bytes": 23686,
+      "sha256": "fafe251288dfe27714d83b9c088c41f4b7543ba0a7aa3997bc0538654bbef0e3",
+      "lines": 735
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos_final.json",
+      "category": "documentacao",
+      "bytes": 17822,
+      "sha256": "ef76b5ee5ba5a72e8590f9cd67b4d87cfcdee3a42f1f486346e508a3590657fc",
+      "lines": 583
+    },
+    {
+      "path": "docs/cicted/banner/impressao/auditoria_textos.json",
+      "category": "documentacao",
+      "bytes": 17816,
+      "sha256": "37f7b128d3f822ceda3b66c5b84fee273e92e6adcf701feb79b85e9eed11bed9",
+      "lines": 583
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 1963110,
+      "sha256": "9b96284491cc2928a6737405147c7559d43c1699c9017e81f530b03c34459bd2",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pdf",
+      "category": "documentacao",
+      "bytes": 7061552,
+      "sha256": "0f73e6ec18945e4560abff2b29f1dd7e181529363e3ab1c549ad1eb680c2f79c",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pptx",
+      "category": "documentacao",
+      "bytes": 6795797,
+      "sha256": "8bcb63870b7e611faa25ae5368e0360946d8474ff1907f21b5a6514edbf9af87",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_ALTERACOES.json",
+      "category": "documentacao",
+      "bytes": 663,
+      "sha256": "77fdf5fc18144f400e2766d453cf08f64139f089b11d45ed1fbcd556a882d5b3",
+      "lines": 18
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 2064712,
+      "sha256": "260193a995108f0bc9ae41c1d6b9a3c2e1658787918fe29e9afb773da1bf843c",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "category": "documentacao",
+      "bytes": 7096551,
+      "sha256": "6b85e1d71da38d0e0018b64d84911f201b97e2b465d42f930a65a5582cfa701f",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "category": "documentacao",
+      "bytes": 5275221,
+      "sha256": "c256bc4a2f5d2c83dfd2de4a8ec64a8e4bafdc144190c34a2bca0b6faf98ab94",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 1962861,
+      "sha256": "067a1b3c000256a914ad518258bce28c9036df9b5d5966e6fe002cea1bde03ec",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "category": "documentacao",
+      "bytes": 7061518,
+      "sha256": "00e9446263bd88d2e542631c673c102efab79af1904e38c161e41245102798f6",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "category": "documentacao",
+      "bytes": 6797639,
+      "sha256": "6765ce32b7e13bc631ad17293a5f1a5405dbf38e17e9dac50e8f48aed400689f",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 1966509,
+      "sha256": "3e356e3755de9be1cb0c01a591767ff58d7de768443b4a8c7f1879447a0fbf95",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pdf",
+      "category": "documentacao",
+      "bytes": 7065806,
+      "sha256": "f31c7a12972e502118470731454321e78695e98ab75923aa7e66c286943c7867",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pptx",
+      "category": "documentacao",
+      "bytes": 5796853,
+      "sha256": "71583545b6955b5318d2e2df504bd5b671317fd69497391437bfb9e23f2775fd",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pdf",
+      "category": "documentacao",
+      "bytes": 6449836,
+      "sha256": "71b0bb97fc98a1b017a466ef61b3dcbf97a863f09a362a4fc62bbf81581c0cd9",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pptx",
+      "category": "documentacao",
+      "bytes": 6796177,
+      "sha256": "4f2a1a11aa2a0554c36a060f69e6e4d9ee2ab072b32d02a534c9325e9f77c6a3",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 1961323,
+      "sha256": "11fb8f1c4e541ca878e36d19ca7f6bbdf91140ad08c851b252e3263dca6973c2",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_ALTERACOES.json",
+      "category": "documentacao",
+      "bytes": 2462,
+      "sha256": "0bd3888aae5ed7f0849ee2e007fa962f7a1861672ef2eb6a77cefd80d55867b6",
+      "lines": 11
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_PREVIA.png",
+      "category": "documentacao",
+      "bytes": 2122096,
+      "sha256": "6ddb61814d3b8bc7b17b40c731b897df729189238c7753e323aa645d09ee0c28",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "category": "documentacao",
+      "bytes": 7107164,
+      "sha256": "93398a9578066ba3a69495b04420767b525e3723cd2aaa46b7f42f2c3a96b6b5",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "category": "documentacao",
+      "bytes": 5275519,
+      "sha256": "aebfeec89f511f0364af7961c35dc43efaa3337a39f28b476315fbaaa6afae8f",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/banner/impressao/equilibrio_vertical.json",
+      "category": "documentacao",
+      "bytes": 328,
+      "sha256": "6300597caf4ef1f36fd55538bebca140fd503829c98bef6e51f89696a1993a3f",
+      "lines": 9
+    },
+    {
+      "path": "docs/cicted/banner/impressao/grade_alinhamento.json",
+      "category": "documentacao",
+      "bytes": 162,
+      "sha256": "84c080db463aed8239eae56d2580c79b49507ba66770d7c60407272f95ed8380",
+      "lines": 7
+    },
+    {
+      "path": "docs/cicted/banner/impressao/LEIA_ANTES_DE_IMPRIMIR.md",
+      "category": "documentacao",
+      "bytes": 3743,
+      "sha256": "f5cf7bf7fec4942b7dc211f50488e866f797c632fad68f0421c3a8448c8318e4",
+      "lines": 31
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "6fbf253790f7351ce922896978bd825141a40bb2009e90f766c49b43d6867f7b",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "ca4177414d5dea8235e0d7a504e17eca26198f0ffec8bec936c84ae45a80e3ba",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "6fbf253790f7351ce922896978bd825141a40bb2009e90f766c49b43d6867f7b",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_REVISAO_2.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "e443aab0a605cb47662ed71247f295f13b23af786a68e279a3c28f63744cb660",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_pdf_final.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "6fbf253790f7351ce922896978bd825141a40bb2009e90f766c49b43d6867f7b",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/recursos_preservados_pdf.json",
+      "category": "documentacao",
+      "bytes": 749,
+      "sha256": "6fbf253790f7351ce922896978bd825141a40bb2009e90f766c49b43d6867f7b",
+      "lines": 58
+    },
+    {
+      "path": "docs/cicted/banner/impressao/resolucao_recursos.json",
+      "category": "documentacao",
+      "bytes": 1223,
+      "sha256": "13857d26bee0ace4bce192d2a9ea4d7d7f2acdb46663ffa26dff0a3a74b7c5a8",
+      "lines": 98
+    },
+    {
+      "path": "docs/cicted/banner/inspecionar_marcacoes.py",
+      "category": "documentacao",
+      "bytes": 2043,
+      "sha256": "0390373daad6f3daf51789b086bb470cb6af03b049ab0d467263724c3feb9329",
+      "lines": 41
+    },
+    {
+      "path": "docs/cicted/banner/preparar_impressao.py",
+      "category": "documentacao",
+      "bytes": 6949,
+      "sha256": "c5248784cbe6dbe1e310c0e4772556eefc80b7a13b1c06acb0aa1010f6c5666f",
+      "lines": 157
+    },
+    {
+      "path": "docs/cicted/banner/preservar_recursos_pdf.py",
+      "category": "documentacao",
+      "bytes": 3584,
+      "sha256": "0e20e514a79b888a225d75b605fc6ce066e20ea2f4607b251b6e07b307269e81",
+      "lines": 84
+    },
+    {
+      "path": "docs/cicted/banner/revisar_banner_esclarecido.py",
+      "category": "documentacao",
+      "bytes": 10597,
+      "sha256": "063b9e8b217c0fe99e5215ecb3f41d2f8fd66fb269f0d303e77e2c321d789cca",
+      "lines": 197
+    },
+    {
+      "path": "docs/cicted/banner/revisar_consideracoes.py",
+      "category": "documentacao",
+      "bytes": 3300,
+      "sha256": "9171b5c33723642945cb4a3a0b3afabe7ae1c35c023903318bfbe24ef9fe6224",
+      "lines": 87
+    },
+    {
+      "path": "docs/cicted/banner/trocar_grafico_por_arquitetura.py",
+      "category": "documentacao",
+      "bytes": 5219,
+      "sha256": "aea10feb4b7b1a11e1066c81ba52666bd96f1d6debd586747be5b0a953ab32c8",
+      "lines": 138
+    },
+    {
+      "path": "docs/cicted/banner/verificar_pdfjs.mjs",
+      "category": "documentacao",
+      "bytes": 2260,
+      "sha256": "1b853759d9534e47d033a6a38404d2586dcd3ea3db9ed018718aafe3f1949139",
+      "lines": 41
+    },
+    {
+      "path": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx",
+      "category": "documentacao",
+      "bytes": 100893,
+      "sha256": "721c4e5429363c891e2d3069646af260ad8d5979514929d28a16fb4d03332f65",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx",
+      "category": "documentacao",
+      "bytes": 100893,
+      "sha256": "721c4e5429363c891e2d3069646af260ad8d5979514929d28a16fb4d03332f65",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/PENDENCIAS_PARA_SUBMISSAO.md",
+      "category": "documentacao",
+      "bytes": 1379,
+      "sha256": "542b68137f66b39249bd2e921c4e5fcadc4fa545d8bf9e817bfc650380405d52",
+      "lines": 28
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL_corrigido.docx",
+      "category": "documentacao",
+      "bytes": 99277,
+      "sha256": "d96c72e6aed77678e50582abb770e2a59d12e0423c21991937ed1949b6756150",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "category": "documentacao",
+      "bytes": 93197,
+      "sha256": "1a7cc3aadbfc8a186b5074a0837d7702c33c2d0f92b7f9e97067273157aa1207",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx",
+      "category": "documentacao",
+      "bytes": 93359,
+      "sha256": "27973e41307d9abe9311367a9002ca2b43ec39919b197389d431d4d04f3da979",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx",
+      "category": "documentacao",
+      "bytes": 93359,
+      "sha256": "27973e41307d9abe9311367a9002ca2b43ec39919b197389d431d4d04f3da979",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx",
+      "category": "documentacao",
+      "bytes": 93029,
+      "sha256": "9c4328f04a7fa8fa333f22004857beef11ea21f80b537358874fe58db76d5241",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx",
+      "category": "documentacao",
+      "bytes": 93029,
+      "sha256": "9c4328f04a7fa8fa333f22004857beef11ea21f80b537358874fe58db76d5241",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_RASCUNHO.docx",
+      "category": "documentacao",
+      "bytes": 93233,
+      "sha256": "ed1f2f9a901ecbb0584c2ab4559b4bcc6bab6d652ae37fa747188f8b7cdde4d0",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Revisao/.conferencia_cabecalho.png",
+      "category": "documentacao",
+      "bytes": 78517,
+      "sha256": "129a3dc83f22c23ea64575b2bb8a710763299572e58bd243f7ec54d820fd66f9",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx",
+      "category": "documentacao",
+      "bytes": 93413,
+      "sha256": "6f32dea0dded916d98ac35793d3d4b533af3c20394fb634a6fa4f6f0f42ac39e",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Escolta_resumo_sem_IA.docx",
+      "category": "documentacao",
+      "bytes": 93264,
+      "sha256": "11b986d8ec02b39d61126d3e2a7e1db2db08193c560694210ff571969870fa59",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Revisado_Sem_Identificacao.docx",
+      "category": "documentacao",
+      "bytes": 92915,
+      "sha256": "38765128d991b75c33a24016b94379a47c12c14c85fe4a3d80042965e5ee3660",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Revisao/CICTED_Revisado.docx",
+      "category": "documentacao",
+      "bytes": 93413,
+      "sha256": "6f32dea0dded916d98ac35793d3d4b533af3c20394fb634a6fa4f6f0f42ac39e",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "category": "documentacao",
+      "bytes": 93197,
+      "sha256": "1a7cc3aadbfc8a186b5074a0837d7702c33c2d0f92b7f9e97067273157aa1207",
+      "lines": null
+    },
+    {
+      "path": "docs/cicted/WhatsApp Image 2026-08-28 at 15.55.39.jpeg",
+      "category": "documentacao",
+      "bytes": 36151,
+      "sha256": "2d3a9bae2151d7ebb83547a2a2b46c7f1ec1ebfed391cf25f5abab29985a773e",
+      "lines": null
+    },
+    {
+      "path": "docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md",
+      "category": "documentacao",
+      "bytes": 19436,
+      "sha256": "16cd2e9434bc5c33232aa25685a6a6e97bd72b78705f4691e42b5fa948bc073f",
+      "lines": 540
+    },
+    {
+      "path": "docs/produto/FLUXOS_CENTRAL_SENTINELA.md",
+      "category": "documentacao",
+      "bytes": 21002,
+      "sha256": "e9aa5de389cf31092cb9871e4b5219e063def33225bb6f9d09cd74937fa37351",
+      "lines": 590
+    },
+    {
+      "path": "docs/produto/imagens_montagem/01-transistor-resistores.png",
+      "category": "documentacao",
+      "bytes": 1774626,
+      "sha256": "f2f900225ca5a275589d721452aee07c94aab4113395ecd0151886c764a0e8de",
+      "lines": null
+    },
+    {
+      "path": "docs/produto/imagens_montagem/02-circuito-completo.png",
+      "category": "documentacao",
+      "bytes": 128615,
+      "sha256": "93514eac1ec2f1e3eee388d4cd429856868ab6e10a1830408e4cadf6fd497571",
+      "lines": null
+    },
+    {
+      "path": "docs/produto/imagens_montagem/03-estrutura-3d-conceito-explodido.png",
+      "category": "documentacao",
+      "bytes": 1615610,
+      "sha256": "1ec59f50107d5242121d5406b94b844b9b5d800946245622756f57175c07c3fa",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/10.jpeg",
+      "category": "documentacao",
+      "bytes": 112417,
+      "sha256": "7c319123e78300b0ef6d064980cc6795eb48b808dd6162398b5f3b55b8a2668e",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/11.jpeg",
+      "category": "documentacao",
+      "bytes": 121706,
+      "sha256": "e637b97fee4226852d0adf984f5fc1ebed4210dc80f1b9e118ec6aa25168d1ee",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/12.jpeg",
+      "category": "documentacao",
+      "bytes": 126989,
+      "sha256": "a18b39d30f7e52a5d11ea11e2a14d6b564ed718b530108129627eadac791b740",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/13.jpeg",
+      "category": "documentacao",
+      "bytes": 133145,
+      "sha256": "4514f1a81b0c02c5fa37aee59b5a41399cf1706507a07cb6a2438d0a05aab8cf",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/14.jpeg",
+      "category": "documentacao",
+      "bytes": 115322,
+      "sha256": "29cf9badbb277e326ee89fb5a08f8decb71f4fd3d49be402640276c05506d91e",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/2.jpeg",
+      "category": "documentacao",
+      "bytes": 89306,
+      "sha256": "93963c1d47e2194d606bbbad41ebdca8e293fd6a72a6ae53ff5baead9ad142ae",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/20.jpeg",
+      "category": "documentacao",
+      "bytes": 290138,
+      "sha256": "64fbb6e29941f6423a52c1a4b79c6197c2d72c2e866d290a1d42e1f04357a0f5",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/3.jpeg",
+      "category": "documentacao",
+      "bytes": 73173,
+      "sha256": "b694447c5679e05421dbc65270d0728745d8591e44b98601580eb179371fef93",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/30.jpeg",
+      "category": "documentacao",
+      "bytes": 79877,
+      "sha256": "fdc0e6d05afac4ec0024af142000fec7a0e2fc2ad27709f06c4f502fd053a662",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/35.jpeg",
+      "category": "documentacao",
+      "bytes": 115384,
+      "sha256": "db2785a57f15a3fff8092609b35c5b2913796cadac8b5a65b568607c6382ff80",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/4.jpeg",
+      "category": "documentacao",
+      "bytes": 68416,
+      "sha256": "10fe6d82081fe830d3b5f051878e1118178e07f0843f6d6bc2e3381e50fec193",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/5.jpeg",
+      "category": "documentacao",
+      "bytes": 260105,
+      "sha256": "066476058e500902031afed320884c7d994ba2043367ad338861d94a47620ace",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/6.jpeg",
+      "category": "documentacao",
+      "bytes": 158156,
+      "sha256": "fa9e3341f7d25cf2ae3dee38dcc21639063d8be7d9522fc325e62ed518b7db25",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/8.jpeg",
+      "category": "documentacao",
+      "bytes": 101131,
+      "sha256": "e58c161d28d9702ffae51bb137f07b85594214a78b3262b0f8d06e83d40277c9",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/9.jpeg",
+      "category": "documentacao",
+      "bytes": 111398,
+      "sha256": "8f41b720caef7b8006cbdc5a39158880e6a01e09be7a1dcb41548fb7b963d728",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png",
+      "category": "documentacao",
+      "bytes": 2485705,
+      "sha256": "2bdc1d63501688e9a74a842642781f33cd0a7ca5e6e517e7095c79de06a3f151",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 17_20_24.png",
+      "category": "documentacao",
+      "bytes": 2075456,
+      "sha256": "a272009873dc16634e1bc52b191c9d81248d8abd65d23958825a1b3bd9feccb4",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_06_47.png",
+      "category": "documentacao",
+      "bytes": 2306352,
+      "sha256": "e5062d2a2033b418adc5dbbf71858b15d7419532db11ddf2c065ddf5b786bab7",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_17_06.png",
+      "category": "documentacao",
+      "bytes": 2135930,
+      "sha256": "177f9fe34588b6a563038f2298904f9a338882b474772fddc647fd17fbef09a2",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/placa_com_regua_3.jpeg",
+      "category": "documentacao",
+      "bytes": 139910,
+      "sha256": "6e54b073014df7cbfabce499e364d9cf13bff68ccd7637a19c05f7e92a22b549",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/placa_com_regua_4.jpeg",
+      "category": "documentacao",
+      "bytes": 121800,
+      "sha256": "ab9a48be0b0c64e579dbe7defed6bbf51c9bd61c3a7b0ca5be7983ba0ea0c902",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 16.58.53.jpeg",
+      "category": "documentacao",
+      "bytes": 69133,
+      "sha256": "a43567111d294915dd62f79de6848362b8152fe554046ae7185cd4307f7162d3",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 21.58.32.jpeg",
+      "category": "documentacao",
+      "bytes": 106431,
+      "sha256": "56cf8ef8df734000b60133bec25586d1f3745beabf42beedb91423235a359ebc",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.08.41.jpeg",
+      "category": "documentacao",
+      "bytes": 225523,
+      "sha256": "06b2119f2e4531497e0c4f2d8dc28abf010fe9689823a759693245c8b61d4c94",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.40.25.jpeg",
+      "category": "documentacao",
+      "bytes": 140638,
+      "sha256": "3094a16e7c29e2bd08ea7e4476b8ce4a4d9472f1956e165c284a6d08e67a9088",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.23.jpeg",
+      "category": "documentacao",
+      "bytes": 154756,
+      "sha256": "ff70782c9c7b2cf7b234a251be122c98d7aeb733dd0091bf4892026b1c227f6e",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.24.jpeg",
+      "category": "documentacao",
+      "bytes": 129053,
+      "sha256": "533c799d2c4d55d6c5611967d6f7321269067a1e7e9b9129ecf2c3c46a7d38a1",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.01.jpeg",
+      "category": "documentacao",
+      "bytes": 114295,
+      "sha256": "83c3f3e7cb750477345a132441f33cae18e9c2e3b7a8db6fad1e6aa686147fa8",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.03.jpeg",
+      "category": "documentacao",
+      "bytes": 110777,
+      "sha256": "561adddc68ccc92664d306e0712b383ffaf3b875dc5cd4ebf1d05f8460f16341",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.04.jpeg",
+      "category": "documentacao",
+      "bytes": 98129,
+      "sha256": "f76ede86a0b215a57c48add305213a88bdd35ecb9f6527bf9be0103cd62b02c5",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.05.jpeg",
+      "category": "documentacao",
+      "bytes": 111792,
+      "sha256": "c4739fee8fe2fbffe21a6e1d5abe1b9cbe729f2e08083f9ac08652c53a9e7d13",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.25.jpeg",
+      "category": "documentacao",
+      "bytes": 130085,
+      "sha256": "689b963cd49b9d18225952f76da0b7519c214a2936dfae3b6312316a92372417",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.26.jpeg",
+      "category": "documentacao",
+      "bytes": 132485,
+      "sha256": "868bf733cc094c567122814cd23d37d29a349c5777fec0b6740e5548998e44fa",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.27.jpeg",
+      "category": "documentacao",
+      "bytes": 289704,
+      "sha256": "15321e59ca4dc1e30f6a23f1566e43c19d136c9d39c8d483372605b9299522b1",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.28.jpeg",
+      "category": "documentacao",
+      "bytes": 200948,
+      "sha256": "38f275f5d58901eabd1d71110b3321a36243e4f1f9881e3f80a2f235b59f2054",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.43.jpeg",
+      "category": "documentacao",
+      "bytes": 93643,
+      "sha256": "851bfc06d930f0ffa0805c79979f3d38a3943d5c3b500b968b2be7ad19b57841",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.44.jpeg",
+      "category": "documentacao",
+      "bytes": 65809,
+      "sha256": "b780d051dc6fd0fabc7696430f58277da65287ef93c5c0c0c93b1068dda33b38",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.46.jpeg",
+      "category": "documentacao",
+      "bytes": 93399,
+      "sha256": "c93ae346fb0f0af9ffbf426680bdf6260a94dc28966a018131ccfb09688f4605",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.45.jpeg",
+      "category": "documentacao",
+      "bytes": 78775,
+      "sha256": "4ddfb85cdb4ad70be696f3a655fc2bd10ff1e2771796e197e0350b570904ce57",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.46.jpeg",
+      "category": "documentacao",
+      "bytes": 66700,
+      "sha256": "63ded17a66b82f1f484a494a70e8a97852dda2206f87507a8889709683acc0a1",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.59.59.jpeg",
+      "category": "documentacao",
+      "bytes": 73128,
+      "sha256": "493aa61782c44579414e03eb4f7c48a72db5ba0baf60e7fb039bfb6af81e25f6",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.19.14.jpeg",
+      "category": "documentacao",
+      "bytes": 90197,
+      "sha256": "66e35eb38a425237dacfccc14434d6a5f2f531ab60fc6fa103b2decd5d483828",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.28.10.jpeg",
+      "category": "documentacao",
+      "bytes": 100517,
+      "sha256": "41081124836bc32d3fd3d02568f56533969a1adc294e6872ce7937b56cf461be",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 16.49.19.jpeg",
+      "category": "documentacao",
+      "bytes": 99532,
+      "sha256": "ee6bd69a40b8aea81c9fd09b8ab6dd75cf8b0f84e08b0c19c986723199139ce3",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.53.jpeg",
+      "category": "documentacao",
+      "bytes": 139880,
+      "sha256": "961c14a0414b2aede4bc7890494683c75bf72267757f7cf4c69d0916fc5da0a4",
+      "lines": null
+    },
+    {
+      "path": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.54.jpeg",
+      "category": "documentacao",
+      "bytes": 121921,
+      "sha256": "2ab748e095d73700f66c7b4da0e291cc049449a7423a5f2b7c1e2f18c35e2a3d",
+      "lines": null
+    },
+    {
+      "path": "docs/README.md",
+      "category": "documentacao",
+      "bytes": 517,
+      "sha256": "f5adaa8195ce2e2ee9b4682be6a1968bdcae80fcb592743845af056c4fe88a8c",
+      "lines": 11
+    },
+    {
+      "path": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.docx",
+      "category": "documentacao",
+      "bytes": 32747,
+      "sha256": "b77ef892c58de7557de8881bdbeb3debaabfe971d4038708661dd031533117a0",
+      "lines": null
+    },
+    {
+      "path": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.pdf",
+      "category": "documentacao",
+      "bytes": 117779,
+      "sha256": "b6994a05c3c6fc5d2f9e60e111c44294b81643379adeb15c2c41e5eafe983cc1",
+      "lines": null
+    },
+    {
+      "path": "docs/tcc/modelos/Template_TG2026.docx",
+      "category": "documentacao",
+      "bytes": 18365,
+      "sha256": "70fb2e32b96302e0fe45031acc66877c5ede4e1fbdc5ff27e5ffab6fe26742bc",
+      "lines": null
+    },
+    {
+      "path": "docs/tcc/Projeto de Pesquisa -1 - Tcc.pdf",
+      "category": "documentacao",
+      "bytes": 134943,
+      "sha256": "45b0172f17518f8a47a468862120b14fcd4964604550c2feffba317a5e9261f4",
+      "lines": null
+    },
+    {
+      "path": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.docx",
+      "category": "documentacao",
+      "bytes": 52003,
+      "sha256": "85fab73ab535303388abea12cae9e9c1e29911864479a2a1437ea92c932ab21c",
+      "lines": null
+    },
+    {
+      "path": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.pdf",
+      "category": "documentacao",
+      "bytes": 337716,
+      "sha256": "556b3461531122530fc6a88c0b581d7dc3d5407d0b80ae534c0a456ccdc531ba",
+      "lines": null
+    },
+    {
+      "path": "docs/testes/dados/proximidade-elevada-2026-10-06.json",
+      "category": "documentacao",
+      "bytes": 3184,
+      "sha256": "74e2ff449533520942e689aea75afa912d01048dfacb236959a23c139cf0cc4d",
+      "lines": 39
+    },
+    {
+      "path": "docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md",
+      "category": "documentacao",
+      "bytes": 2398,
+      "sha256": "26b90c167cc5934f9388018e35d9f44cbe405fe497ffaf18324ebdbd3acb2448",
+      "lines": 56
+    },
+    {
+      "path": "docs/testes/ENSAIO_PROXIMIDADE_CAIXA_FECHADA.md",
+      "category": "documentacao",
+      "bytes": 5110,
+      "sha256": "4d9c3d78be0c960f1d1d4f8775a6ebe9e1e77505118c51fc3c78cb940adba6a7",
+      "lines": 79
+    },
+    {
+      "path": "docs/testes/RELATORIO_TESTES_S24_ULTRA_2026-07-31.md",
+      "category": "documentacao",
+      "bytes": 4406,
+      "sha256": "ddbbb4662193a4307db76749e6bec67de0aa39fde4a4c0a557a554c8d0c9c7cb",
+      "lines": 76
+    },
+    {
+      "path": "docs/testes/REVISAO_DISTANCIA_P2.md",
+      "category": "documentacao",
+      "bytes": 6277,
+      "sha256": "5eebeea4ca96344f0a085989fa51a3c2de9da4e18a410b2b13b4c8a331b55b2c",
+      "lines": 113
+    },
+    {
+      "path": "docs/testes/REVISAO_PROXIMIDADE_P1.md",
+      "category": "documentacao",
+      "bytes": 7912,
+      "sha256": "e294517591f90cdc1ada4dc596f2a455fcaaa7b84812c40b030bd79d7e55b0ca",
+      "lines": 139
+    },
+    {
+      "path": "eas.json",
+      "category": "configuracao-raiz",
+      "bytes": 398,
+      "sha256": "03a8e63ec56c5baff05b74737d8fedc173c36232c3b17d6b09e1cc8127ed41fd",
+      "lines": 25
+    },
+    {
+      "path": "firmware/esp32_escolta_ble/esp32_escolta_ble.ino",
+      "category": "firmware-legado",
+      "bytes": 14471,
+      "sha256": "a363b37bf5b18ef513e186365956c9020c41cd03a6264b74dc07a12fed903bb5",
+      "lines": 450
+    },
+    {
+      "path": "firmware/README.md",
+      "category": "firmware-atual",
+      "bytes": 831,
+      "sha256": "92d8f6ac514ebf4bbf8eacca155805d505e2f6c35f80d97a03419204e0868f7d",
+      "lines": 16
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/ProximityDistance.h",
+      "category": "firmware-atual",
+      "bytes": 798,
+      "sha256": "af28a13734f3c36ae75aae77cbad61e1081fe4ee63d8f608391e07a6808957ba",
+      "lines": 24
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/ProximitySignal.h",
+      "category": "firmware-atual",
+      "bytes": 4082,
+      "sha256": "9ee0887dc21c5c58e77ea476d25f7dac2e82085c850afeadcc1c7c27fc22058e",
+      "lines": 134
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/xiao_escolta_ble.ino",
+      "category": "firmware-atual",
+      "bytes": 20090,
+      "sha256": "167898e22cc1352b86761c2a4fd8b43735919da59f561c22bbeed1b4c5d21bdb",
+      "lines": 616
+    },
+    {
+      "path": "hardware/case_3d/ABRIR_CAIXA_OPENSCAD.cmd",
+      "category": "hardware",
+      "bytes": 459,
+      "sha256": "d15634c0f93f01bdb22900c74827245563c6b8893cb6093cef91b4be3f03798c",
+      "lines": 18
+    },
+    {
+      "path": "hardware/case_3d/AUDITORIA_DIMENSIONAL_V2_4.md",
+      "category": "hardware",
+      "bytes": 10168,
+      "sha256": "6b641fbad01b0749f86748907c3a8510aab9ce2f2debeca741ddbb15ba2b529e",
+      "lines": 172
+    },
+    {
+      "path": "hardware/case_3d/documentacao/INSTRUCOES_TESTE_BOTAO_V2_2.md",
+      "category": "hardware",
+      "bytes": 1702,
+      "sha256": "dc46e5e45c961951d02c8837496be056803f7fbdea29d6f814e868186ba94594",
+      "lines": 43
+    },
+    {
+      "path": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_2.md",
+      "category": "hardware",
+      "bytes": 2041,
+      "sha256": "515977b609766d5a73b78f186d298e76a467e83484ca723612708bcb89b4c30d",
+      "lines": 59
+    },
+    {
+      "path": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_3.md",
+      "category": "hardware",
+      "bytes": 1529,
+      "sha256": "f420c1d9b7608645cde9fb9916ae7c6f28f301b0ef558043b880253477b7287d",
+      "lines": 40
+    },
+    {
+      "path": "hardware/case_3d/documentacao/README_V2.md",
+      "category": "hardware",
+      "bytes": 6341,
+      "sha256": "0aa6783ead9962362394ad12bc5946d08b9ebd30d014e70dd5bd123e2c363476",
+      "lines": 111
+    },
+    {
+      "path": "hardware/case_3d/documentacao/README.md",
+      "category": "hardware",
+      "bytes": 3019,
+      "sha256": "bc076a87313b0885ebbda82947e06148a2e3914c8dee249e1f9c2bfd839184a8",
+      "lines": 66
+    },
+    {
+      "path": "hardware/case_3d/documentacao/REVISAO_ENCAIXE_2026-09-23.md",
+      "category": "hardware",
+      "bytes": 12858,
+      "sha256": "4a752a7f4c3c6924edc50d2a01f497a2c93ea5f0f150c58e11e1ee51e2431efd",
+      "lines": 220
+    },
+    {
+      "path": "hardware/case_3d/escolta_case_v2.scad",
+      "category": "hardware",
+      "bytes": 44161,
+      "sha256": "8373fe669f1752353806531f95e3690ec095fdc02ba54d77d4cab44a23d6472c",
+      "lines": 1049
+    },
+    {
+      "path": "hardware/case_3d/ferramentas/validate_stl.py",
+      "category": "hardware",
+      "bytes": 5788,
+      "sha256": "c5c7b74fe364fa9db7580bf7588feb0220580eae8ac7a247c9ae8c870adc8898",
+      "lines": 168
+    },
+    {
+      "path": "hardware/case_3d/ferramentas/verificar_revisao_apoios.py",
+      "category": "hardware",
+      "bytes": 2840,
+      "sha256": "9b49ae223f742d707d9d8c2d426fd0ee003057e593ef8d93eaf855b91cdff9fb",
+      "lines": 67
+    },
+    {
+      "path": "hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl",
+      "category": "hardware-historico-local",
+      "bytes": 588464,
+      "sha256": "8bed530fa93fbb17364c27d6c078f7a97f1aa230cb67284bf62f364a51449648",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/antes_apoios_v2_8/escolta_case_v2.scad",
+      "category": "hardware-historico-local",
+      "bytes": 42870,
+      "sha256": "b44c05de15e2fb740ccd2f0d02cfec2832cba54657804db605a3418357223abf",
+      "lines": 1026
+    },
+    {
+      "path": "hardware/case_3d/historico/antes_apoios_v2_8/LEIA-ME.md",
+      "category": "hardware-historico-local",
+      "bytes": 1602,
+      "sha256": "4f4358992c5215d871a6cee1e35e28620c116715c21b10b0684a4196d7f60cf8",
+      "lines": 30
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl",
+      "category": "hardware-historico-local",
+      "bytes": 847197,
+      "sha256": "621e758d4e28ec26b0a277bef05ba7034372d3fd44ffd5f860ea25d21533b4a4",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl",
+      "category": "hardware-historico-local",
+      "bytes": 196919,
+      "sha256": "ebf55bdc482d74e50e4969ac27bfd5493251a7218aa543943c257e9abcd4aec5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v1.stl",
+      "category": "hardware-historico-local",
+      "bytes": 487873,
+      "sha256": "7e18dd0500daee1a4d4c60b1c2f0d2c9895c39c1eccac6410d7a2236debea6c3",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 740448,
+      "sha256": "f789205862d9ab12d550df1c8ad86f5dcb7cb846091ee9ac526ff6e718e5902e",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_3.stl",
+      "category": "hardware-historico-local",
+      "bytes": 749661,
+      "sha256": "a2f9d0a363ec3e739444156804924d7876d612ee49d979e47cb7f469ae8ebe92",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 761896,
+      "sha256": "e2915fd01b49d24d7ad06cd971d70032e19c688bf1a6d36632879f5ea476e741",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 196919,
+      "sha256": "f2904b7fe91c983bd96ad86b2065c6c474b38b2e1ec026bfd54a5b46b573a0a2",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_botao_v2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 80108,
+      "sha256": "dc93ce2618ca4e84cba0a14e3f6e35a36abafff2542a278ba126af9515683fd5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_case_v1.scad",
+      "category": "hardware-historico-local",
+      "bytes": 16487,
+      "sha256": "6bb62f06231e76971b4b5d55b610cbe0d290d67892ff8ba007c0322c5be79631",
+      "lines": 544
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl",
+      "category": "hardware-historico-local",
+      "bytes": 3885,
+      "sha256": "2679bc2d0bd516da2158c6db64d665e50c40caf078e172577e2ce6763500f72b",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v1.stl",
+      "category": "hardware-historico-local",
+      "bytes": 160738,
+      "sha256": "567123d2ff10d5969028414b4a69c99a60eb44372560fef89bf1739b46aae9b5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 496198,
+      "sha256": "a79e2ca404993f8b79343844a3a35a80cdd0b5c78cc3757e5d031918a0cf5ba9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 494826,
+      "sha256": "ac9916a9a98ecfd32ea38b0198d856aa3fe8b2cf1ab99991a034e08843e788fa",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 58455,
+      "sha256": "de4a84348ce86e65dd39b02a902e9175a444ce8ffa0c17d15c0bace3360e19c1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_v2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 70946,
+      "sha256": "41edcb34f69fa005490ebd0cfb85a933f8ee293f87b321b188aea64e89a9ed71",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_2.zip",
+      "category": "hardware-historico-local",
+      "bytes": 114683,
+      "sha256": "f2f29452b6bbaa1376bc08cdad2e29a51ce228af8d267c522e76db4acb73260a",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_3.zip",
+      "category": "hardware-historico-local",
+      "bytes": 107886,
+      "sha256": "a034bdb0246f96828595c71eb55e131a6f49173cc9a24c7b5faabfc4f9384962",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2.zip",
+      "category": "hardware-historico-local",
+      "bytes": 219254,
+      "sha256": "3691f3452b9f7cc1fa3100156dd65f31b762a7f3c4c3e9914766235bdc10a78f",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/kit_teste_botao_v2_2.zip",
+      "category": "hardware-historico-local",
+      "bytes": 53646,
+      "sha256": "1b3569cc5661448de895048638f3726f3d85442710e85768914978a735930aa1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl",
+      "category": "hardware-historico-local",
+      "bytes": 740448,
+      "sha256": "f789205862d9ab12d550df1c8ad86f5dcb7cb846091ee9ac526ff6e718e5902e",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl",
+      "category": "hardware-historico-local",
+      "bytes": 496198,
+      "sha256": "a79e2ca404993f8b79343844a3a35a80cdd0b5c78cc3757e5d031918a0cf5ba9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl",
+      "category": "hardware-historico-local",
+      "bytes": 196919,
+      "sha256": "f2904b7fe91c983bd96ad86b2065c6c474b38b2e1ec026bfd54a5b46b573a0a2",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl",
+      "category": "hardware-historico-local",
+      "bytes": 58455,
+      "sha256": "de4a84348ce86e65dd39b02a902e9175a444ce8ffa0c17d15c0bace3360e19c1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/01_base_v2_3.stl",
+      "category": "hardware-historico-local",
+      "bytes": 740705,
+      "sha256": "7a8a0fbcccd4fe9d16d4b95fdbab4c16abe15e587082a995ac18cde60b85b88c",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 496198,
+      "sha256": "a79e2ca404993f8b79343844a3a35a80cdd0b5c78cc3757e5d031918a0cf5ba9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 196919,
+      "sha256": "f2904b7fe91c983bd96ad86b2065c6c474b38b2e1ec026bfd54a5b46b573a0a2",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl",
+      "category": "hardware-historico-local",
+      "bytes": 58455,
+      "sha256": "de4a84348ce86e65dd39b02a902e9175a444ce8ffa0c17d15c0bace3360e19c1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl",
+      "category": "hardware-historico-local",
+      "bytes": 3885,
+      "sha256": "2679bc2d0bd516da2158c6db64d665e50c40caf078e172577e2ce6763500f72b",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/LEIA-ME.md",
+      "category": "hardware-historico-local",
+      "bytes": 1530,
+      "sha256": "904315142a5b3bceeca5b5e416724f44de0b2d4fff4379dc0a252d2271dbb542",
+      "lines": 41
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/01_base_v2_4.stl",
+      "category": "hardware-historico-local",
+      "bytes": 829799,
+      "sha256": "86b2bc602c041393212fb9d9b68723dcdac7fe64c8336ef6a00aa4bd2c390e3f",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/02_tampa_v2_4.stl",
+      "category": "hardware-historico-local",
+      "bytes": 588470,
+      "sha256": "7bf64f79055e0ee28d1236c3e54a2201cb010bffcc8cfa788b4ed4c405b2a679",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl",
+      "category": "hardware-historico-local",
+      "bytes": 56053,
+      "sha256": "114f0b936ee23c2b895aee4cbaa80a86df95c8f0bec4eb6ce0a4c9b2827ad163",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/historico/v2_4/botao_prolongador_v2_4_antigo.stl",
+      "category": "hardware-historico-local",
+      "bytes": 196919,
+      "sha256": "8fac7312e88f2841cade34f23e06535dad6f83f9876cf89b76b546c28a02e924",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/01_base_v2_6.stl",
+      "category": "hardware",
+      "bytes": 856740,
+      "sha256": "e30521481ee507d1e6011aa36d0a37caa3ed5d2c15b5d31dad5f9c98080827ea",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/02_tampa_v2_8.stl",
+      "category": "hardware",
+      "bytes": 588507,
+      "sha256": "5078170583cdeeac50418297617a9ce31ba654cd019932746d528f886972201d",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/03_botao_vermelho_v2_7.stl",
+      "category": "hardware",
+      "bytes": 198263,
+      "sha256": "672b435a81cc2b313b80f15815dfed5125fa8bc9aed90ecbc171b4caa759a4f3",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl",
+      "category": "hardware",
+      "bytes": 56053,
+      "sha256": "114f0b936ee23c2b895aee4cbaa80a86df95c8f0bec4eb6ce0a4c9b2827ad163",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/PARA_IMPRIMIR_AGORA/LEIA-ME.md",
+      "category": "hardware",
+      "bytes": 2483,
+      "sha256": "f5c4047c5222cc7ada35d6246e09ccd371f2cbbb8bf396f6595221d6d68ceb4e",
+      "lines": 50
+    },
+    {
+      "path": "hardware/case_3d/REVISAO_APOIOS_BOTAO_2026-10-02.md",
+      "category": "hardware",
+      "bytes": 3343,
+      "sha256": "fa9a8ebae134e4dd1bcf6d3f799e5625a38078cd9745fbde7b602bca75f23a29",
+      "lines": 66
+    },
+    {
+      "path": "hardware/case_3d/revisao_bateria_pilares_v2_6.png",
+      "category": "hardware",
+      "bytes": 10866,
+      "sha256": "80dd2c634b3d25e5304d635edee19ddbef815c6d533c8e70798a28c53967e97c",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/REVISAO_ENCAIXE_2026-09-30.md",
+      "category": "hardware",
+      "bytes": 5925,
+      "sha256": "6c156f7e8b7a53bc8ee30f50562c54a7590e741068d8497918241759891ff15b",
+      "lines": 100
+    },
+    {
+      "path": "hardware/case_3d/revisao_pilares_perspectiva_v2_6.png",
+      "category": "hardware",
+      "bytes": 81514,
+      "sha256": "9fc60c84d8ec110ec938488817624f87b87d5adb18a8a265e291bcb74340b6b3",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/apoios_botao_v2_8.png",
+      "category": "hardware",
+      "bytes": 19405,
+      "sha256": "f1ffb5cb0abf3cf119583f9be75c2f2b609212ec3da3f57f4c31ab1864f12523",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/auditoria_folgas_corrigidas.png",
+      "category": "hardware",
+      "bytes": 21387,
+      "sha256": "62df88a916cb287a06a4e95c9cb9142248d5d0f6d32f7bf53e7ac15499128c28",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/auditoria_xiao_2_5mm.png",
+      "category": "hardware",
+      "bytes": 102501,
+      "sha256": "ae83d7ef8231c95b2f73242c6b1b33453f9efc29549cb21ed59574a5de88e39c",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png",
+      "category": "hardware",
+      "bytes": 2485705,
+      "sha256": "2bdc1d63501688e9a74a842642781f33cd0a7ca5e6e517e7095c79de06a3f151",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/conceito_xiao_girada_v3.png",
+      "category": "hardware",
+      "bytes": 2018256,
+      "sha256": "7bb401d86cd5c5029da6db733393123a99cb0d8ed2573869525032dc2405a41f",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v1.png",
+      "category": "hardware",
+      "bytes": 37729,
+      "sha256": "006727b5d39b396e8d1ddba755c7714c138cb417e0687cd7f7677ebfeed07b35",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v2_2.png",
+      "category": "hardware",
+      "bytes": 54329,
+      "sha256": "66072cbdf8edd221ca54d67d1c896b816721f3689ef79024728e8aad89189c48",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_3d_v2.png",
+      "category": "hardware",
+      "bytes": 36762,
+      "sha256": "81d7dc1466cde415b73dc64cf4b8bfbd9eea555b0845db8dea6c60e92282d860",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_base_interna_v1.png",
+      "category": "hardware",
+      "bytes": 27812,
+      "sha256": "eae16a68c0c9c886d55f2cd9ce72d74e6146c0826e409f89039459bbf69c3213",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_base_superior_v1.png",
+      "category": "hardware",
+      "bytes": 7257,
+      "sha256": "0b5db6dc746a95b2d12115e38310bc2b1c8adf4e178ed48015d48e7ef1716275",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_botao_reforcado_v2_2.png",
+      "category": "hardware",
+      "bytes": 20076,
+      "sha256": "c1ee4bd881247823a9f6030492cbf4105601a8c9007c7527affb4062b7248d02",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_botao_v2.png",
+      "category": "hardware",
+      "bytes": 10312,
+      "sha256": "22e15a2202b0ffeff05a989ca72bc25f292aec2051ee31380ccb42ba1d469c4a",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_buzzer_suporte_v2.png",
+      "category": "hardware",
+      "bytes": 18719,
+      "sha256": "281e32ec5f0bd59ccda565fcc536fc5e2d1485ef1cc0434e34e6021a23b13026",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_explodido_v2_2.png",
+      "category": "hardware",
+      "bytes": 52420,
+      "sha256": "fe84231605e80aaab49c9afe37bae2f9af6a579e60fae0726990106b605ad125",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_explodido_v2.png",
+      "category": "hardware",
+      "bytes": 46733,
+      "sha256": "a663490136d6f3d94fcf340210293ebb28baf91cd256259aa9b830c628bbc0a1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_lateral_v2.png",
+      "category": "hardware",
+      "bytes": 9757,
+      "sha256": "0f2fca009df07ba5c96adb311725d0b1f404326e1feab2cb3bcc45f89fcf3aa5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_superior_v2.png",
+      "category": "hardware",
+      "bytes": 10251,
+      "sha256": "675b39f35154a3c49be9fb468eea247af2a9bced3735c126ea79306d466be502",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_v2_3.png",
+      "category": "hardware",
+      "bytes": 55191,
+      "sha256": "dd21efa79f0fe49fb815710781255dd3993e249af02c2aeef8a29b326886595f",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_layout_v2.png",
+      "category": "hardware",
+      "bytes": 43109,
+      "sha256": "9cff42d90e97d1a5d5b42de90f0f830bdae294e29f7ed9c8381bc51f2c22350a",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_parede_led_buzzer_v2.png",
+      "category": "hardware",
+      "bytes": 30274,
+      "sha256": "a91382935ff82d4e5cb2d3a3c8d9ee9f68fc975405b1f58ceb7345757d230f34",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_protetor_bateria_v2_3.png",
+      "category": "hardware",
+      "bytes": 12074,
+      "sha256": "fbcdc3fdefb1a84966a8279401086499591e3c5581e0a40302f9388b013da12a",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_externa_v2.png",
+      "category": "hardware",
+      "bytes": 5685,
+      "sha256": "8a156aa609ff1e9e4fd3805f6489569b3f86eac659203cd2c273ee5356005294",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_interna_v1.png",
+      "category": "hardware",
+      "bytes": 22480,
+      "sha256": "55dcc5779b3b7f5b82abd0d926eb305236afd8b469f39284f6f328aac5be016b",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/render_tampa_v2.png",
+      "category": "hardware",
+      "bytes": 20634,
+      "sha256": "c1bf6997b2f20e85a61e57b332c93ceab51eb5eee8758f77b39bf76e29bdb7da",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_bateria_fixa.png",
+      "category": "hardware",
+      "bytes": 32181,
+      "sha256": "9f319a6131b4a0287068a6656001c38c9b8259fbcc4922f702d503a9789ed091",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_botao.png",
+      "category": "hardware",
+      "bytes": 22432,
+      "sha256": "4694d2f97c08774b0b0ccf01125cc207d1a83857d4fa88ba799ba0f5a12293b6",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_buzzer.png",
+      "category": "hardware",
+      "bytes": 27305,
+      "sha256": "5154788a7ad5e9b9cb9e4bafde012e46c92c43c3f5173c9d3f0200c5611d36b8",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_completa.png",
+      "category": "hardware",
+      "bytes": 21458,
+      "sha256": "e36b76ccee4d0632d8ef94c0e2c517db7c7d9cf895226359a51e5f83c979a9f1",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_explodida.png",
+      "category": "hardware",
+      "bytes": 103826,
+      "sha256": "cdfe3132571d6d2c7900fdbc58eb22fc866bc90a8334e08041b85d2a679a92a0",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_compacta_fechada.png",
+      "category": "hardware",
+      "bytes": 91117,
+      "sha256": "b6b70c45fc33865b56edf39df3907c21c88d7f16843ab193a52dc7ba5b362fb9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_fixacao_xiao.png",
+      "category": "hardware",
+      "bytes": 59276,
+      "sha256": "67b5d7c4787496c02a3e437e19b3ad610467a0501c225c3277b8c3e6f0a07ad7",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png",
+      "category": "hardware",
+      "bytes": 5647,
+      "sha256": "aed1f9e0cdf9305a18b2e53f224fa468a82d837842d183b54583b0f870aa9740",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png",
+      "category": "hardware",
+      "bytes": 5647,
+      "sha256": "aed1f9e0cdf9305a18b2e53f224fa468a82d837842d183b54583b0f870aa9740",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_layout_v2_5.png",
+      "category": "hardware",
+      "bytes": 47703,
+      "sha256": "efc3b2242ee0525269a325cdd1b904eed3cb7ef971b62d441ca9692d3325a97e",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada_13mm.png",
+      "category": "hardware",
+      "bytes": 58127,
+      "sha256": "1b8bfdd97a4475d0f4bc9ca2dff7aa556c4c3cce4e4d0f824850dce7b85a2ba5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada.png",
+      "category": "hardware",
+      "bytes": 58244,
+      "sha256": "18e3649dc0aa8e04b3a6f2dc5b275baa9cbc017d3aa74dd43717a528e1e49888",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_base_v2_2.png",
+      "category": "hardware",
+      "bytes": 43594,
+      "sha256": "855d191cdf6a3e13a4ffd9baab1b5c692ce7e5c0190c0e7f848e1cfcc655c29e",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_botao_v2_2.png",
+      "category": "hardware",
+      "bytes": 18896,
+      "sha256": "67a37232ead0313d8be912cc860be250d1674a00c751c8b2388917e9cdc040a4",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_tampa_v2_2.png",
+      "category": "hardware",
+      "bytes": 30417,
+      "sha256": "8a0a8b2ce7af789edf3f22e9765afb849f20a82ac75e98170cbebbee8d455a01",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/verificacao_trava_v2_2.png",
+      "category": "hardware",
+      "bytes": 15616,
+      "sha256": "ef609530b32325bca83c28425a80a13290b6cbc53ceca2d8fd81cb9adab2b332",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.png",
+      "category": "hardware",
+      "bytes": 126184,
+      "sha256": "4e506bcd3ab76b488232f459c7375041a4374de752ce084f7be790c1c8aec97a",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.svg",
+      "category": "hardware",
+      "bytes": 6168,
+      "sha256": "25945f189fe51d36b6e94dcb3447975a44f74019daca845d973a574bae4b9d3e",
+      "lines": 103
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/imagens/visualizar_botao_montado.png",
+      "category": "hardware",
+      "bytes": 16529,
+      "sha256": "ba68fd62098ec20c28f3ae76f06b81421c5b8079e696791d742e7af6579949b3",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_2026_09_30.stl",
+      "category": "hardware",
+      "bytes": 838988,
+      "sha256": "5e188ed07c9ba7dd6c3cc7f4928c076174e1b48e5d5aef7a65ab547ac1ce2ceb",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_v2_5_candidate.stl",
+      "category": "hardware",
+      "bytes": 862568,
+      "sha256": "d0a53c9473ec6b8006fe049e7195496c2748450f730b5edba046e7b7a141c9d9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl",
+      "category": "hardware",
+      "bytes": 847197,
+      "sha256": "621e758d4e28ec26b0a277bef05ba7034372d3fd44ffd5f860ea25d21533b4a4",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl",
+      "category": "hardware",
+      "bytes": 196919,
+      "sha256": "ebf55bdc482d74e50e4969ac27bfd5493251a7218aa543943c257e9abcd4aec5",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_base.stl",
+      "category": "hardware",
+      "bytes": 856740,
+      "sha256": "692bf289cb27380a4ff09c464e37cff969eda0b0bf9045dcc61481bef96d427d",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_cap.stl",
+      "category": "hardware",
+      "bytes": 198263,
+      "sha256": "7bbf0cc9c6f326290297b7a68e9bf17db61b0d703eadd3f6c7aa4996cdfc9d14",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_retainer.stl",
+      "category": "hardware",
+      "bytes": 56053,
+      "sha256": "104f2d89ffc93dea424e8372151b37e1ff7f34ee75a5adf3b83e4e72ee7ab8de",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/revisao_2026_09_30.csg",
+      "category": "hardware",
+      "bytes": 28293,
+      "sha256": "64327b3ba6858668553051290c9671fc57112db0c99748c67492e48bb485e156",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl",
+      "category": "hardware",
+      "bytes": 588464,
+      "sha256": "8bed530fa93fbb17364c27d6c078f7a97f1aa230cb67284bf62f364a51449648",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_folgas.stl",
+      "category": "hardware",
+      "bytes": 255084,
+      "sha256": "008926a4eb82012b04384e41fadb327b6f5dbc9bf5a4170bbe8065bc78a92ed3",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_xiao.stl",
+      "category": "hardware",
+      "bytes": 255384,
+      "sha256": "40375c4112bc65037a05b1e5611767e5a1620ea36f33191e60b673143e911cf4",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_base_reexportada.stl",
+      "category": "hardware",
+      "bytes": 827434,
+      "sha256": "9ae04014548cd446ad11582d50d47708078f8be658ff2f9063cd3edc35128908",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_bateria_fixa.stl",
+      "category": "hardware",
+      "bytes": 253184,
+      "sha256": "4f081fb8c3f0315c070952fe8555dea0765add850ec1456a5f6df6b667372a5c",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_base.stl",
+      "category": "hardware",
+      "bytes": 255384,
+      "sha256": "9d9b068dbc43f01bb3dbbf0c8d2e13d9c3302535fe65aa8c38be2126de9c2ff9",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_botao.stl",
+      "category": "hardware",
+      "bytes": 55884,
+      "sha256": "17dfa572b79c49b7c8e5cf1573d794954bb65bd264a51a0e7542f0e89dbcf6eb",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_tampa.stl",
+      "category": "hardware",
+      "bytes": 144484,
+      "sha256": "a623d6349bd6addcd91e0a5db446a13265451a80771060720f93e5b5aeb53636",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_trava_c.stl",
+      "category": "hardware",
+      "bytes": 16684,
+      "sha256": "8a6d384c8b61ee28eae0ca43b2f9fbe9a87f3abe34033f03f0627c464f202c45",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_fixacao_xiao.stl",
+      "category": "hardware",
+      "bytes": 252784,
+      "sha256": "e4271179d92f6a17a6b89aec17bc9c64d83b6b8794de6d6edfd8fdf99cd8abc4",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_passantes.csg",
+      "category": "hardware",
+      "bytes": 15786,
+      "sha256": "c22bfd1d0d90c584538cbde681e02af0e27f6a93ba4cbcb0e0191d73878cce2d",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada_13mm.stl",
+      "category": "hardware",
+      "bytes": 248184,
+      "sha256": "59dd90a32e42ff27990008cef518f03d13bd1df0df4eaf0e674723e5176a6faa",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada.stl",
+      "category": "hardware",
+      "bytes": 251384,
+      "sha256": "e0f055095b91ab8c5325d50c945ee58d691e97a2ca27690268e755cdaebf2e91",
+      "lines": null
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/auditar_apoio_botao.py",
+      "category": "hardware",
+      "bytes": 3689,
+      "sha256": "61084bbf042bc7076c4d66e72c30195d40d9d97a83e3a8cfdfcbff8a95c9904f",
+      "lines": 73
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/conferir_bateria_fixa.scad",
+      "category": "hardware",
+      "bytes": 1565,
+      "sha256": "0b6a620a8c812321e2f577c14cb12960dc3fc8c822f99129a7330bcc9c96041d",
+      "lines": 30
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/verificar_apoios_v2_8.scad",
+      "category": "hardware",
+      "bytes": 695,
+      "sha256": "b8fbe168c190dc4cc127d51c8511f221ce893eb19424732b28149a55ae692fed",
+      "lines": 18
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/verificar_stl.scad",
+      "category": "hardware",
+      "bytes": 147,
+      "sha256": "8bba1318c51290dc2b968b80f5258195cfeff69a66049a73da0873c2ada50d34",
+      "lines": 4
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/visualizar_botao.scad",
+      "category": "hardware",
+      "bytes": 2019,
+      "sha256": "5f946904edf83765bf80e47ae6e0f1e939a9a586f69facc26561ff09a0adc6d9",
+      "lines": 60
+    },
+    {
+      "path": "hardware/case_3d/verificacoes/scripts/visualizar_passantes.scad",
+      "category": "hardware",
+      "bytes": 253,
+      "sha256": "0a3ff92a5a886d6be97bc7850c0b0947757e6d1fce748ba06cc54b7b95afc9a8",
+      "lines": 7
+    },
+    {
+      "path": "hardware/README.md",
+      "category": "hardware",
+      "bytes": 346,
+      "sha256": "033ab1d8a9f3ec6086ddd11c9246491fd1fb71c9417b4f0034c46428c67dd342",
+      "lines": 9
+    },
+    {
+      "path": "modules/escolta-sentinela/android/build.gradle",
+      "category": "android-nativo-fonte",
+      "bytes": 252,
+      "sha256": "b46ba88970af1a50412c09e8bd45e924263192c5cf2bd7306fe59f0231ec9a7e",
+      "lines": 16
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/AndroidManifest.xml",
+      "category": "android-nativo-fonte",
+      "bytes": 737,
+      "sha256": "b600df3f48349fe96017702067b7fa8531fe01062279a61ce9a9037d04169798",
+      "lines": 16
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaModule.kt",
+      "category": "android-nativo-fonte",
+      "bytes": 2066,
+      "sha256": "251766fb4356d962a20bec7d03ecba1bafb1c46f10b032c126416d9318e63d60",
+      "lines": 62
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt",
+      "category": "android-nativo-fonte",
+      "bytes": 12286,
+      "sha256": "74f507fa43884ad66ce9e8553f693c21b3980b70cccc8b4cb738a09c8313b1e6",
+      "lines": 349
+    },
+    {
+      "path": "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav",
+      "category": "android-nativo-fonte",
+      "bytes": 88244,
+      "sha256": "9f5ffd851c96f007e38d28856fe8af4f38e8052031d27e657176e7dd3c2bc3bf",
+      "lines": null
+    },
+    {
+      "path": "modules/escolta-sentinela/expo-module.config.json",
+      "category": "android-nativo-fonte",
+      "bytes": 123,
+      "sha256": "787f17f60bcaad7eca24029c88201c69989b2c9bb381b14fca1a7070e5b5a14c",
+      "lines": 7
+    },
+    {
+      "path": "package-lock.json",
+      "category": "configuracao-raiz",
+      "bytes": 376899,
+      "sha256": "92df69e43a9c133cee45217cc26beaf64f102060a4fcff9d8c9e4f4c649c4cb2",
+      "lines": 9950
+    },
+    {
+      "path": "package.json",
+      "category": "configuracao-raiz",
+      "bytes": 980,
+      "sha256": "8c22e74e2b3f532e694b06394afec1bc628b249e258b66abb4ee3fae2ae2ee28",
+      "lines": 37
+    },
+    {
+      "path": "README.md",
+      "category": "configuracao-raiz",
+      "bytes": 7599,
+      "sha256": "3e19d59dff6836645f07d0a7defb793350b680e2be256f38b678ba2d0960ab96",
+      "lines": 133
+    },
+    {
+      "path": "src/context/AppPreferencesContext.tsx",
+      "category": "app",
+      "bytes": 3281,
+      "sha256": "c0bc4ccf06b16cb5331cba783fd93d76843128060ece9b572f0d4b53eca64457",
+      "lines": 100
+    },
+    {
+      "path": "src/hooks/useEsp32Monitor.ts",
+      "category": "app",
+      "bytes": 33875,
+      "sha256": "d54a4a69ad0b69405f450ee1577f8a32a75fb974a4f939f5c22ffe5e95726f8f",
+      "lines": 914
+    },
+    {
+      "path": "src/screens/AlertsScreen.tsx",
+      "category": "app",
+      "bytes": 11155,
+      "sha256": "7212010685db8402d1035e4df36fef509ab0bdab4a25837e66505bc1d9872080",
+      "lines": 208
+    },
+    {
+      "path": "src/screens/AuthScreen.tsx",
+      "category": "app",
+      "bytes": 10205,
+      "sha256": "ed37359bc2dad3d2f599f8bbc3687cf2fded63fcbf3727a07301931770882367",
+      "lines": 198
+    },
+    {
+      "path": "src/screens/DashboardScreen.tsx",
+      "category": "app",
+      "bytes": 20178,
+      "sha256": "596ef7ecb7eafcbf2da81637455600e9348b924e8bef827612cb1113e1828217",
+      "lines": 398
+    },
+    {
+      "path": "src/screens/ManualScreen.tsx",
+      "category": "app",
+      "bytes": 8169,
+      "sha256": "8cfbaae125106935d9bbffc3bcc035641398d9172dcf7897e41f8f4dcbf391a8",
+      "lines": 139
+    },
+    {
+      "path": "src/screens/PatrolScreen.tsx",
+      "category": "app-legado",
+      "bytes": 9655,
+      "sha256": "17f465626cfb43e6c018eb8b0fb72cdc3da941fd60a732f09f735a499140e554",
+      "lines": 203
+    },
+    {
+      "path": "src/screens/ProximityTrialModal.tsx",
+      "category": "app",
+      "bytes": 14131,
+      "sha256": "cd4d7a8eb3a291af7e79b810378931aae959cace80ca7470c616a41cbc30b687",
+      "lines": 230
+    },
+    {
+      "path": "src/screens/SettingsScreen.tsx",
+      "category": "app",
+      "bytes": 28439,
+      "sha256": "6025aa6ad5ab3ebd16814b59ab35546d260689dd2f84a6f9c4b24224b721c3ca",
+      "lines": 556
+    },
+    {
+      "path": "src/screens/SystemDiagnosticsModal.tsx",
+      "category": "app",
+      "bytes": 23909,
+      "sha256": "7178deb48d4147009524b6f15cbb5a12a9dc2dd53bb9fd8c75f56617500658f0",
+      "lines": 472
+    },
+    {
+      "path": "src/services/backgroundSentinel.ts",
+      "category": "app",
+      "bytes": 2273,
+      "sha256": "3e534573daea26882e1592b044ced953a4aa9d8ae81fd30d39441e6a58be9264",
+      "lines": 79
+    },
+    {
+      "path": "src/services/bleApi.ts",
+      "category": "app",
+      "bytes": 13123,
+      "sha256": "ff7c6692c9596e77238bcbbc07021ea81113d720eb20a36ee055256bc4fe3833",
+      "lines": 341
+    },
+    {
+      "path": "src/services/firebaseConfig.ts",
+      "category": "app",
+      "bytes": 1339,
+      "sha256": "392c58d78dded33466e9e957090b2254e2ed24e8113b6893d61428f4ee9d789b",
+      "lines": 41
+    },
+    {
+      "path": "src/services/notificationService.ts",
+      "category": "app",
+      "bytes": 6064,
+      "sha256": "d6a4601058907e632bb287e5fa296b79bd80eaa93046d49a1d3ec9c654d52f73",
+      "lines": 153
+    },
+    {
+      "path": "src/theme.ts",
+      "category": "app",
+      "bytes": 2239,
+      "sha256": "5fae7ec8d7bd2da2801c3b44f47612f3e43fbbd3fadcec1ff0f8f4b8b5297b7f",
+      "lines": 90
+    },
+    {
+      "path": "src/utils/proximityTrial.ts",
+      "category": "app",
+      "bytes": 6808,
+      "sha256": "6301ecb5f544dbc8ad5cb0bf72f703ccfa42c63c7ea6688e730ace370b51f36a",
+      "lines": 151
+    },
+    {
+      "path": "tools/auditoria/inventario.cjs",
+      "category": "ferramentas",
+      "bytes": 2966,
+      "sha256": "43395a3ab558bd0aff6b06e6e51b6fd1e0c3f1712d7cc326dbdaf26f6feacfaa",
+      "lines": 58
+    },
+    {
+      "path": "tools/cicted/anonymize_cicted.py",
+      "category": "ferramentas",
+      "bytes": 5179,
+      "sha256": "2fb80230e9bb5c2eef01902dcba920d9fe8b0d3f3aa7a8e0777c56baf56a42a5",
+      "lines": 101
+    },
+    {
+      "path": "tools/cicted/apply_cicted_review.py",
+      "category": "ferramentas",
+      "bytes": 5783,
+      "sha256": "207473edc44aa18bd2b60f96510fc51613a1e3db84cf0942d502fa99b5057a99",
+      "lines": 110
+    },
+    {
+      "path": "tools/cicted/gerar_resumo_cicted.py",
+      "category": "ferramentas",
+      "bytes": 8551,
+      "sha256": "eaa4d23bf78e154735682b72827c14b20eba8665b1f9fd9228197c9de89ddfbe",
+      "lines": 180
+    },
+    {
+      "path": "tools/cicted/inspect_cicted_docx.py",
+      "category": "ferramentas",
+      "bytes": 1194,
+      "sha256": "b951df91ad02f436a5f559cdd127b5b739c68507be842f9ae72027196fb05b82",
+      "lines": 36
+    },
+    {
+      "path": "tools/cicted/remove_ai_from_cicted.py",
+      "category": "ferramentas",
+      "bytes": 1966,
+      "sha256": "7b9b299922ef2ae2639cf15f2169584bfe3614b6edb6a7bf8e5c4c4e6d760307",
+      "lines": 66
+    },
+    {
+      "path": "tools/diagramas/gerar_diagrama_circuito_completo.py",
+      "category": "ferramentas",
+      "bytes": 11104,
+      "sha256": "b160528c85e247927011a2d66bf59768b72d27810394a9f290cbd5d1131f0c4b",
+      "lines": 278
+    },
+    {
+      "path": "tools/test-monitor-alerts.cjs",
+      "category": "ferramentas",
+      "bytes": 7745,
+      "sha256": "7e75a4d033925d71d313dc825c19d194b76ede25d374cb1207ec46055c9bfcf4",
+      "lines": 175
+    },
+    {
+      "path": "tools/test-proximity-ble.cjs",
+      "category": "ferramentas",
+      "bytes": 3644,
+      "sha256": "af13edd5e625548bbe87b07202d768dd3bb9748f8b368c5cb7e047830b186832",
+      "lines": 83
+    },
+    {
+      "path": "tools/test-proximity-distance.cjs",
+      "category": "ferramentas",
+      "bytes": 6007,
+      "sha256": "4c8d8b4014bbf97d17d893ef87e1bec6da6a4e0e213861c805a55c9834652de8",
+      "lines": 131
+    },
+    {
+      "path": "tools/test-proximity-signal.cpp",
+      "category": "ferramentas",
+      "bytes": 8554,
+      "sha256": "e3361e0aa6c12508b4c5ee9667cbb4e3519405bdd0d7f18cc9a672486708cd69",
+      "lines": null
+    },
+    {
+      "path": "tools/test-proximity-signal.ps1",
+      "category": "ferramentas",
+      "bytes": 881,
+      "sha256": "b0b7bdc1db9aacadd99ea651394a7f0512a9b0498b07a63a2317fcb5cd6fdcd4",
+      "lines": 12
+    },
+    {
+      "path": "tools/test-proximity-trial.cjs",
+      "category": "ferramentas",
+      "bytes": 5820,
+      "sha256": "0d466724e852c4980a5074958c0598d18e733d714bbcf54fd9618c0ecf6c3eea",
+      "lines": 112
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "configuracao-raiz",
+      "bytes": 85,
+      "sha256": "712583ff9cdb4b4e4f9b000a4a56d68db8dc1921cbfbc36d490a3a9f2be3dd72",
+      "lines": 7
+    }
+  ],
+  "counts": {
+    "configuracao-raiz": 10,
+    "android-local-gerado": 44,
+    "recursos-app": 4,
+    "entrega-cicted-raiz": 4,
+    "documentacao": 160,
+    "firmware-legado": 1,
+    "firmware-atual": 4,
+    "hardware": 91,
+    "hardware-historico-local": 36,
+    "android-nativo-fonte": 6,
+    "app": 15,
+    "app-legado": 1,
+    "ferramentas": 13
+  },
+  "skipped": [
+    {
+      "path": ".expo",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": ".git",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "android/.gradle",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "docs/cicted/banner/ferramentas/vendor",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "docs/cicted/banner/__pycache__",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/build_check",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/build_proximity",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "firmware/xiao_escolta_ble/build_v2",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "hardware/case_3d/ferramentas/__pycache__",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "local_tools",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "node_modules",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "tools/cicted/__pycache__",
+      "reason": "dependencia-ou-gerado"
+    },
+    {
+      "path": "tools/diagramas/__pycache__",
+      "reason": "dependencia-ou-gerado"
+    }
+  ],
+  "duplicates": [
+    [
+      "android/app/src/debug/AndroidManifest.xml",
+      "android/app/src/debugOptimized/AndroidManifest.xml"
+    ],
+    [
+      "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+    ],
+    [
+      "assets/alert_tone.wav",
+      "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav"
+    ],
+    [
+      "CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx"
+    ],
+    [
+      "CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf"
+    ],
+    [
+      "docs/cicted/banner/impressao/assets/cabecalho_original.png",
+      "docs/cicted/Revisao/.conferencia_cabecalho.png"
+    ],
+    [
+      "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json",
+      "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "docs/cicted/banner/impressao/recursos_preservados_pdf_final.json",
+      "docs/cicted/banner/impressao/recursos_preservados_pdf.json"
+    ],
+    [
+      "docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx",
+      "docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx"
+    ],
+    [
+      "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx"
+    ],
+    [
+      "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx",
+      "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx"
+    ],
+    [
+      "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx",
+      "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx"
+    ],
+    [
+      "docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx",
+      "docs/cicted/Revisao/CICTED_Revisado.docx"
+    ],
+    [
+      "docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png",
+      "hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png"
+    ],
+    [
+      "hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl",
+      "hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl",
+      "hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl",
+      "hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl"
+    ],
+    [
+      "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl",
+      "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl"
+    ],
+    [
+      "hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl",
+      "hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl"
+    ],
+    [
+      "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png",
+      "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png"
+    ]
+  ]
+}

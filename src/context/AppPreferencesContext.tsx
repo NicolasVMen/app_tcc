@@ -1,6 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage, { initializeAccountStorage, ensureProfileForAccount } from '../services/accountStorage';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../services/firebaseConfig';
 import { AppColors, DARK_COLORS, LIGHT_COLORS, ThemeMode } from '../theme';
 
 const STORAGE_KEY = '@escolta_preferences_v2';
@@ -34,6 +36,7 @@ interface PreferencesContextValue {
   colors: AppColors;
   resolvedTheme: 'dark' | 'light';
   hydrated: boolean;
+  accountUid: string | null;
   setPreference: <K extends keyof AppPreferences>(key: K, value: AppPreferences[K]) => Promise<void>;
   resetPreferences: () => Promise<void>;
 }
@@ -44,37 +47,64 @@ export function AppPreferencesProvider({ children }: { children: React.ReactNode
   const systemScheme = useColorScheme();
   const [preferences, setPreferences] = useState<AppPreferences>(DEFAULT_PREFERENCES);
   const [hydrated, setHydrated] = useState(false);
+  const [accountUid, setAccountUid] = useState<string | null>(null);
+  const currentPreferences = useRef(DEFAULT_PREFERENCES);
 
   useEffect(() => {
     let mounted = true;
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then(raw => {
-        if (!mounted || !raw) return;
-        const parsed = JSON.parse(raw) as Partial<AppPreferences>;
-        setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (mounted) setHydrated(true);
-      });
-    return () => { mounted = false; };
+    let first = true;
+    let generation = 0;
+    const unsubscribe = onAuthStateChanged(auth, async user => {
+      const current = ++generation;
+      const recoverExisting = first && Boolean(user);
+      first = false;
+      setHydrated(false);
+      setAccountUid(null);
+      setPreferences(DEFAULT_PREFERENCES);
+      currentPreferences.current = DEFAULT_PREFERENCES;
+      try {
+        await initializeAccountStorage(user?.uid ?? null, recoverExisting);
+        if (!mounted || current !== generation) return;
+        if (user?.displayName) await ensureProfileForAccount(user.uid, user.displayName);
+        const raw = await AsyncStorage.getItem(STORAGE_KEY);
+        if (!mounted || current !== generation) return;
+        const parsed = raw ? JSON.parse(raw) : {};
+        const next = { ...DEFAULT_PREFERENCES };
+        for (const key of Object.keys(DEFAULT_PREFERENCES) as Array<keyof AppPreferences>) {
+          if (key === 'themeMode') {
+            if (['dark', 'light', 'system'].includes(parsed?.themeMode)) next.themeMode = parsed.themeMode;
+          } else if (typeof parsed?.[key] === 'boolean') next[key] = parsed[key];
+        }
+        setPreferences(next);
+        currentPreferences.current = next;
+      } catch {} finally {
+        if (mounted && current === generation) {
+          setAccountUid(user?.uid ?? null);
+          setHydrated(true);
+        }
+      }
+    });
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   const setPreference = useCallback(async <K extends keyof AppPreferences>(
     key: K,
     value: AppPreferences[K]
   ) => {
-    setPreferences(current => {
-      const next = { ...current, [key]: value };
-      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
-      return next;
-    });
-  }, []);
+    if (!hydrated || accountUid !== (auth.currentUser?.uid ?? null)) return;
+    const next = { ...currentPreferences.current, [key]: value };
+    currentPreferences.current = next;
+    setPreferences(next);
+    // Persistência fora do updater React: a conta é capturada já neste clique.
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
+  }, [hydrated, accountUid]);
 
   const resetPreferences = useCallback(async () => {
+    if (!hydrated || accountUid !== (auth.currentUser?.uid ?? null)) return;
+    currentPreferences.current = DEFAULT_PREFERENCES;
     setPreferences(DEFAULT_PREFERENCES);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PREFERENCES));
-  }, []);
+  }, [hydrated, accountUid]);
 
   const resolvedTheme: 'dark' | 'light' = preferences.themeMode === 'system'
     ? (systemScheme === 'light' ? 'light' : 'dark')
@@ -85,9 +115,10 @@ export function AppPreferencesProvider({ children }: { children: React.ReactNode
     colors: resolvedTheme === 'dark' ? DARK_COLORS : LIGHT_COLORS,
     resolvedTheme,
     hydrated,
+    accountUid,
     setPreference,
     resetPreferences,
-  }), [preferences, resolvedTheme, hydrated, setPreference, resetPreferences]);
+  }), [preferences, resolvedTheme, hydrated, accountUid, setPreference, resetPreferences]);
 
   return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
 }

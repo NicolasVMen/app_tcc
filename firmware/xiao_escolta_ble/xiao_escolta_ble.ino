@@ -20,6 +20,36 @@
 #include <ArduinoBLE.h>
 #include <math.h>
 #include <nrf.h>
+#include "ProximitySignal.h"
+#include "ProximityDistance.h"
+#include "RadioDiagnostics.h"
+#include "RadioPowerExperiment.h"
+#include "CommunicationWatchdog.h"
+
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+#if ESCOLTA_TESTE_WATCHDOG_RSSI != 1 || !defined(ESCOLTA_TESTE_KALMAN_K2)
+#error "Watchdog W1 requer opt-in explicito junto do perfil K2"
+#endif
+Comunicacao::Watchdog watchdogRssi;
+#endif
+
+// Experimento isolado: altera somente a aquisição do ADC, não o carregador.
+#if defined(ESCOLTA_TESTE_BATERIA_AQUISICAO_40US)
+#if ESCOLTA_TESTE_BATERIA_AQUISICAO_40US != 1 || !defined(ARDUINO_ARCH_MBED) || !defined(ESCOLTA_TESTE_CONFIRMACAO_PROXIMA) || !defined(ESCOLTA_TESTE_RADIO_TX_DBM)
+#error "ADC 40 us requer opt-in explicito e o firmware de teste p5-r4 no core Mbed"
+#endif
+// Na descoberta de bibliotecas o Arduino omite temporariamente a API da variante.
+#if !defined(ANALOG_CONFIG) && ARDUINO_LIBRARY_DISCOVERY_PHASE != 1
+#error "A variante selecionada nao oferece analogAcquisitionTime"
+#endif
+static_assert(ESCOLTA_TESTE_RADIO_TX_DBM == 4, "Manter radio em +4 dBm neste ensaio de bateria");
+#endif
+
+#if defined(ESCOLTA_TESTE_BATERIA_TOPO_4100MV)
+#if ESCOLTA_TESTE_BATERIA_TOPO_4100MV != 1 || !defined(ESCOLTA_TESTE_BATERIA_AQUISICAO_40US)
+#error "Topo visual 4,10 V requer opt-in explicito na variante de bateria de teste"
+#endif
+#endif
 
 // ============================================================
 //   PINOS
@@ -30,9 +60,44 @@ const uint8_t PINO_LEITURA_BATERIA = PIN_VBAT;  // índice 6 -> P0.31 / AIN7_BAT
 const uint8_t PINO_CORRENTE_CARGA = 21;         // índice 21 -> P0.13 / HICHG
 const uint8_t PINO_STATUS_CARGA = 22;           // índice 22 -> P0.17 / ~CHG
 
-// Operacao normal: atenção é visual; o buzzer fica reservado ao pânico,
-// à perda sustentada do vínculo e ao botão de emergência.
+// Atenção confirmada mantém bipe lento; pânico mantém o bipe rápido obrigatório.
 const bool SAIDAS_DE_ALARME_ATIVAS = true;
+#if defined(ESCOLTA_TESTE_CONFIRMACAO_PROXIMA)
+#if defined(ESCOLTA_TESTE_KALMAN_K2)
+static_assert(Proximidade::ATENCAO_ENTRA == -77 && Proximidade::PERIGO_ENTRA == -90
+  && Proximidade::ATENCAO_MS == 4000 && Proximidade::PERIGO_MS == 4000,
+  "Candidato K2 requer perfil experimental -77/-90/4s");
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+const char* VERSAO_FIRMWARE = "xiao-p5-r4-d1-k2-w1";
+#else
+const char* VERSAO_FIRMWARE = "xiao-p5-r4-d1-k2";
+#endif
+#elif defined(ESCOLTA_TESTE_KALMAN_K1)
+static_assert(Proximidade::ATENCAO_ENTRA == -77 && Proximidade::PERIGO_ENTRA == -85
+  && Proximidade::ATENCAO_MS == 4000 && Proximidade::PERIGO_MS == 4000,
+  "Candidato K1 requer perfil experimental -77/-85/4s");
+const char* VERSAO_FIRMWARE = "xiao-p5-r4-d1-k1";
+#else
+static_assert(Proximidade::ATENCAO_ENTRA == -82 && Proximidade::PERIGO_ENTRA == -90
+  && Proximidade::ATENCAO_MS == 4000 && Proximidade::PERIGO_MS == 4000,
+  "A confirmacao p5 requer o perfil de sinal p4");
+#if defined(ESCOLTA_TESTE_RADIO_TX_DBM)
+#if defined(ESCOLTA_TESTE_DISTANCIA_RADIO4)
+const char* VERSAO_FIRMWARE = "xiao-p5-r4-d1";
+#else
+const char* VERSAO_FIRMWARE = "xiao-p5-r4";
+#endif
+#else
+const char* VERSAO_FIRMWARE = "xiao-p5-teste";
+#endif
+#endif
+#elif defined(ESCOLTA_TESTE_PROXIMIDADE_4DB)
+const char* VERSAO_FIRMWARE = "xiao-p4-teste";
+#elif defined(ESCOLTA_TESTE_PROXIMIDADE_6DB)
+const char* VERSAO_FIRMWARE = "xiao-p3-teste";
+#else
+const char* VERSAO_FIRMWARE = "xiao-p2";
+#endif
 
 // ============================================================
 //   UUIDs BLE — idênticos aos usados pelo aplicativo
@@ -89,11 +154,14 @@ bool usbConectado = false;
 bool leituraBateriaIniciada = false;
 
 // ============================================================
-//   FILTRAGEM DE SINAL — EMA + histerese + debounce
+//   FILTRAGEM DE SINAL — mediana/EMA ou K1 opt-in + histerese/tempo
 // ============================================================
-enum Estado { SEGURO, ATENCAO, PERIGO };
+using Proximidade::Estado;
+using Proximidade::SEGURO;
+using Proximidade::ATENCAO;
+using Proximidade::PERIGO;
 Estado estadoAtual = SEGURO;
-Estado candidatoEstado = SEGURO;
+Proximidade::Monitor monitorProximidade;
 
 // ============================================================
 //   LED RGB INTERNO — LOW acende, HIGH apaga
@@ -108,29 +176,18 @@ bool pulsoLedAtivo(uint32_t periodoMs, uint32_t duracaoMs) {
   return millis() % periodoMs < duracaoMs;
 }
 
-const float EMA_ALFA = 0.30f;
 const uint32_t INTERVALO_AMOSTRA = 500;
-// Atenção é apenas informativa; perigo precisa permanecer estável por mais
-// tempo para que uma oscilação comum do RSSI não dispare uma emergência.
-const uint8_t DEBOUNCE_ATENCAO_AMOSTRAS = 8;  // aproximadamente 4 s
-const uint8_t DEBOUNCE_PERIGO_AMOSTRAS = 16; // aproximadamente 8 s
-const uint8_t DEBOUNCE_RETORNO_AMOSTRAS = 4; // aproximadamente 2 s
+// Os tempos de atenção/perigo contam leituras contínuas, não ticks sem RSSI.
+// Política experimental e filtro estão em ProximitySignal.h.
 const uint8_t DEBOUNCE_DESCONEXAO_AMOSTRAS = 10;
 const uint32_t INTERVALO_NOTIFY = 1000;
 
-// Valores herdados do protótipo ESP32. Devem ser recalibrados com a
-// XIAO e a carcaça finais antes de serem apresentados como resultado.
-const int LIMIAR_ATENCAO_ENTRA = -70;
-const int LIMIAR_ATENCAO_SAI = -66;
-const int LIMIAR_PERIGO_ENTRA = -86;
-const int LIMIAR_PERIGO_SAI = -82;
-const int RSSI_REF_1M = -71;
-const float N_PROPAGACAO = 2.5f;
+// Escala experimental ajustada separadamente dos limites de alarme.
+// Parâmetros e fórmula em ProximityDistance.h.
 
 float rssiFiltrado = -50.0f;
 bool filtroIniciado = false;
 int ultimoRssiCru = -50;
-uint8_t contadorEstado = 0;
 uint8_t contadorDesconectado = 0;
 int rssiRecebidoDoApp = -50;
 bool rssiAtualizado = false;
@@ -151,9 +208,14 @@ const uint32_t TEMPO_ACIONAMENTO_BOTAO_MS = 1500;
 //   BATERIA — leitura interna da XIAO e estimativa por tensão
 // ============================================================
 uint8_t estimarPercentualBateria(float volts) {
-  // Curva aproximada de uma célula Li-Po em repouso. Sob carga, o valor pode
-  // oscilar; por isso o aplicativo identifica o resultado como estimativa.
-  const float tensoes[] = {3.30f, 3.50f, 3.60f, 3.70f, 3.75f, 3.79f, 3.83f, 3.87f, 3.92f, 3.98f, 4.08f, 4.20f};
+  // Estimativa por tensão, não medição de capacidade ou de fim de carga.
+#if defined(ESCOLTA_TESTE_BATERIA_TOPO_4100MV)
+  // Convenção visual solicitada: 100% em 4,10 V; faixa até 90% inalterada.
+  const float tensaoTopo = 4.10f;
+#else
+  const float tensaoTopo = 4.20f;
+#endif
+  const float tensoes[] = {3.30f, 3.50f, 3.60f, 3.70f, 3.75f, 3.79f, 3.83f, 3.87f, 3.92f, 3.98f, 4.08f, tensaoTopo};
   const uint8_t percentuais[] = {0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
   const size_t quantidade = sizeof(tensoes) / sizeof(tensoes[0]);
 
@@ -202,33 +264,32 @@ void atualizarLeituraBateria() {
 
   usbConectado = (NRF_POWER->USBREGSTATUS & POWER_USBREGSTATUS_VBUSDETECT_Msk) != 0;
   bateriaCarregando = usbConectado && digitalRead(PINO_STATUS_CARGA) == LOW;
+#if defined(ESCOLTA_TESTE_BATERIA_AQUISICAO_40US)
+  // Apenas com monitor USB aberto; não altera o contrato BLE ou a estimativa.
+  if (Serial) {
+    Serial.print("[BATTERY_ADC] profile=p5-r4-adc40 requested_us=40 adc_mean=");
+    Serial.print(mediaAdc, 2);
+    Serial.print(" unfiltered_v=");
+    Serial.print(novaTensao, 4);
+    Serial.print(" filtered_v=");
+    Serial.print(tensaoBateria, 4);
+#if defined(ESCOLTA_TESTE_BATERIA_TOPO_4100MV)
+    Serial.print(" display_top_v=4.10 pct=");
+    Serial.print(percentualBateria);
+#endif
+    Serial.print(" usb=");
+    Serial.print(usbConectado);
+    Serial.print(" charging=");
+    Serial.println(bateriaCarregando);
+  }
+#endif
 }
 
 // ============================================================
 //   FUNÇÕES DE ESTADO
 // ============================================================
 float estimarDistancia(float rssi) {
-  return pow(10.0f, (RSSI_REF_1M - rssi) / (10.0f * N_PROPAGACAO));
-}
-
-Estado proximoEstadoHisterese(Estado atual, float rssi) {
-  switch (atual) {
-    case SEGURO:
-      if (rssi <= LIMIAR_PERIGO_ENTRA) return PERIGO;
-      if (rssi <= LIMIAR_ATENCAO_ENTRA) return ATENCAO;
-      return SEGURO;
-
-    case ATENCAO:
-      if (rssi <= LIMIAR_PERIGO_ENTRA) return PERIGO;
-      if (rssi > LIMIAR_ATENCAO_SAI) return SEGURO;
-      return ATENCAO;
-
-    case PERIGO:
-      if (rssi > LIMIAR_PERIGO_SAI) return ATENCAO;
-      return PERIGO;
-  }
-
-  return atual;
+  return Proximidade::estimarDistancia(rssi);
 }
 
 const char* nomeEstado() {
@@ -241,8 +302,7 @@ const char* nomeEstado() {
 void restaurarEstadoSeguro() {
   modoPanico = false;
   estadoAtual = SEGURO;
-  candidatoEstado = SEGURO;
-  contadorEstado = 0;
+  monitorProximidade.reset();
   contadorDesconectado = 0;
   filtroIniciado = false;
   rssiAtualizado = false;
@@ -255,6 +315,10 @@ void aplicarModoEspera(bool emEspera) {
   pausaIntencional = emEspera;
   escoltaAtivada = !emEspera;
   restaurarEstadoSeguro();
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+  if (emEspera) watchdogRssi.desarmar();
+  else watchdogRssi.armar(millis());
+#endif
   controleCharacteristic.writeValue(emEspera ? "espera" : "ativo");
 
   Serial.println(emEspera
@@ -283,44 +347,26 @@ void processarSinal(int rssiCru, bool conectado) {
 
   contadorDesconectado = 0;
 
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+  // Consumir primeiro a amostra que já chegou; não disparar no limite com dado novo.
+  if (rssiAtualizado) watchdogRssi.recebeu(millis());
+  if (watchdogRssi.expirou(millis()) && !modoPanico) {
+    modoPanico = true;
+    estadoAtual = PERIGO;
+    Serial.println("[ALARME] Comunicacao sem RSSI valido por 8 s!");
+  }
+#endif
   // Não cria uma leitura artificial enquanto o app ainda não enviou RSSI.
   if (!rssiAtualizado) return;
   rssiAtualizado = false;
 
-  if (!filtroIniciado) {
-    rssiFiltrado = (float)rssiCru;
-    filtroIniciado = true;
-  } else {
-    rssiFiltrado = EMA_ALFA * (float)rssiCru
-      + (1.0f - EMA_ALFA) * rssiFiltrado;
-  }
-
-  Estado alvo = proximoEstadoHisterese(estadoAtual, rssiFiltrado);
-  if (alvo == estadoAtual) {
-    contadorEstado = 0;
-    return;
-  }
-
-  if (alvo == candidatoEstado) {
-    contadorEstado++;
-  } else {
-    candidatoEstado = alvo;
-    contadorEstado = 1;
-  }
-
-  uint8_t amostrasNecessarias = candidatoEstado == PERIGO
-    ? DEBOUNCE_PERIGO_AMOSTRAS
-    : candidatoEstado == ATENCAO
-      ? DEBOUNCE_ATENCAO_AMOSTRAS
-      : DEBOUNCE_RETORNO_AMOSTRAS;
-
-  if (contadorEstado >= amostrasNecessarias) {
-    estadoAtual = candidatoEstado;
-    contadorEstado = 0;
-    if (estadoAtual == PERIGO) {
-      modoPanico = true;
-      Serial.println("[ALARME] Distancia sustentada na faixa de perigo!");
-    }
+  if (!monitorProximidade.receber(rssiCru, millis())) return;
+  rssiFiltrado = monitorProximidade.sinal();
+  filtroIniciado = monitorProximidade.temLeitura();
+  estadoAtual = monitorProximidade.estado();
+  if (estadoAtual == PERIGO && !modoPanico) {
+    modoPanico = true;
+    Serial.println("[ALARME] Sinal fraco sustentado na faixa de perigo!");
   }
 }
 
@@ -337,15 +383,13 @@ void atualizarBuzzer() {
     return;
   }
 
-  // A faixa amarela não aciona o buzzer: RSSI varia naturalmente com posição,
-  // corpo, móveis e interferência. O som fica reservado à emergência latched.
-  if (!escoltaAtivada || !modoPanico) {
+  const uint32_t periodo = Proximidade::periodoBuzzer(
+    escoltaAtivada, modoPanico, somHabilitado, estadoAtual);
+  if (periodo == 0) {
     digitalWrite(PINO_BUZZER, LOW);
     ligado = false;
     return;
   }
-
-  const uint32_t periodo = 150;
 
   if (millis() - ultimoPulso >= periodo) {
     ligado = !ligado;
@@ -436,13 +480,20 @@ void lerBotaoEmergencia() {
 //   EVENTOS BLE
 // ============================================================
 void aoConectar(BLEDevice central) {
+#if defined(ESCOLTA_TESTE_RADIO_TX_DBM)
+  EnsaioPotencia::resetSession();
+#endif
   clienteConectado = true;
   contadorDesconectado = 0;
   filtroIniciado = false;
   rssiAtualizado = false;
+  monitorProximidade.resetLeituras();
 
   if (!pausaIntencional) {
     escoltaAtivada = true;
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+    watchdogRssi.armar(millis());
+#endif
     Serial.println("[SISTEMA] MONITORAMENTO ARMADO!");
   }
 
@@ -451,9 +502,16 @@ void aoConectar(BLEDevice central) {
 }
 
 void aoDesconectar(BLEDevice central) {
+#if defined(ESCOLTA_TESTE_WATCHDOG_RSSI)
+  watchdogRssi.desarmar(); // a perda real continua usando o caminho de 5 s existente
+#endif
+#if defined(ESCOLTA_TESTE_RADIO_TX_DBM)
+  EnsaioPotencia::resetSession();
+#endif
   clienteConectado = false;
   rssiAtualizado = false;
   filtroIniciado = false;
+  monitorProximidade.resetLeituras();
   contadorDesconectado = 0;
 
   Serial.print("[BLE] Cliente desconectado: ");
@@ -482,7 +540,20 @@ void aoEscreverReset(BLEDevice central, BLECharacteristic characteristic) {
   (void)central;
   (void)characteristic;
 
+#if defined(ESCOLTA_TESTE_CONFIRMACAO_PROXIMA)
+  if (!clienteConectado || !escoltaAtivada || ultimoRssiCru <= Proximidade::ATENCAO_ENTRA
+      || !monitorProximidade.podeConfirmarSeguranca(millis())) {
+    Serial.println("[BLE] Confirmacao recusada: aguardando sinal recente na faixa segura.");
+    return;
+  }
+  // Encerra apenas a emergência retida. Não fabrica RSSI -50 nem limpa o filtro.
+  modoPanico = false;
+  estadoAtual = monitorProximidade.estado();
+  contadorDesconectado = 0;
+  digitalWrite(PINO_BUZZER, LOW);
+#else
   restaurarEstadoSeguro();
+#endif
   Serial.println("[BLE] Emergencia confirmada pelo responsavel.");
 }
 
@@ -492,8 +563,9 @@ void aoEscreverRssi(BLEDevice central, BLECharacteristic characteristic) {
 
   String valor = rssiCharacteristic.value();
   valor.trim();
-  long rssi = valor.toInt();
-  if (rssi >= -127 && rssi <= 0) {
+  char* fim = nullptr;
+  long rssi = strtol(valor.c_str(), &fim, 10);
+  if (fim != valor.c_str() && *fim == '\0' && rssi >= -126 && rssi < 0) {
     rssiRecebidoDoApp = (int)rssi;
     ultimoRssiCru = rssiRecebidoDoApp;
     rssiAtualizado = true;
@@ -526,10 +598,12 @@ void enviarStatus() {
   float distancia = estimarDistancia(rssiFiltrado);
 
   String json;
-  json.reserve(210);
+  json.reserve(230);
   json += "{\"rssi\":" + String(rssiMostrar);
   json += ",\"rssi_raw\":" + String(ultimoRssiCru);
-  json += ",\"distancia_m\":" + String(distancia, 1);
+  json += ",\"distancia_m\":";
+  json += monitorProximidade.leituraRecente(millis()) && isfinite(distancia)
+    ? String(distancia, 1) : String("null");
   json += ",\"estado\":\"" + String(nomeEstado()) + "\"";
   json += ",\"som_on\":" + String((SAIDAS_DE_ALARME_ATIVAS && somHabilitado) ? "true" : "false");
   json += ",\"monitoramento_ativo\":" + String(escoltaAtivada ? "true" : "false");
@@ -538,6 +612,7 @@ void enviarStatus() {
   json += ",\"bateria_v\":" + String(tensaoBateria, 2);
   json += ",\"carregando\":" + String(bateriaCarregando ? "true" : "false");
   json += ",\"usb_conectado\":" + String(usbConectado ? "true" : "false");
+  json += ",\"fw\":\"" + String(VERSAO_FIRMWARE) + "\"";
   json += "}";
 
   if (json.length() > 244) {
@@ -576,6 +651,10 @@ void setup() {
   pinMode(PINO_STATUS_CARGA, INPUT_PULLUP);
   analogReadResolution(12);
   analogReference(AR_INTERNAL2V4);
+#if defined(ESCOLTA_TESTE_BATERIA_AQUISICAO_40US)
+  // O divisor de alta impedância precisa de tempo para carregar o ADC.
+  analogAcquisitionTime(AT_40_US);
+#endif
   atualizarLeituraBateria();
 
   Serial.begin(115200);
@@ -585,6 +664,19 @@ void setup() {
   }
 
   Serial.println("\n========= ESCOLTA UNITAU — XIAO nRF52840 Sense =========");
+  Serial.print("[FIRMWARE] ");
+  Serial.println(VERSAO_FIRMWARE);
+#if defined(ESCOLTA_TESTE_KALMAN_K2)
+  Serial.println("[SIGNAL_FILTER] profile=k2 q_per_s=1 r=4 yellow=-77 red=-90 hold_ms=4000");
+#elif defined(ESCOLTA_TESTE_KALMAN_K1)
+  Serial.println("[SIGNAL_FILTER] profile=k1 q_per_s=1 r=4 yellow=-77 red=-85 hold_ms=4000");
+#endif
+#if defined(ESCOLTA_TESTE_DISTANCIA_RADIO4)
+  Serial.print("[DISTANCE_CAL] profile=radio4-d1 ref_1m=");
+  Serial.print(Proximidade::RSSI_REF_1M, 6);
+  Serial.print(" n=");
+  Serial.println(Proximidade::N_PROPAGACAO, 6);
+#endif
   Serial.println("[BATERIA] Corrente de carregamento configurada em 50 mA.");
 
   if (!BLE.begin()) {
@@ -628,6 +720,12 @@ void setup() {
 void loop() {
   BLE.poll();
   lerBotaoEmergencia();
+#if defined(ESCOLTA_TESTE_RADIO_TX_DBM)
+  EnsaioPotencia::poll(clienteConectado);
+#endif
+#if defined(ESCOLTA_TESTE_DIAGNOSTICO_RADIO)
+  DiagnosticoRadio::poll(clienteConectado);
+#endif
 
   static uint32_t ultimaAmostra = 0;
   if (millis() - ultimaAmostra >= INTERVALO_AMOSTRA) {

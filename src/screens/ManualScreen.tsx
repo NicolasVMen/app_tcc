@@ -19,9 +19,9 @@ const STATES: Array<{
   colorKey: 'safeGreen' | 'warningYellow' | 'primaryBlue' | 'dangerRed';
 }> = [
   { icon: 'shield-checkmark', title: 'Protegido', text: 'O vínculo está ativo e a proximidade está dentro da faixa esperada.', colorKey: 'safeGreen' },
-  { icon: 'warning', title: 'Alcance reduzido', text: 'O sinal enfraqueceu. Aproxime-se da criança e observe o ambiente.', colorKey: 'warningYellow' },
+  { icon: 'warning', title: 'Alcance reduzido', text: 'Aviso de sinal fraco sustentado: amarelo, bipe lento na caixinha e vibração breve no celular, conforme as preferências. Observe a proximidade e o ambiente; o sinal não mede distância exata.', colorKey: 'warningYellow' },
   { icon: 'radio', title: 'Reconectando', text: 'A Sentinela perdeu o vínculo e está tentando recuperá-lo antes de iniciar a emergência.', colorKey: 'primaryBlue' },
-  { icon: 'alert-circle', title: 'Emergência', text: 'A reconexão falhou. Verifique a criança imediatamente e utilize as ações disponíveis.', colorKey: 'dangerRed' },
+  { icon: 'alert-circle', title: 'Emergência', text: 'O botão físico, sinal muito fraco sustentado ou falha de comunicação podem acionar este alerta. Verifique a criança imediatamente. Aproximar-se não encerra a emergência: confirme a segurança com a placa próxima e conectada.', colorKey: 'dangerRed' },
 ];
 
 export default function ManualScreen() {
@@ -86,8 +86,8 @@ export default function ManualScreen() {
         </View>
 
         <View style={styles.prototypeBox}>
-          <Ionicons name="flask-outline" size={20} color={colors.textSecondary} />
-          <Text style={styles.prototypeText}>O Escolta UNITAU é um protótipo acadêmico funcional e uma camada complementar de proteção. Ele não substitui a supervisão de um responsável.</Text>
+          <Ionicons name="information-circle-outline" size={20} color={colors.textSecondary} />
+          <Text style={styles.prototypeText}>O Escolta UNITAU é um recurso complementar de monitoramento. Ele não substitui a supervisão de um responsável nem garante a segurança da criança.</Text>
         </View>
       </ScrollView>
     </View>

@@ -1,0 +1,111 @@
+[2026-10-14T22:35:11.7003524+00:00] [SISTEMA] MONITORAMENTO ARMADO!
+[2026-10-14T22:35:11.7149081+00:00] [BLE] Cliente conectado: 49:ee:c0:83:30:f2
+[2026-10-14T22:35:11.7155103+00:00] [RADIO_POWER] profile=p5-r4 handle=0 before_status=0 before_dbm=0 requested_dbm=4 set_status=0 read_status=0 actual_dbm=4 applied=true
+[2026-10-14T22:35:11.7157992+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=80395 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:12.4985117+00:00] [SISTEMA] PROTECAO RETOMADA
+[2026-10-14T22:35:12.6056286+00:00] RSSI App: -69 | Filt: -69.0 dBm | ~1.0 m | seguro
+[2026-10-14T22:35:13.1555785+00:00] RSSI App: -66 | Filt: -68.6 dBm | ~1.0 m | seguro
+[2026-10-14T22:35:13.1565301+00:00] [RADIO_POWER_VERIFY] profile=p5-r4 checkpoint=1 read_status=0 actual_dbm=4 retained=true
+[2026-10-14T22:35:13.5917188+00:00] RSSI App: -66 | Filt: -67.8 dBm | ~0.9 m | seguro
+[2026-10-14T22:35:14.1486248+00:00] RSSI App: -70 | Filt: -67.7 dBm | ~0.9 m | seguro
+[2026-10-14T22:35:14.5897738+00:00] RSSI App: -72 | Filt: -68.1 dBm | ~1.0 m | seguro
+[2026-10-14T22:35:14.5901925+00:00] [RADIO_POWER_VERIFY] profile=p5-r4 checkpoint=2 read_status=0 actual_dbm=4 retained=true
+[2026-10-14T22:35:16.6941354+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=85395 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:19.6480338+00:00] RSSI App: -77 | Filt: -77.8 dBm | ~2.3 m | seguro
+[2026-10-14T22:35:21.6404371+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=90399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:25.1539606+00:00] RSSI App: -75 | Filt: -77.0 dBm | ~2.1 m | seguro
+[2026-10-14T22:35:26.6961139+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=95398 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:30.6493757+00:00] RSSI App: -73 | Filt: -76.0 dBm | ~1.9 m | seguro
+[2026-10-14T22:35:31.6428353+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=100398 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:36.1480495+00:00] RSSI App: -71 | Filt: -73.3 dBm | ~1.5 m | seguro
+[2026-10-14T22:35:36.7014471+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=105398 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:41.6726452+00:00] RSSI App: -70 | Filt: -71.1 dBm | ~1.3 m | seguro
+[2026-10-14T22:35:41.6730955+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=110398 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:46.6264323+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=115398 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:47.1742857+00:00] RSSI App: -65 | Filt: -71.0 dBm | ~1.2 m | seguro
+[2026-10-14T22:35:51.6998002+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=120399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:52.6807993+00:00] RSSI App: -69 | Filt: -69.6 dBm | ~1.1 m | seguro
+[2026-10-14T22:35:56.6465913+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=125404 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:35:58.1801106+00:00] RSSI App: -71 | Filt: -70.0 dBm | ~1.1 m | seguro
+[2026-10-14T22:36:01.6881833+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=130399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:03.6712520+00:00] RSSI App: -68 | Filt: -70.0 dBm | ~1.1 m | seguro
+[2026-10-14T22:36:06.6524203+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=135400 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:09.1867067+00:00] RSSI App: -70 | Filt: -69.2 dBm | ~1.1 m | seguro
+[2026-10-14T22:36:11.7154299+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=140399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:14.7058588+00:00] RSSI App: -67 | Filt: -69.1 dBm | ~1.1 m | seguro
+[2026-10-14T22:36:16.6910178+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=145399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:20.2381970+00:00] RSSI App: -69 | Filt: -68.7 dBm | ~1.0 m | seguro
+[2026-10-14T22:36:21.6681423+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=150404 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+
+[2026-10-14T22:36:25.7154514+00:00] RSSI App: -66 | Filt: -67.2 dBm | ~0.9 m | seguro
+[2026-10-14T22:36:26.6952075+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=155399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:31.2347930+00:00] RSSI App: -68 | Filt: -67.3 dBm | ~0.9 m | seguro
+[2026-10-14T22:36:31.6727058+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=160399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:36.7207177+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=165399 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:36.7210817+00:00] RSSI App: -67 | Filt: -67.2 dBm | ~0.9 m | seguro
+[2026-10-14T22:36:41.6497235+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=170401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:42.1967342+00:00] RSSI App: -67 | Filt: -67.0 dBm | ~0.9 m | seguro
+[2026-10-14T22:36:46.7041974+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=175401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:47.2495934+00:00] RSSI App: -67 | Filt: -67.7 dBm | ~0.9 m | seguro
+[2026-10-14T22:36:51.6515217+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=180401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:52.6399744+00:00] RSSI App: -65 | Filt: -65.7 dBm | ~0.8 m | seguro
+[2026-10-14T22:36:56.6287975+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=185401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:36:57.7352045+00:00] RSSI App: -65 | Filt: -65.0 dBm | ~0.7 m | seguro
+[2026-10-14T22:37:01.6995751+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=190401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:03.2512196+00:00] RSSI App: -65 | Filt: -65.2 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:06.6674507+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=195401 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:08.6429738+00:00] RSSI App: -66 | Filt: -65.9 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:11.7041679+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=200403 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:13.6857330+00:00] RSSI App: -67 | Filt: -65.9 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:16.6623770+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=205402 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:19.2188157+00:00] RSSI App: -64 | Filt: -65.1 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:21.6586230+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=210407 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:24.7119081+00:00] RSSI App: -66 | Filt: -65.0 dBm | ~0.7 m | seguro
+[2026-10-14T22:37:26.6848832+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=215402 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:30.2079339+00:00] RSSI App: -66 | Filt: -65.4 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:31.6548885+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=220403 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:35.2566773+00:00] RSSI App: -68 | Filt: -67.8 dBm | ~0.9 m | seguro
+[2026-10-14T22:37:36.6955002+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=225404 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:40.7812391+00:00] RSSI App: -67 | Filt: -67.1 dBm | ~0.9 m | seguro
+[2026-10-14T22:37:41.6693167+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=230406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:46.2112561+00:00] RSSI App: -66 | Filt: -65.2 dBm | ~0.8 m | seguro
+[2026-10-14T22:37:46.6462728+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=235406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:51.2703321+00:00] RSSI App: -64 | Filt: -64.6 dBm | ~0.7 m | seguro
+[2026-10-14T22:37:51.7218882+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=240405 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:56.7073846+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=245405 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:37:56.7076936+00:00] RSSI App: -68 | Filt: -67.3 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:01.6620830+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=250406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:01.7852585+00:00] RSSI App: -68 | Filt: -68.0 dBm | ~1.0 m | seguro
+[2026-10-14T22:38:06.6244619+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=255405 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:07.2800317+00:00] RSSI App: -66 | Filt: -66.8 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:11.6796310+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=260405 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:12.7773720+00:00] RSSI App: -67 | Filt: -66.9 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:16.6244516+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=265406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:18.2802595+00:00] RSSI App: -67 | Filt: -68.4 dBm | ~1.0 m | seguro
+[2026-10-14T22:38:21.7014661+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=270406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:23.7916146+00:00] RSSI App: -68 | Filt: -67.5 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:26.6320445+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=275406 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:28.8198902+00:00] RSSI App: -66 | Filt: -67.7 dBm | ~0.9 m | seguro
+
+[2026-10-14T22:38:31.6813853+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=280407 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:34.3119317+00:00] RSSI App: -68 | Filt: -67.2 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:36.6303017+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=285409 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:39.8025950+00:00] RSSI App: -68 | Filt: -68.1 dBm | ~1.0 m | seguro
+[2026-10-14T22:38:41.6887607+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=290407 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:44.8549958+00:00] RSSI App: -67 | Filt: -67.3 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:46.6264757+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=295408 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:50.2657337+00:00] RSSI App: -67 | Filt: -67.0 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:51.7102243+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=300408 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:38:55.3551382+00:00] RSSI App: -67 | Filt: -67.0 dBm | ~0.9 m | seguro
+[2026-10-14T22:38:56.6729453+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=305409 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:00.8449309+00:00] RSSI App: -69 | Filt: -68.1 dBm | ~1.0 m | seguro
+[2026-10-14T22:39:01.7332043+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=310412 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:05.8991201+00:00] RSSI App: -70 | Filt: -69.4 dBm | ~1.1 m | seguro
+[2026-10-14T22:39:06.6710861+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=315409 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:11.3750700+00:00] RSSI App: -68 | Filt: -69.5 dBm | ~1.1 m | seguro
+[2026-10-14T22:39:11.7059511+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=320410 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:16.6446545+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=325412 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:16.8779105+00:00] RSSI App: -76 | Filt: -71.8 dBm | ~1.3 m | seguro
+[2026-10-14T22:39:21.6827981+00:00] [RADIO_DIAG] build=p5-radio4-periodic uptime_ms=330409 handle=0 tx_status=0 tx_dbm=4 max_status=0 max_dbm=20 phy_status=0 tx_phy=1 rx_phy=1 adv_status=0 adv_dbm=0
+[2026-10-14T22:39:21.9010175+00:00] RSSI App: -73 | Filt: -73.6 dBm | ~1.6 m | seguro
+

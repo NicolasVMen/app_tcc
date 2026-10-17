@@ -1,0 +1,1975 @@
+{
+  "checkedOriginals": 389,
+  "preserved": 385,
+  "expectedEdits": [
+    {
+      "from": "docs/README.md",
+      "currentPath": "docs/README.md",
+      "status": "expected-edit"
+    },
+    {
+      "from": "package.json",
+      "currentPath": "package.json",
+      "status": "expected-edit"
+    },
+    {
+      "from": "README.md",
+      "currentPath": "README.md",
+      "status": "expected-edit"
+    },
+    {
+      "from": "tools/test-monitor-alerts.cjs",
+      "currentPath": "tools/test-monitor-alerts.cjs",
+      "status": "expected-edit"
+    }
+  ],
+  "issues": [],
+  "moved": 5,
+  "results": [
+    {
+      "from": ".gitignore",
+      "currentPath": ".gitignore",
+      "status": "preserved"
+    },
+    {
+      "from": ".npmrc",
+      "currentPath": ".npmrc",
+      "status": "preserved"
+    },
+    {
+      "from": "android/.gitignore",
+      "currentPath": "android/.gitignore",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/build.gradle",
+      "currentPath": "android/app/build.gradle",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/debug.keystore",
+      "currentPath": "android/app/debug.keystore",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/proguard-rules.pro",
+      "currentPath": "android/app/proguard-rules.pro",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/debug/AndroidManifest.xml",
+      "currentPath": "android/app/src/debug/AndroidManifest.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/debugOptimized/AndroidManifest.xml",
+      "currentPath": "android/app/src/debugOptimized/AndroidManifest.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/AndroidManifest.xml",
+      "currentPath": "android/app/src/main/AndroidManifest.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainActivity.kt",
+      "currentPath": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainActivity.kt",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainApplication.kt",
+      "currentPath": "android/app/src/main/java/com/nicolasvmen/escoltaunitau/MainApplication.kt",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
+      "currentPath": "android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable-mdpi/splashscreen_logo.png",
+      "currentPath": "android/app/src/main/res/drawable-mdpi/splashscreen_logo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png",
+      "currentPath": "android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png",
+      "currentPath": "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png",
+      "currentPath": "android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable/ic_launcher_background.xml",
+      "currentPath": "android/app/src/main/res/drawable/ic_launcher_background.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/drawable/rn_edit_text_material.xml",
+      "currentPath": "android/app/src/main/res/drawable/rn_edit_text_material.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "currentPath": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "currentPath": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp",
+      "currentPath": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
+      "currentPath": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-hdpi/ic_launcher.webp",
+      "currentPath": "android/app/src/main/res/mipmap-hdpi/ic_launcher.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp",
+      "currentPath": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
+      "currentPath": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-mdpi/ic_launcher.webp",
+      "currentPath": "android/app/src/main/res/mipmap-mdpi/ic_launcher.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+      "currentPath": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/values-night/colors.xml",
+      "currentPath": "android/app/src/main/res/values-night/colors.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/values/colors.xml",
+      "currentPath": "android/app/src/main/res/values/colors.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/values/strings.xml",
+      "currentPath": "android/app/src/main/res/values/strings.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/app/src/main/res/values/styles.xml",
+      "currentPath": "android/app/src/main/res/values/styles.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "android/build.gradle",
+      "currentPath": "android/build.gradle",
+      "status": "preserved"
+    },
+    {
+      "from": "android/gradle.properties",
+      "currentPath": "android/gradle.properties",
+      "status": "preserved"
+    },
+    {
+      "from": "android/gradle/wrapper/gradle-wrapper.jar",
+      "currentPath": "android/gradle/wrapper/gradle-wrapper.jar",
+      "status": "preserved"
+    },
+    {
+      "from": "android/gradle/wrapper/gradle-wrapper.properties",
+      "currentPath": "android/gradle/wrapper/gradle-wrapper.properties",
+      "status": "preserved"
+    },
+    {
+      "from": "android/gradlew",
+      "currentPath": "android/gradlew",
+      "status": "preserved"
+    },
+    {
+      "from": "android/gradlew.bat",
+      "currentPath": "android/gradlew.bat",
+      "status": "preserved"
+    },
+    {
+      "from": "android/settings.gradle",
+      "currentPath": "android/settings.gradle",
+      "status": "preserved"
+    },
+    {
+      "from": "app.json",
+      "currentPath": "app.json",
+      "status": "preserved"
+    },
+    {
+      "from": "App.tsx",
+      "currentPath": "App.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "assets/adaptive-icon.png",
+      "currentPath": "assets/adaptive-icon.png",
+      "status": "preserved"
+    },
+    {
+      "from": "assets/alert_tone.wav",
+      "currentPath": "assets/alert_tone.wav",
+      "status": "preserved"
+    },
+    {
+      "from": "assets/favicon.png",
+      "currentPath": "assets/favicon.png",
+      "status": "preserved"
+    },
+    {
+      "from": "assets/icon.png",
+      "currentPath": "assets/icon.png",
+      "status": "preserved"
+    },
+    {
+      "from": "babel.config.js",
+      "currentPath": "babel.config.js",
+      "status": "preserved"
+    },
+    {
+      "from": "CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "currentPath": "CICTED/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "CICTED/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "currentPath": "CICTED/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "currentPath": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "currentPath": "CICTED/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/alinhar_banner.py",
+      "currentPath": "docs/cicted/banner/alinhar_banner.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/auditar_impressao.py",
+      "currentPath": "docs/cicted/banner/auditar_impressao.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA_preview.png",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA_preview.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pdf",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pptx",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_ARQUITETURA.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS_preview.png",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS_preview.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pdf",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pptx",
+      "currentPath": "docs/cicted/banner/Banner_Escolta_UNITAU_CICTED_2026_CONSIDERACOES_REVISADAS.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/corrigir_parecer_professor.py",
+      "currentPath": "docs/cicted/banner/corrigir_parecer_professor.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/equilibrar_banner.py",
+      "currentPath": "docs/cicted/banner/equilibrar_banner.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/exportar_impressao.ps1",
+      "currentPath": "docs/cicted/banner/exportar_impressao.ps1",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/finalizar_parecer_banner.py",
+      "currentPath": "docs/cicted/banner/finalizar_parecer_banner.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/cabecalho_original.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/cabecalho_original.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/cabecalho_vetorial.svg",
+      "currentPath": "docs/cicted/banner/impressao/assets/cabecalho_vetorial.svg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/cad_perspectiva.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/cad_perspectiva.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/cad_superior.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/cad_superior.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_ALINHADO.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_ALINHADO.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_powerpoint_final.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_powerpoint_final.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/exportacao_powerpoint.pdf",
+      "currentPath": "docs/cicted/banner/impressao/assets/exportacao_powerpoint.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/marcacoes_professor_2026-10-02.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/marcacoes_professor_2026-10-02.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/prova_app.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/prova_app.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/prova_cabecalho.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/prova_cabecalho.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/prova_pdfjs_equilibrado.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/prova_pdfjs_equilibrado.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/prova_tabela.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/prova_tabela.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/revisao_2_pdfjs.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/revisao_2_pdfjs.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/teste_pdfjs_alinhado.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/teste_pdfjs_alinhado.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/assets/teste_pdfjs_final.png",
+      "currentPath": "docs/cicted/banner/impressao/assets/teste_pdfjs_final.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_ALINHADO.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_ALINHADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_REVISAO_2.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf_Banner_Escolta_CICTED_REVISAO_2.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf_final.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf_final.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_pdf.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_pdf.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_ALINHADO.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_ALINHADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_REVISAO_2.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos_Banner_Escolta_CICTED_REVISAO_2.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos_final.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos_final.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/auditoria_textos.json",
+      "currentPath": "docs/cicted/banner/impressao/auditoria_textos.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_ALINHADO.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_ALTERACOES.json",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_ALTERACOES.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_FINAL.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_IMPRESSAO.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_ALTERACOES.json",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_ALTERACOES.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_PREVIA.png",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2_PREVIA.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "currentPath": "docs/cicted/banner/impressao/Banner_Escolta_CICTED_REVISAO_2.pptx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/equilibrio_vertical.json",
+      "currentPath": "docs/cicted/banner/impressao/equilibrio_vertical.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/grade_alinhamento.json",
+      "currentPath": "docs/cicted/banner/impressao/grade_alinhamento.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/LEIA_ANTES_DE_IMPRIMIR.md",
+      "currentPath": "docs/cicted/banner/impressao/LEIA_ANTES_DE_IMPRIMIR.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_ALINHADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_EQUILIBRADO.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_REVISAO_2.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_Banner_Escolta_CICTED_REVISAO_2.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_pdf_final.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_pdf_final.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/recursos_preservados_pdf.json",
+      "currentPath": "docs/cicted/banner/impressao/recursos_preservados_pdf.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/impressao/resolucao_recursos.json",
+      "currentPath": "docs/cicted/banner/impressao/resolucao_recursos.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/inspecionar_marcacoes.py",
+      "currentPath": "docs/cicted/banner/inspecionar_marcacoes.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/preparar_impressao.py",
+      "currentPath": "docs/cicted/banner/preparar_impressao.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/preservar_recursos_pdf.py",
+      "currentPath": "docs/cicted/banner/preservar_recursos_pdf.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/revisar_banner_esclarecido.py",
+      "currentPath": "docs/cicted/banner/revisar_banner_esclarecido.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/revisar_consideracoes.py",
+      "currentPath": "docs/cicted/banner/revisar_consideracoes.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/trocar_grafico_por_arquitetura.py",
+      "currentPath": "docs/cicted/banner/trocar_grafico_por_arquitetura.py",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/banner/verificar_pdfjs.mjs",
+      "currentPath": "docs/cicted/banner/verificar_pdfjs.mjs",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx",
+      "currentPath": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.607f415da36e45e9b4da.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx",
+      "currentPath": "docs/cicted/Modelo_Resumo_XV_CICTED_2026.ee4fb938888c4908bca9.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/PENDENCIAS_PARA_SUBMISSAO.md",
+      "currentPath": "docs/cicted/PENDENCIAS_PARA_SUBMISSAO.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL_corrigido.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL_corrigido.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO_para_submissão.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_IDENTIFICADO.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO_para_submissão.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_NAO_IDENTIFICADO.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_RASCUNHO.docx",
+      "currentPath": "docs/cicted/Resumo_Escolta_UNITAU_XV_CICTED_2026_RASCUNHO.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Revisao/.conferencia_cabecalho.png",
+      "currentPath": "docs/cicted/Revisao/.conferencia_cabecalho.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx",
+      "currentPath": "docs/cicted/Revisao/CICTED_Escolta_resumo_revisado_parecer.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Revisao/CICTED_Escolta_resumo_sem_IA.docx",
+      "currentPath": "docs/cicted/Revisao/CICTED_Escolta_resumo_sem_IA.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Revisao/CICTED_Revisado_Sem_Identificacao.docx",
+      "currentPath": "docs/cicted/Revisao/CICTED_Revisado_Sem_Identificacao.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Revisao/CICTED_Revisado.docx",
+      "currentPath": "docs/cicted/Revisao/CICTED_Revisado.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "currentPath": "docs/cicted/Versao_Final/Resumo_Escolta_UNITAU_XV_CICTED_2026_FINAL.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/cicted/WhatsApp Image 2026-08-28 at 15.55.39.jpeg",
+      "currentPath": "docs/cicted/WhatsApp Image 2026-08-28 at 15.55.39.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md",
+      "currentPath": "docs/produto/ESPECIFICACAO_PRODUTO_ESCOLTA_UNITAU.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/produto/FLUXOS_CENTRAL_SENTINELA.md",
+      "currentPath": "docs/produto/FLUXOS_CENTRAL_SENTINELA.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/produto/imagens_montagem/01-transistor-resistores.png",
+      "currentPath": "docs/produto/imagens_montagem/01-transistor-resistores.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/produto/imagens_montagem/02-circuito-completo.png",
+      "currentPath": "docs/produto/imagens_montagem/02-circuito-completo.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/produto/imagens_montagem/03-estrutura-3d-conceito-explodido.png",
+      "currentPath": "docs/produto/imagens_montagem/03-estrutura-3d-conceito-explodido.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/10.jpeg",
+      "currentPath": "docs/prototipo/fotos/10.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/11.jpeg",
+      "currentPath": "docs/prototipo/fotos/11.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/12.jpeg",
+      "currentPath": "docs/prototipo/fotos/12.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/13.jpeg",
+      "currentPath": "docs/prototipo/fotos/13.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/14.jpeg",
+      "currentPath": "docs/prototipo/fotos/14.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/2.jpeg",
+      "currentPath": "docs/prototipo/fotos/2.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/20.jpeg",
+      "currentPath": "docs/prototipo/fotos/20.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/3.jpeg",
+      "currentPath": "docs/prototipo/fotos/3.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/30.jpeg",
+      "currentPath": "docs/prototipo/fotos/30.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/35.jpeg",
+      "currentPath": "docs/prototipo/fotos/35.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/4.jpeg",
+      "currentPath": "docs/prototipo/fotos/4.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/5.jpeg",
+      "currentPath": "docs/prototipo/fotos/5.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/6.jpeg",
+      "currentPath": "docs/prototipo/fotos/6.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/8.jpeg",
+      "currentPath": "docs/prototipo/fotos/8.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/9.jpeg",
+      "currentPath": "docs/prototipo/fotos/9.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png",
+      "currentPath": "docs/prototipo/fotos/Imagem do Codex 15 de set. de 2026, 18_37_50.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 17_20_24.png",
+      "currentPath": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 17_20_24.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_06_47.png",
+      "currentPath": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_06_47.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_17_06.png",
+      "currentPath": "docs/prototipo/fotos/Imagem do Codex 8 de set. de 2026, 18_17_06.png",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/placa_com_regua_3.jpeg",
+      "currentPath": "docs/prototipo/fotos/placa_com_regua_3.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/placa_com_regua_4.jpeg",
+      "currentPath": "docs/prototipo/fotos/placa_com_regua_4.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 16.58.53.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 16.58.53.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 21.58.32.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 21.58.32.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.08.41.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.08.41.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.40.25.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-04 at 22.40.25.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.23.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.23.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.24.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.31.24.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.01.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.01.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.03.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.03.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.04.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.04.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.05.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-08-28 at 17.39.05.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.25.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.25.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.26.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-08 at 16.32.26.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.27.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.27.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.28.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.25.28.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.43.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.43.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.44.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.44.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.46.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.47.46.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.45.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.45.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.46.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.57.46.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.59.59.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-09 at 18.59.59.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.19.14.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.19.14.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.28.10.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-17 at 21.28.10.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 16.49.19.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 16.49.19.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.53.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.53.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.54.jpeg",
+      "currentPath": "docs/prototipo/fotos/WhatsApp Image 2026-09-24 at 19.42.54.jpeg",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/README.md",
+      "currentPath": "docs/README.md",
+      "status": "expected-edit"
+    },
+    {
+      "from": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.docx",
+      "currentPath": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.pdf",
+      "currentPath": "docs/tcc/Capitulo_Introdutorio_Escolta_UNITAU.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/tcc/modelos/Template_TG2026.docx",
+      "currentPath": "docs/tcc/modelos/Template_TG2026.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/tcc/Projeto de Pesquisa -1 - Tcc.pdf",
+      "currentPath": "docs/tcc/Projeto de Pesquisa -1 - Tcc.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.docx",
+      "currentPath": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.docx",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.pdf",
+      "currentPath": "docs/tcc/TG_Escolta_UNITAU_ate_Capitulo_4.pdf",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/dados/proximidade-elevada-2026-10-06.json",
+      "currentPath": "docs/testes/dados/proximidade-elevada-2026-10-06.json",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md",
+      "currentPath": "docs/testes/ENSAIO_AUTONOMIA_BATERIA_2026-09-08.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/ENSAIO_PROXIMIDADE_CAIXA_FECHADA.md",
+      "currentPath": "docs/testes/ENSAIO_PROXIMIDADE_CAIXA_FECHADA.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/RELATORIO_TESTES_S24_ULTRA_2026-07-31.md",
+      "currentPath": "docs/testes/RELATORIO_TESTES_S24_ULTRA_2026-07-31.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/REVISAO_DISTANCIA_P2.md",
+      "currentPath": "docs/testes/REVISAO_DISTANCIA_P2.md",
+      "status": "preserved"
+    },
+    {
+      "from": "docs/testes/REVISAO_PROXIMIDADE_P1.md",
+      "currentPath": "docs/testes/REVISAO_PROXIMIDADE_P1.md",
+      "status": "preserved"
+    },
+    {
+      "from": "eas.json",
+      "currentPath": "eas.json",
+      "status": "preserved"
+    },
+    {
+      "from": "firmware/esp32_escolta_ble/esp32_escolta_ble.ino",
+      "currentPath": "firmware/esp32_escolta_ble/esp32_escolta_ble.ino",
+      "status": "preserved"
+    },
+    {
+      "from": "firmware/README.md",
+      "currentPath": "firmware/README.md",
+      "status": "preserved"
+    },
+    {
+      "from": "firmware/xiao_escolta_ble/ProximityDistance.h",
+      "currentPath": "firmware/xiao_escolta_ble/ProximityDistance.h",
+      "status": "preserved"
+    },
+    {
+      "from": "firmware/xiao_escolta_ble/ProximitySignal.h",
+      "currentPath": "firmware/xiao_escolta_ble/ProximitySignal.h",
+      "status": "preserved"
+    },
+    {
+      "from": "firmware/xiao_escolta_ble/xiao_escolta_ble.ino",
+      "currentPath": "firmware/xiao_escolta_ble/xiao_escolta_ble.ino",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/ABRIR_CAIXA_OPENSCAD.cmd",
+      "currentPath": "hardware/case_3d/ABRIR_CAIXA_OPENSCAD.cmd",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/AUDITORIA_DIMENSIONAL_V2_4.md",
+      "currentPath": "hardware/case_3d/documentacao/revisoes/AUDITORIA_DIMENSIONAL_V2_4.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/INSTRUCOES_TESTE_BOTAO_V2_2.md",
+      "currentPath": "hardware/case_3d/documentacao/INSTRUCOES_TESTE_BOTAO_V2_2.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_2.md",
+      "currentPath": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_2.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_3.md",
+      "currentPath": "hardware/case_3d/documentacao/README_IMPRESSAO_V2_3.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/README_V2.md",
+      "currentPath": "hardware/case_3d/documentacao/README_V2.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/README.md",
+      "currentPath": "hardware/case_3d/documentacao/README.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/documentacao/REVISAO_ENCAIXE_2026-09-23.md",
+      "currentPath": "hardware/case_3d/documentacao/REVISAO_ENCAIXE_2026-09-23.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/escolta_case_v2.scad",
+      "currentPath": "hardware/case_3d/escolta_case_v2.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/ferramentas/validate_stl.py",
+      "currentPath": "hardware/case_3d/ferramentas/validate_stl.py",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/ferramentas/verificar_revisao_apoios.py",
+      "currentPath": "hardware/case_3d/ferramentas/verificar_revisao_apoios.py",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl",
+      "currentPath": "hardware/case_3d/historico/antes_apoios_v2_8/02_tampa_v2_5.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/antes_apoios_v2_8/escolta_case_v2.scad",
+      "currentPath": "hardware/case_3d/historico/antes_apoios_v2_8/escolta_case_v2.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/antes_apoios_v2_8/LEIA-ME.md",
+      "currentPath": "hardware/case_3d/historico/antes_apoios_v2_8/LEIA-ME.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/01_base_v2_5.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/03_botao_vermelho_v2_5.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_base_v1.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_base_v1.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_3.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2_3.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_base_v2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_botao_reforcado_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_botao_v2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_botao_v2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_case_v1.scad",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_case_v1.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_protetor_bateria_v2_3.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v1.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v1.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_tampa_v2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_reforcada_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_v2.stl",
+      "currentPath": "hardware/case_3d/historico/modelos_antigos/escolta_trava_botao_v2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_2.zip",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_2.zip",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_3.zip",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2_3.zip",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2.zip",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/kit_impressao_escolta_v2.zip",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/kit_teste_botao_v2_2.zip",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/kit_teste_botao_v2_2.zip",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/01_base_teste.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/02_tampa_teste_simetrica.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/03_botao_vermelho_teste.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_AGORA_2026-09-17/04_trava_C_teste.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/01_base_v2_3.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/01_base_v2_3.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/02_tampa_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/03_botao_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/04_trava_C_v2_2.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/05_protetor_bateria_v2_3.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/LEIA-ME.md",
+      "currentPath": "hardware/case_3d/historico/pacotes_anteriores/PARA_IMPRIMIR_V2_3/LEIA-ME.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/v2_4/01_base_v2_4.stl",
+      "currentPath": "hardware/case_3d/historico/v2_4/01_base_v2_4.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/v2_4/02_tampa_v2_4.stl",
+      "currentPath": "hardware/case_3d/historico/v2_4/02_tampa_v2_4.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl",
+      "currentPath": "hardware/case_3d/historico/v2_4/03_trava_C_v2_4.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/historico/v2_4/botao_prolongador_v2_4_antigo.stl",
+      "currentPath": "hardware/case_3d/historico/v2_4/botao_prolongador_v2_4_antigo.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/PARA_IMPRIMIR_AGORA/01_base_v2_6.stl",
+      "currentPath": "hardware/case_3d/PARA_IMPRIMIR_AGORA/01_base_v2_6.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/PARA_IMPRIMIR_AGORA/02_tampa_v2_8.stl",
+      "currentPath": "hardware/case_3d/PARA_IMPRIMIR_AGORA/02_tampa_v2_8.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/PARA_IMPRIMIR_AGORA/03_botao_vermelho_v2_7.stl",
+      "currentPath": "hardware/case_3d/PARA_IMPRIMIR_AGORA/03_botao_vermelho_v2_7.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl",
+      "currentPath": "hardware/case_3d/PARA_IMPRIMIR_AGORA/04_trava_C_v2_5.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/PARA_IMPRIMIR_AGORA/LEIA-ME.md",
+      "currentPath": "hardware/case_3d/PARA_IMPRIMIR_AGORA/LEIA-ME.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/REVISAO_APOIOS_BOTAO_2026-10-02.md",
+      "currentPath": "hardware/case_3d/documentacao/revisoes/REVISAO_APOIOS_BOTAO_2026-10-02.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/revisao_bateria_pilares_v2_6.png",
+      "currentPath": "hardware/case_3d/documentacao/imagens/revisao_bateria_pilares_v2_6.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/REVISAO_ENCAIXE_2026-09-30.md",
+      "currentPath": "hardware/case_3d/documentacao/revisoes/REVISAO_ENCAIXE_2026-09-30.md",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/revisao_pilares_perspectiva_v2_6.png",
+      "currentPath": "hardware/case_3d/documentacao/imagens/revisao_pilares_perspectiva_v2_6.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/apoios_botao_v2_8.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/apoios_botao_v2_8.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/auditoria_folgas_corrigidas.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/auditoria_folgas_corrigidas.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/auditoria_xiao_2_5mm.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/auditoria_xiao_2_5mm.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/conceito_xiao_de_lado_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/conceito_xiao_girada_v3.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/conceito_xiao_girada_v3.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_3d_v1.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_3d_v1.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_3d_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_3d_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_3d_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_3d_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_base_interna_v1.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_base_interna_v1.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_base_superior_v1.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_base_superior_v1.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_botao_reforcado_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_botao_reforcado_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_botao_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_botao_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_buzzer_suporte_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_buzzer_suporte_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_explodido_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_explodido_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_explodido_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_explodido_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_lateral_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_lateral_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_layout_superior_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_layout_superior_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_layout_v2_3.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_layout_v2_3.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_layout_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_layout_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_parede_led_buzzer_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_parede_led_buzzer_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_protetor_bateria_v2_3.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_protetor_bateria_v2_3.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_tampa_externa_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_tampa_externa_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_tampa_interna_v1.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_tampa_interna_v1.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/render_tampa_v2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/render_tampa_v2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_bateria_fixa.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_bateria_fixa.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_compacta_botao.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_compacta_botao.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_compacta_buzzer.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_compacta_buzzer.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_compacta_completa.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_compacta_completa.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_compacta_explodida.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_compacta_explodida.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_compacta_fechada.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_compacta_fechada.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_fixacao_xiao.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_fixacao_xiao.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5_render.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_frente_v2_5.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_layout_v2_5.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_layout_v2_5.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada_13mm.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada_13mm.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/revisao_xiao_soldada.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/verificacao_base_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/verificacao_base_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/verificacao_botao_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/verificacao_botao_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/verificacao_tampa_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/verificacao_tampa_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/verificacao_trava_v2_2.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/verificacao_trava_v2_2.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.svg",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/vista_tecnica_vertical_v1.svg",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/imagens/visualizar_botao_montado.png",
+      "currentPath": "hardware/case_3d/verificacoes/imagens/visualizar_botao_montado.png",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/base_2026_09_30.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/base_2026_09_30.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/base_v2_5_candidate.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/base_v2_5_candidate.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/base_v2_5_final.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/botao_2026_09_30.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_base.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_base.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_cap.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_cap.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_retainer.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/regressao_v2_8_button_retainer.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/revisao_2026_09_30.csg",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/revisao_2026_09_30.csg",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/tampa_2026_09_30.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_folgas.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_folgas.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_xiao.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_auditoria_xiao.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_base_reexportada.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_base_reexportada.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_bateria_fixa.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_bateria_fixa.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_base.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_base.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_botao.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_botao.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_tampa.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_tampa.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_trava_c.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_compacta_trava_c.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_fixacao_xiao.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_fixacao_xiao.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_passantes.csg",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_passantes.csg",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada_13mm.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada_13mm.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada.stl",
+      "currentPath": "hardware/case_3d/verificacoes/malhas/verificacao_xiao_soldada.stl",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/auditar_apoio_botao.py",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/auditar_apoio_botao.py",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/conferir_bateria_fixa.scad",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/conferir_bateria_fixa.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/verificar_apoios_v2_8.scad",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/verificar_apoios_v2_8.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/verificar_stl.scad",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/verificar_stl.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/visualizar_botao.scad",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/visualizar_botao.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/case_3d/verificacoes/scripts/visualizar_passantes.scad",
+      "currentPath": "hardware/case_3d/verificacoes/scripts/visualizar_passantes.scad",
+      "status": "preserved"
+    },
+    {
+      "from": "hardware/README.md",
+      "currentPath": "hardware/README.md",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/android/build.gradle",
+      "currentPath": "modules/escolta-sentinela/android/build.gradle",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/android/src/main/AndroidManifest.xml",
+      "currentPath": "modules/escolta-sentinela/android/src/main/AndroidManifest.xml",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaModule.kt",
+      "currentPath": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaModule.kt",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt",
+      "currentPath": "modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav",
+      "currentPath": "modules/escolta-sentinela/android/src/main/res/raw/escolta_alerta.wav",
+      "status": "preserved"
+    },
+    {
+      "from": "modules/escolta-sentinela/expo-module.config.json",
+      "currentPath": "modules/escolta-sentinela/expo-module.config.json",
+      "status": "preserved"
+    },
+    {
+      "from": "package-lock.json",
+      "currentPath": "package-lock.json",
+      "status": "preserved"
+    },
+    {
+      "from": "package.json",
+      "currentPath": "package.json",
+      "status": "expected-edit"
+    },
+    {
+      "from": "README.md",
+      "currentPath": "README.md",
+      "status": "expected-edit"
+    },
+    {
+      "from": "src/context/AppPreferencesContext.tsx",
+      "currentPath": "src/context/AppPreferencesContext.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/hooks/useEsp32Monitor.ts",
+      "currentPath": "src/hooks/useEsp32Monitor.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/AlertsScreen.tsx",
+      "currentPath": "src/screens/AlertsScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/AuthScreen.tsx",
+      "currentPath": "src/screens/AuthScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/DashboardScreen.tsx",
+      "currentPath": "src/screens/DashboardScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/ManualScreen.tsx",
+      "currentPath": "src/screens/ManualScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/PatrolScreen.tsx",
+      "currentPath": "src/screens/PatrolScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/ProximityTrialModal.tsx",
+      "currentPath": "src/screens/ProximityTrialModal.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/SettingsScreen.tsx",
+      "currentPath": "src/screens/SettingsScreen.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/screens/SystemDiagnosticsModal.tsx",
+      "currentPath": "src/screens/SystemDiagnosticsModal.tsx",
+      "status": "preserved"
+    },
+    {
+      "from": "src/services/backgroundSentinel.ts",
+      "currentPath": "src/services/backgroundSentinel.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/services/bleApi.ts",
+      "currentPath": "src/services/bleApi.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/services/firebaseConfig.ts",
+      "currentPath": "src/services/firebaseConfig.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/services/notificationService.ts",
+      "currentPath": "src/services/notificationService.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/theme.ts",
+      "currentPath": "src/theme.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "src/utils/proximityTrial.ts",
+      "currentPath": "src/utils/proximityTrial.ts",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/auditoria/inventario.cjs",
+      "currentPath": "tools/auditoria/inventario.cjs",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/cicted/anonymize_cicted.py",
+      "currentPath": "tools/cicted/anonymize_cicted.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/cicted/apply_cicted_review.py",
+      "currentPath": "tools/cicted/apply_cicted_review.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/cicted/gerar_resumo_cicted.py",
+      "currentPath": "tools/cicted/gerar_resumo_cicted.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/cicted/inspect_cicted_docx.py",
+      "currentPath": "tools/cicted/inspect_cicted_docx.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/cicted/remove_ai_from_cicted.py",
+      "currentPath": "tools/cicted/remove_ai_from_cicted.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/diagramas/gerar_diagrama_circuito_completo.py",
+      "currentPath": "tools/diagramas/gerar_diagrama_circuito_completo.py",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/test-monitor-alerts.cjs",
+      "currentPath": "tools/test-monitor-alerts.cjs",
+      "status": "expected-edit"
+    },
+    {
+      "from": "tools/test-proximity-ble.cjs",
+      "currentPath": "tools/test-proximity-ble.cjs",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/test-proximity-distance.cjs",
+      "currentPath": "tools/test-proximity-distance.cjs",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/test-proximity-signal.cpp",
+      "currentPath": "tools/test-proximity-signal.cpp",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/test-proximity-signal.ps1",
+      "currentPath": "tools/test-proximity-signal.ps1",
+      "status": "preserved"
+    },
+    {
+      "from": "tools/test-proximity-trial.cjs",
+      "currentPath": "tools/test-proximity-trial.cjs",
+      "status": "preserved"
+    },
+    {
+      "from": "tsconfig.json",
+      "currentPath": "tsconfig.json",
+      "status": "preserved"
+    }
+  ]
+}

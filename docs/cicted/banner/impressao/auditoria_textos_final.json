@@ -1,0 +1,582 @@
+[
+  {
+    "name": "TextBox 1026",
+    "text": "ENIC GRADUAÇÃO — APRESENTAÇÃO EM PÔSTER",
+    "height": 79.2,
+    "availableHeight": 79.19999694824219,
+    "textHeight": 77.365036,
+    "availableWidth": 720.0,
+    "textWidth": 659.25,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1027",
+    "text": "Nº DO TRABALHO: 1782760",
+    "height": 44.64,
+    "availableHeight": 44.63999938964844,
+    "textHeight": 28.79,
+    "availableWidth": 684.0,
+    "textWidth": 325.0,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1028",
+    "text": "Autores: Nicolas Venciguerra Men; Rafael Gonçalves Dedini",
+    "height": 50.4,
+    "availableHeight": 50.400001525878906,
+    "textHeight": 29.995039,
+    "availableWidth": 813.5999755859375,
+    "textWidth": 674.87506,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1029",
+    "text": "Orientador: Prof. Dr. Luis Fernando de Almeida",
+    "height": 50.4,
+    "availableHeight": 50.400001525878906,
+    "textHeight": 29.995039,
+    "availableWidth": 813.5999755859375,
+    "textWidth": 530.87506,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1030",
+    "text": "ESCOLTA UNITAU: PROTÓTIPO VESTÍVEL PARA MONITORAMENTO DE PROXIMIDADE INFANTIL POR BLUETOOTH LOW ENERGY",
+    "height": 399.6,
+    "availableHeight": 399.6000061035156,
+    "textHeight": 305.26,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 1053.125,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1031",
+    "text": "Introdução",
+    "height": 54.72,
+    "availableHeight": 54.720001220703125,
+    "textHeight": 52.785038,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 239.62505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1032",
+    "text": "Em locais movimentados, o afastamento de uma criança pode não ser percebido de imediato. O Escolta UNITAU integra dispositivo vestível e aplicativo Android para acompanhar condições de proximidade por BLE, sinalizar degradação ou perda do enlace e oferecer um botão físico de emergência. Objetivo: avaliar essa prova de conceito integrada.",
+    "height": 257.04,
+    "availableHeight": 257.0400085449219,
+    "textHeight": 191.50504,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 1084.0,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1033",
+    "text": "Método",
+    "height": 54.72,
+    "availableHeight": 54.720001220703125,
+    "textHeight": 52.785038,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 168.62505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1034",
+    "text": "Pesquisa aplicada e experimental. Vestível com XIAO nRF52840 Sense, firmware C++/Arduino, buzzer, botão e LiPo 180 mAh; app Android em React Native/Expo com serviço em primeiro plano. RSSI usado como indicador experimental de proximidade. Ensaios iterativos iniciais em Samsung Galaxy S24 Ultra.",
+    "height": 205.92,
+    "availableHeight": 205.9199981689453,
+    "textHeight": 147.54504,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 1061.625,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1035",
+    "text": "Resultados",
+    "height": 54.72,
+    "availableHeight": 54.720001220703125,
+    "textHeight": 52.785038,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 249.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1037",
+    "text": "CENÁRIO",
+    "height": 36.0,
+    "availableHeight": 36.0,
+    "textHeight": 31.19504,
+    "availableWidth": 179.27999877929688,
+    "textWidth": 127.12504,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1039",
+    "text": "COMO FOI VERIFICADO",
+    "height": 36.0,
+    "availableHeight": 36.0,
+    "textHeight": 31.19504,
+    "availableWidth": 348.4800109863281,
+    "textWidth": 306.37503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1041",
+    "text": "RESULTADO OBSERVADO",
+    "height": 36.0,
+    "availableHeight": 36.0,
+    "textHeight": 31.19504,
+    "availableWidth": 494.6400146484375,
+    "textWidth": 343.87503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1043",
+    "text": "Vínculo BLE",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 31.19504,
+    "availableWidth": 179.27999877929688,
+    "textWidth": 160.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1045",
+    "text": "Conexão, perda do enlace e tentativas de reconexão.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 348.4800109863281,
+    "textWidth": 334.62503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1047",
+    "text": "A perda acionou alerta no telefone; o sistema tentou reconectar.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 494.6400146484375,
+    "textWidth": 434.62503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1049",
+    "text": "Segundo plano",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 179.27999877929688,
+    "textWidth": 118.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1051",
+    "text": "Tela bloqueada e serviço Android em primeiro plano.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 348.4800109863281,
+    "textWidth": 319.75,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1053",
+    "text": "Após correções do serviço, a monitoração persistiu.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 494.6400146484375,
+    "textWidth": 493.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1055",
+    "text": "Botão físico",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 31.19504,
+    "availableWidth": 179.27999877929688,
+    "textWidth": 156.12505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1057",
+    "text": "Acionamento de emergência no vestível conectado.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 348.4800109863281,
+    "textWidth": 338.75,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1059",
+    "text": "Resposta sonora no dispositivo e no telefone.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 494.6400146484375,
+    "textWidth": 427.12503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1061",
+    "text": "Aplicativo",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 31.19504,
+    "availableWidth": 179.27999877929688,
+    "textWidth": 131.62505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1063",
+    "text": "Navegação, estados, registros e confirmação de segurança.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 59.89504,
+    "availableWidth": 348.4800109863281,
+    "textWidth": 351.0,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1065",
+    "text": "Estados protegido, alcance reduzido e emergência registrados.",
+    "height": 91.44,
+    "availableHeight": 91.44000244140625,
+    "textHeight": 64.89,
+    "availableWidth": 494.6400146484375,
+    "textWidth": 450.37503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1066",
+    "text": "Fonte: elaboração própria (2026).\nAutonomia preliminar: 11 h 10, de 90% a 5% estimados (um ciclo, sem alertas automáticos).",
+    "height": 61.92,
+    "availableHeight": 61.91999816894531,
+    "textHeight": 59.89504,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 990.25,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1097",
+    "text": "Figura 1 — estados do aplicativo durante o afastamento",
+    "height": 39.6,
+    "availableHeight": 39.599998474121094,
+    "textHeight": 33.59504,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 754.12494,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1100",
+    "text": "Protegido",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.5599060058594,
+    "textWidth": 123.62496,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1103",
+    "text": "Alcance Reduzido",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.5599060058594,
+    "textWidth": 222.12495,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1106",
+    "text": "Emergência",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.5599060058594,
+    "textWidth": 148.62495,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1107",
+    "text": "Fonte: acervo próprio (2026). Metros exibidos: estimativas por RSSI.",
+    "height": 46.08,
+    "availableHeight": 46.08000183105469,
+    "textHeight": 28.79,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 786.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1108",
+    "text": "Figura 2 — projeto CAD e protótipo físico",
+    "height": 39.6,
+    "availableHeight": 39.599998474121094,
+    "textHeight": 33.59504,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 558.87506,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1111",
+    "text": "OpenSCAD · perspectiva",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.55999755859375,
+    "textWidth": 302.75,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1113",
+    "text": "OpenSCAD · vista superior",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 28.79,
+    "availableWidth": 322.55999755859375,
+    "textWidth": 314.62503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1116",
+    "text": "Caixa aberta",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.5599060058594,
+    "textWidth": 155.62495,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1119",
+    "text": "Caixa fechada",
+    "height": 34.56,
+    "availableHeight": 34.560001373291016,
+    "textHeight": 29.995039,
+    "availableWidth": 322.5599060058594,
+    "textWidth": 175.0,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1120",
+    "text": "Fonte: elaboração própria e acervo próprio (2026).",
+    "height": 46.08,
+    "availableHeight": 46.08000183105469,
+    "textHeight": 28.79,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 579.87494,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1121",
+    "text": "Considerações finais",
+    "height": 54.72,
+    "availableHeight": 54.720001220703125,
+    "textHeight": 50.38504,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 434.0,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1122",
+    "text": "A integração entre o vestível e o aplicativo demonstrou viabilidade técnica nas condições ensaiadas. Após as correções no serviço Android, a monitoração persistiu no Galaxy S24 Ultra, modelo usado na validação inicial. A perda do enlace BLE acionou o alerta de desconexão, enquanto o botão físico permitiu disparar o alerta manual.\rEm um ciclo de monitoração contínua, a placa operou por 11 h 10 entre 90% e 5% de carga estimada, com as saídas automáticas de alerta bloqueadas. Trata-se de um resultado preliminar: o tempo de uso pode mudar com reconexões, acionamentos sonoros e outras condições de operação.\rO RSSI permitiu observar mudanças na intensidade do sinal, mas variou com obstáculos, orientação e ambiente. Por isso, os valores indicados pelo aplicativo não devem ser interpretados como medição precisa de distância. Os testes confirmam o funcionamento integrado do protótipo, mas ainda não permitem generalizar o desempenho para diferentes celulares e cenários de uso.",
+    "height": 540.0,
+    "availableHeight": 540.0,
+    "textHeight": 533.36505,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 1074.25,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1123",
+    "text": "Referências",
+    "height": 54.72,
+    "availableHeight": 54.720001220703125,
+    "textHeight": 50.38504,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 249.87505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1124",
+    "text": "BLUETOOTH SIG. The Bluetooth Low Energy Primer. 2022.\nFARAGHER, R.; HARLE, R. Location Fingerprinting With Bluetooth Low Energy Beacons. IEEE JSAC, 33(11), 2015.\nSAKPHROM, S. et al. A Simplified and High Accuracy Algorithm of RSSI-Based Localization Zoning for Children Tracking In-Out the School Buses Using Bluetooth Low Energy Beacon. Informatics, 8(4):65, 2021.",
+    "height": 266.4,
+    "availableHeight": 266.3999938964844,
+    "textHeight": 184.31503,
+    "availableWidth": 1087.199951171875,
+    "textWidth": 1067.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1125",
+    "text": "Figura 3 — arquitetura funcional e resposta aos eventos",
+    "height": 46.8,
+    "availableHeight": 46.79999923706055,
+    "textHeight": 37.81504,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 862.50006,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1127",
+    "text": "VESTÍVEL",
+    "height": 39.6,
+    "availableHeight": 39.599998474121094,
+    "textHeight": 36.63,
+    "availableWidth": 364.32000732421875,
+    "textWidth": 158.12495,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1128",
+    "text": "XIAO nRF52840 Sense\nBotão, buzzer e bateria",
+    "height": 122.4,
+    "availableHeight": 122.4000015258789,
+    "textHeight": 66.25,
+    "availableWidth": 364.32000732421875,
+    "textWidth": 289.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1129",
+    "text": "↔\nBLE",
+    "height": 154.8,
+    "availableHeight": 154.8000030517578,
+    "textHeight": 78.52,
+    "availableWidth": 147.59991455078125,
+    "textWidth": 72.87504,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1131",
+    "text": "APLICATIVO ANDROID",
+    "height": 39.6,
+    "availableHeight": 39.599998474121094,
+    "textHeight": 34.27,
+    "availableWidth": 398.8800048828125,
+    "textWidth": 327.25,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1132",
+    "text": "Serviço persistente\nRSSI filtrado e estados",
+    "height": 122.4,
+    "availableHeight": 122.4000015258789,
+    "textHeight": 66.25,
+    "availableWidth": 398.8800048828125,
+    "textWidth": 283.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1133",
+    "text": "Caminhos de resposta",
+    "height": 39.6,
+    "availableHeight": 39.599998474121094,
+    "textHeight": 33.09,
+    "availableWidth": 1016.6400146484375,
+    "textWidth": 308.5,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1136",
+    "text": "SINAL ENFRAQUECE",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 262.79998779296875,
+    "textWidth": 253.37505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1137",
+    "text": "→",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 35.445038,
+    "availableWidth": 46.79999923706055,
+    "textWidth": 38.37496,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1138",
+    "text": "Indicação de alcance reduzido no aplicativo.",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 632.159912109375,
+    "textWidth": 478.12503,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1141",
+    "text": "ENLACE SE PERDE",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 262.79998779296875,
+    "textWidth": 233.37505,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1142",
+    "text": "→",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 35.445038,
+    "availableWidth": 46.79999923706055,
+    "textWidth": 38.37496,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1143",
+    "text": "Tentativa de reconexão; alerta se não recuperar.",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 632.159912109375,
+    "textWidth": 525.87506,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1146",
+    "text": "BOTÃO FÍSICO",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 262.79998779296875,
+    "textWidth": 179.75,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1147",
+    "text": "→",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 35.445038,
+    "availableWidth": 46.79999923706055,
+    "textWidth": 38.37496,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1148",
+    "text": "Com vínculo ativo, alerta manual nos dois lados.",
+    "height": 76.32,
+    "availableHeight": 76.31999969482422,
+    "textHeight": 28.36,
+    "availableWidth": 632.159912109375,
+    "textWidth": 523.25,
+    "overflow": false
+  },
+  {
+    "name": "TextBox 1149",
+    "text": "Fonte: elaboração própria (2026).",
+    "height": 46.08,
+    "availableHeight": 46.08000183105469,
+    "textHeight": 28.36,
+    "availableWidth": 1078.56005859375,
+    "textWidth": 364.50003,
+    "overflow": false
+  }
+]

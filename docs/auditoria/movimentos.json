@@ -1,0 +1,35 @@
+{
+  "moves": [
+    {
+      "from": "hardware/case_3d/AUDITORIA_DIMENSIONAL_V2_4.md",
+      "to": "hardware/case_3d/documentacao/revisoes/AUDITORIA_DIMENSIONAL_V2_4.md",
+      "sha256": "6b641fbad01b0749f86748907c3a8510aab9ce2f2debeca741ddbb15ba2b529e",
+      "alreadyMoved": false
+    },
+    {
+      "from": "hardware/case_3d/REVISAO_ENCAIXE_2026-09-30.md",
+      "to": "hardware/case_3d/documentacao/revisoes/REVISAO_ENCAIXE_2026-09-30.md",
+      "sha256": "6c156f7e8b7a53bc8ee30f50562c54a7590e741068d8497918241759891ff15b",
+      "alreadyMoved": false
+    },
+    {
+      "from": "hardware/case_3d/REVISAO_APOIOS_BOTAO_2026-10-02.md",
+      "to": "hardware/case_3d/documentacao/revisoes/REVISAO_APOIOS_BOTAO_2026-10-02.md",
+      "sha256": "fa9a8ebae134e4dd1bcf6d3f799e5625a38078cd9745fbde7b602bca75f23a29",
+      "alreadyMoved": false
+    },
+    {
+      "from": "hardware/case_3d/revisao_bateria_pilares_v2_6.png",
+      "to": "hardware/case_3d/documentacao/imagens/revisao_bateria_pilares_v2_6.png",
+      "sha256": "80dd2c634b3d25e5304d635edee19ddbef815c6d533c8e70798a28c53967e97c",
+      "alreadyMoved": false
+    },
+    {
+      "from": "hardware/case_3d/revisao_pilares_perspectiva_v2_6.png",
+      "to": "hardware/case_3d/documentacao/imagens/revisao_pilares_perspectiva_v2_6.png",
+      "sha256": "9fc60c84d8ec110ec938488817624f87b87d5adb18a8a265e291bcb74340b6b3",
+      "alreadyMoved": false
+    }
+  ],
+  "originalsPreserved": true
+}

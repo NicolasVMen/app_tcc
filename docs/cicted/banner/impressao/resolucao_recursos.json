@@ -1,0 +1,98 @@
+[
+  {
+    "shape": 0,
+    "pixels": [
+      2481,
+      296
+    ],
+    "ppi": [
+      70.0,
+      70.1
+    ],
+    "vector_svg": true
+  },
+  {
+    "shape": 44,
+    "pixels": [
+      821,
+      1599
+    ],
+    "ppi": [
+      183.3,
+      183.3
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 47,
+    "pixels": [
+      820,
+      1600
+    ],
+    "ppi": [
+      183.0,
+      183.0
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 50,
+    "pixels": [
+      816,
+      1600
+    ],
+    "ppi": [
+      182.1,
+      182.1
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 55,
+    "pixels": [
+      4000,
+      3000
+    ],
+    "ppi": [
+      1010.1,
+      1010.1
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 57,
+    "pixels": [
+      4000,
+      3000
+    ],
+    "ppi": [
+      1010.1,
+      1010.1
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 60,
+    "pixels": [
+      1168,
+      1347
+    ],
+    "ppi": [
+      260.7,
+      260.7
+    ],
+    "vector_svg": false
+  },
+  {
+    "shape": 63,
+    "pixels": [
+      1086,
+      1448
+    ],
+    "ppi": [
+      242.4,
+      242.4
+    ],
+    "vector_svg": false
+  }
+]

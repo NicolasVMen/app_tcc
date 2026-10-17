@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-07",
+  "timezone": "America/Sao_Paulo",
+  "productionCodeChangedDuringAudit": false,
+  "firmwareFlashedDuringAudit": false,
+  "apkGeneratedOrInstalledDuringAudit": false,
+  "typescript": {"exitCode": 0},
+  "javascriptTests": {"total": 24, "approved": 21, "knownPendingFailures": 3, "strictNpmTestExitCode": 1},
+  "cppStaticChecks": {"approved": 33, "exitCode": 0},
+  "xiaoFullCompilation": {"exitCode": 0, "programBytes": 332320, "globalBytes": 70024},
+  "androidHermesExport": {"exitCode": 0, "modules": 854, "output": ".expo/auditoria-export"},
+  "androidModuleAutolinking": {"found": true, "module": "escolta-sentinela"},
+  "kotlinCompilation": {"confirmed": false, "environmentError": "Unable to establish loopback connection"},
+  "sourceSyntax": {"checked": 29, "errors": 0, "importsChecked": 104, "unresolvedImports": 0},
+  "powershellSyntax": {"checked": 2, "errors": 0},
+  "fileFormats": {"checked": 298, "errors": 0, "pdfs": 18},
+  "cad": {"currentMeshes": 4, "validAndMatchingSource": 4, "closureCollision": false},
+  "originalPreservation": {"checked": 389, "unchangedHashes": 385, "expectedEdits": 4, "movedWithoutChangingHash": 5, "unexpectedChanges": 0},
+  "limits": ["No physical tests in this audit", "No native APK compile confirmation", "Academic content and all third-party source code not manually certified"]
+}

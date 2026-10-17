@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Modal, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '../services/accountStorage';
 
 import { AlertItem } from '../hooks/useEsp32Monitor';
 import { useAppPreferences } from '../context/AppPreferencesContext';
@@ -46,7 +46,7 @@ export default function AlertsScreen({ alertas, limparAlertas }: { alertas: Aler
     return [
       'ESCOLTA UNITAU',
       'RELATÓRIO DE OCORRÊNCIAS',
-      'Protótipo acadêmico funcional',
+      'Histórico de monitoramento',
       '',
       'IDENTIFICAÇÃO',
       `Responsável: ${profile?.nomeResponsavel || 'Não informado'}`,
@@ -58,7 +58,7 @@ export default function AlertsScreen({ alertas, limparAlertas }: { alertas: Aler
       events,
       '',
       'AVISO',
-      'Este relatório pertence a um protótipo acadêmico e não representa certificação de segurança ou localização exata da criança.',
+      'Este relatório registra ocorrências do monitoramento. Não comprova a segurança nem a localização exata da criança.',
     ].join('\n');
   };
 

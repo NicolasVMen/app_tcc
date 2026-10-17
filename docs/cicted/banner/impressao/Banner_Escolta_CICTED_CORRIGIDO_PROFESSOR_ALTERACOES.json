@@ -1,0 +1,18 @@
+{
+  "source": "C:\\Users\\Nicolas Venciguerra\\Desktop\\app_tcc\\CICTED\\Banner_Escolta_CICTED_EQUILIBRADO.pptx",
+  "destination": "C:\\Users\\Nicolas Venciguerra\\Desktop\\app_tcc\\docs\\cicted\\banner\\impressao\\Banner_Escolta_CICTED_CORRIGIDO_PROFESSOR.pptx",
+  "duration_label": "aproximadamente 11 horas",
+  "images_preserved": true,
+  "figures": {
+    "1": "arquitetura",
+    "2": "caixa e protótipo",
+    "3": "telas do aplicativo"
+  },
+  "references_with_citations": [
+    "Bluetooth SIG, 2022",
+    "Sakphrom et al., 2021",
+    "Faragher; Harle, 2015"
+  ],
+  "statistical_claims_added": false,
+  "hardware_comparison_invented": false
+}
