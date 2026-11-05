@@ -65,8 +65,11 @@ CSVs não substitui versionamento do APK. Não substituir a oficial sob o mesmo
 número de versão. Confirmar espera/silêncio antes da instalação, não retomar a
 proteção automaticamente e conferir assinatura/Firebase antes de atualizar.
 
-O código fonte continua com versão 1.0.1 enquanto não se prepara essa candidata.
-Nenhum build ou instalação A1 foi executado nesta etapa.
+Na preparação posterior, após confirmação de espera/silêncio pelo usuário, o
+código passou a versão 1.0.2, base local Android 3. EAS remoto e Samsung foram
+consultados: a referência anterior é 1.0.1/código 2. O código remoto final e o
+certificado do APK novo precisam ser conferidos após a compilação. Esta preparação
+ainda não representa instalação ou aprovação física do coletor.
 
 ## Validação física necessária antes do ciclo longo
 

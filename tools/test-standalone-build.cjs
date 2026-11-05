@@ -70,8 +70,8 @@ test('oficial validada: versão de atualização, assinatura remota e cliente p�
   const config = JSON.parse(fs.readFileSync('app.json', 'utf8')).expo;
   const profile = JSON.parse(fs.readFileSync('eas.json', 'utf8')).build['oficial-validada'];
   assert.equal(config.android.package, 'com.nicolasvmen.escoltaunitau');
-  assert.ok(config.android.versionCode > 1);
-  assert.equal(config.version, '1.0.1');
+  assert.ok(config.android.versionCode > 2);
+  assert.equal(config.version, '1.0.2');
   assert.equal(profile.environment, 'production');
   assert.equal(profile.credentialsSource, 'remote');
   assert.equal(profile.env.EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS, 'false');
