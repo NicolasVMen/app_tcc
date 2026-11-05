@@ -1,5 +1,15 @@
 # Ensaio preliminar de autonomia da bateria
 
+> Nota de interpretação adicionada em 04/11/2026: este é um registro histórico,
+> anterior à variante W1 e ao APK oficial 1.0.1. O tempo observado entre os
+> indicadores inicial/final não demonstra capacidade entregue em mAh, corrente
+> média ou autonomia integral. As projeções de 13,7 mA e 13 horas abaixo foram
+> estimadas a partir da capacidade nominal e de percentuais por tensão, não
+> medidas com instrumento; não utilizá-las como resultados experimentais no TCC.
+> O efeito do bloqueio de alertas sobre consumo também não foi quantificado.
+> Na redação final, informar apenas 11 h 10 min naquele ciclo e condições,
+> sem generalizar para uso diário, configuração atual ou todos os aparelhos.
+
 ## Identificação
 
 - Protótipo: Escolta UNITAU

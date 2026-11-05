@@ -10,7 +10,7 @@ O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel 
 
 ## Estado atual
 
-_Atualizado em 17 de outubro de 2026._
+_Estado documental atualizado em 4 de novembro de 2026; distribuição do APK de 17/10 preservada._
 
 **Escolta UNITAU 1.0.1 (Android, código 2) é a versão oficial desta rodada do protótipo acadêmico.**
 APK release com JavaScript incorporado, assinatura original e Firebase/Google
@@ -30,8 +30,13 @@ Registro de assinatura, APK, hashes, instalação, testes e limitações:
 [Compilação EAS](https://expo.dev/accounts/nicolas_venciguerra_men/projects/escolta-unitau/builds/622eb96d-11d7-4f0e-81bf-f26d546ffb7c).
 APK e backups são artefatos de distribuição locais, não arquivos do histórico Git.
 
-**Pendências:** reparar os fios e confirmar o botão físico em 19/10/2026;
-medir autonomia integral e bateria baixa/descarga real. Não haverá nova alteração
+**Atualização de 04/11/2026:** o usuário confirmou o reparo e a aprovação do
+botão físico na oficial. A data exata do ensaio não foi informada; trata-se de
+aceite relatado, sem novo registro instrumental anexado.
+O texto acadêmico foi atualizado e salvo no Drive em Word e PDF de 41 páginas
+em 04/11; consultar [a revisão e os links](docs/tcc/README.md).
+**Pendências:** revisão final dos autores/orientador; medir autonomia na
+configuração atual e comportamento de bateria baixa. Não haverá nova alteração
 de comportamento sem falha observada ou nova solicitação. Relatórios antigos em
 `docs/auditoria` e `docs/testes` registram etapas históricas, não o estado atual.
 
@@ -61,7 +66,7 @@ A caixa foi impressa, montada e parafusada pelo usuário. O kit digital atual es
 - [x] XIAO nRF52840 Sense programada e reconhecida pelo aplicativo.
 - [x] Comunicação BLE e comandos do buzzer validados.
 - [x] Transistor, resistores, diodo e buzzer soldados.
-- [ ] Reparar fios do botão e repetir a validação física na oficial em 19/10/2026.
+- [x] Reparar fios do botão e repetir a validação física na oficial (aceite do usuário informado em 04/11/2026).
 - [x] Conector da bateria LiPo soldado e isolado.
 - [x] Validar alimentação e recarga pela XIAO.
 - [x] Exibir percentual, tensão e estado de carga no aplicativo.

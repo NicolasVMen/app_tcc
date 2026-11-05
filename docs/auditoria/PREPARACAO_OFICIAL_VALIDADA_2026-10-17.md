@@ -124,3 +124,18 @@ Usuário solicitou manter somente a oficial no celular e testar o botão reparad
 - Verificação posterior `pm list packages --user 0 escoltaunitau`: somente **com.nicolasvmen.escoltaunitau** instalado para o usuário principal, Teste ausente. Código/APK da oficial não alterados, sem recarga/abertura/retomada por ferramenta. Cadastros Firebase e arquivos de desenvolvimento não apagados.
 
 A partir daqui o uso e o próximo teste físico do botão serão somente no **Escolta UNITAU 1.0.1**. Fontes/ferramentas e APKs de teste continuam preservados no computador; não há necessidade de manter duas instalações no telefone.
+
+## Atualização de acompanhamento — 04/11/2026
+
+Ao ser perguntado sobre o reparo e teste do botão físico na oficial (aplicativo
+aberto e tela bloqueada), o usuário respondeu: **“sim, funcionando e aprovado”**.
+A pendência de reparo/validação funcional relatada foi encerrada. A data exata
+de execução e tempos instrumentais não foram informados; não atribuir este
+aceite a 19/10 nem apresentá-lo como novo ensaio automatizado ou laboratorial.
+
+O usuário informou não ter realizado novos ensaios de autonomia ou descarga e
+priorizou concluir o TCC antes de evoluir para produto. Foi proposto um registro
+opcional de autonomia no celular, sem implementação/instalação nesta etapa.
+Permanecem as limitações de RSSI, autonomia na configuração atual e bateria
+baixa real. Nenhum APK, firmware ou regra de alarme foi alterado para registrar
+esta atualização.

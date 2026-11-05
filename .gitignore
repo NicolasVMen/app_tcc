@@ -40,3 +40,4 @@ veda
 # Dependências locais de geração do banner e capturas do console autenticado.
 /docs/cicted/banner/ferramentas/vendor/
 /docs/auditoria/FIREBASE_OFICIAL_*.png
+/backups/tcc/

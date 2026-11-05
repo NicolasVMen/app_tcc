@@ -1,0 +1,377 @@
+{
+  "pages": 41,
+  "emptyPages": [],
+  "outsidePage": [],
+  "obsoleteFragments": [],
+  "pagesInfo": [
+    {
+      "page": 1,
+      "characters": 187,
+      "first": "UNIVERSIDADE DE TAUBATÉ Nicolas Venciguerra Men Rafael Gonçalves Dedini ESCOLTA UNITAU: protótipo vestível par",
+      "last": "TA UNITAU: protótipo vestível para monitoramento de proximidade infantil por bluetooth low energy Taubaté 2026",
+      "outsidePage": [],
+      "minY": 63.144,
+      "maxX": 524.1960000000003
+    },
+    {
+      "page": 2,
+      "characters": 447,
+      "first": "UNIVERSIDADE DE TAUBATÉ Nicolas Venciguerra Men Rafael Gonçalves Dedini ESCOLTA UNITAU: protótipo vestível par",
+      "last": "aubaté. Área de Concentração: Sistemas Embarcados. Orientador: Prof. Dr. Luis Fernando de Almeida Taubaté 2026",
+      "outsidePage": [],
+      "minY": 94.824,
+      "maxX": 538.5939999999998
+    },
+    {
+      "page": 3,
+      "characters": 326,
+      "first": "NICOLAS VENCIGUERRA MEN RAFAEL GONÇALVES DEDINI ESCOLTA UNITAU: protótipo vestível para monitoramento de proxi",
+      "last": "Luis Fernando de Almeida UNIVERSIDADE DE TAUBATÉ : Prof. UNIVERSIDADE DE TAUBATÉ Prof. UNIVERSIDADE DE TAUBATÉ",
+      "outsidePage": [],
+      "minY": 190.1,
+      "maxX": 524.1960000000003
+    },
+    {
+      "page": 4,
+      "characters": 1923,
+      "first": "RESUMO Este trabalho apresenta o desenvolvimento e a avaliação do Escolta UNITAU, um protótipo acadêmico compo",
+      "last": "-chave: sistemas embarcados; Bluetooth Low Energy; aplicativo móvel; dispositivo vestível; segurança infantil.",
+      "outsidePage": [],
+      "minY": 265.13,
+      "maxX": 538.81
+    },
+    {
+      "page": 5,
+      "characters": 1936,
+      "first": "ABSTRACT This work presents the development and evaluation of Escolta UNITAU, an academic prototype comprising",
+      "last": "ervision. Keywords: embedded systems; Bluetooth Low Energy; mobile application; wearable device; child safety.",
+      "outsidePage": [],
+      "minY": 244.37,
+      "maxX": 538.7159999999999
+    },
+    {
+      "page": 6,
+      "characters": 359,
+      "first": "LISTA DE FIGURAS Figura 1 – Arquitetura funcional do protótipo................................................",
+      "last": "8 Figura 3 – Estimativas e dispersão observadas na campanha D1............................................. 35",
+      "outsidePage": [],
+      "minY": 665.62,
+      "maxX": 538.8000000000002
+    },
+    {
+      "page": 7,
+      "characters": 861,
+      "first": "LISTA DE QUADROS Quadro 1 – Componentes empregados no protótipo ..............................................",
+      "last": "egistro histórico de autonomia ............................................................................ 38",
+      "outsidePage": [],
+      "minY": 582.82,
+      "maxX": 538.8
+    },
+    {
+      "page": 8,
+      "characters": 476,
+      "first": "LISTA DE ABREVIATURAS E SIGLAS ADC – Conversor Analógico-Digital APK – Android Package BLE – Bluetooth Low Ene",
+      "last": "ador da Intensidade do Sinal Recebido USB – Universal Serial Bus UUID – Identificador Universalmente Exclusivo",
+      "outsidePage": [],
+      "minY": 458.59,
+      "maxX": 418.26199999999994
+    },
+    {
+      "page": 9,
+      "characters": 3533,
+      "first": "SUMÁRIO 1 INTRODUÇÃO .........................................................................................",
+      "last": ".......... 28 4.4 FILTRAGEM, ESTIMATIVA E CLASSIFICAÇÃO ................................................... 29",
+      "outsidePage": [],
+      "minY": 77.424,
+      "maxX": 538.2
+    },
+    {
+      "page": 10,
+      "characters": 1427,
+      "first": "4.5 EMERGÊNCIA, BOTÃO E CONFIRMAÇÃO DE SEGURANÇA ............................ 30 4.6 APLICATIVO E EXECUÇÃO EM ",
+      "last": "........................................................................................................... 40",
+      "outsidePage": [],
+      "minY": 472.87,
+      "maxX": 538.2
+    },
+    {
+      "page": 11,
+      "characters": 2551,
+      "first": "11 1 INTRODUÇÃO Ambientes como parques, centros comerciais, festas, feiras e eventos reúnem muitas pessoas e e",
+      "last": "dispositivo da criança e o telefone do responsável, sem tentativa de calcular uma coordenada dentro do prédio.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 12,
+      "characters": 2501,
+      "first": "12 Cao et al. (2019) apresentaram um sistema de monitoramento infantil apoiado em posicionamento em ambiente i",
+      "last": "ulo de proximidade entre dois pontos: o dispositivo vestível e o telefone do responsável. Essa decisão reduz a",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 13,
+      "characters": 1871,
+      "first": "13 dependência de infraestrutura externa e permite que o funcionamento principal ocorra mesmo quando não há ac",
+      "last": "áfica da criança. A localização do celular do responsável pode ser usada apenas de forma opcional no início de",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 14,
+      "characters": 1574,
+      "first": "14 uma emergência e não representa a posição do dispositivo vestível. O canal de e-mail utilizado nos ensaios ",
+      "last": "tados. Por fim, o sexto apresenta as conclusões, as limitações observadas e as possibilidades de continuidade.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 15,
+      "characters": 2352,
+      "first": "15 2 FUNDAMENTAÇÃO TEÓRICA Este capítulo reúne os conceitos usados nas decisões do projeto. A fundamentação nã",
+      "last": "identificar se um problema estava no sinal, no firmware, no módulo BLE do aplicativo ou nas regras do Android.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 16,
+      "characters": 2498,
+      "first": "16 2.2 COMUNICAÇÃO BLUETOOTH LOW ENERGY O Bluetooth Low Energy opera na faixa ISM de 2,4 GHz e foi criado para",
+      "last": "lefone possui rádio e antena próprios. Faragher e Harle (2015) observaram a suscetibilidade do BLE a variações",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 17,
+      "characters": 2529,
+      "first": "17 rápidas em ambientes internos. Portanto, converter um único RSSI em metros transmite uma precisão que o mét",
+      "last": "imeiro plano do tipo connectedDevice para interações contínuas com dispositivos Bluetooth. Esse serviço mantém",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 18,
+      "characters": 2392,
+      "first": "18 uma notificação visível e informa ao sistema operacional que existe uma tarefa perceptível ao usuário (ANDR",
+      "last": "nção de transformar o circuito soldado em um conjunto testável e repetível, ainda identificado como protótipo.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 19,
+      "characters": 1833,
+      "first": "19 3 MATERIAIS E MÉTODOS A pesquisa é de natureza aplicada, pois utiliza conhecimentos de computação e eletrôn",
+      "last": " Multímetro Multímetro digital Comparação da tensão indicada pela placa Fonte: elaborada pelos autores (2026).",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 20,
+      "characters": 2382,
+      "first": "20 3.1.2 Recursos de software e fabricação Quadro 2 – Ferramentas utilizadas Recurso Tecnologia Uso no projeto",
+      "last": "e são tratadas como resultados do processo de engenharia, e não como características que devem ser escondidas.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 21,
+      "characters": 2486,
+      "first": "21 Este trabalho se justifica pela possibilidade de estudar, em um único protótipo, temas de sistemas embarcad",
+      "last": "ndo pressionado. O firmware aplica debounce para evitar múltiplos acionamentos causados pelo contato mecânico.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 22,
+      "characters": 2347,
+      "first": "22 A bateria LiPo foi conectada ao circuito de carga da XIAO. A tensão lida pelo ADC é convertida para uma est",
+      "last": "spositivo e horário da última comunicação. O RSSI em dBm foi mantido na área técnica, fora da navegação comum.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 23,
+      "characters": 2256,
+      "first": "23 A conexão usa a biblioteca react-native-ble-plx. O aplicativo procura o periférico, conecta, descobre os se",
+      "last": "e aguarda a confirmação do firmware. Dessa forma, uma desconexão intencional não é confundida com afastamento.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.8760000000001
+    },
+    {
+      "page": 24,
+      "characters": 2405,
+      "first": "24 3.2.6 Procedimentos de teste Os testes funcionais foram executados em sequências controladas. Cada sequênci",
+      "last": " 5% e 3,54 V, sem forçar a célula até o corte da proteção. O intervalo observado foi de 11 horas e 10 minutos.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 25,
+      "characters": 2438,
+      "first": "25 Esse ensaio foi usado apenas como referência preliminar. Para obter um valor acadêmico mais consistente, o ",
+      "last": "mentos e os modelos produzidos foram mantidos em controle de versão para permitir rastreamento das alterações.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 26,
+      "characters": 1948,
+      "first": "26 4 DESENVOLVIMENTO O desenvolvimento resultou em um conjunto composto pelo vestível montado em caixa impress",
+      "last": "itoramento principal ocorre localmente; uma falha de internet não deve ser confundida com perda do enlace BLE.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 27,
+      "characters": 1734,
+      "first": "27 Figura 1 – Arquitetura funcional do protótipo Fonte: elaboração própria (2026), a partir da implementação d",
+      "last": "erto é lido em nível alto; a pressão fecha o circuito para o terra. O firmware aplica estabilização de contato",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 28,
+      "characters": 1217,
+      "first": "28 e exige acionamento sustentado. A bateria é conectada aos terminais destinados a ela na XIAO, e não ao pino",
+      "last": "rmitiu testar comandos e telemetria separadamente, sem mudar o aplicativo inteiro a cada revisão do firmware .",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 29,
+      "characters": 2339,
+      "first": "29 Quadro 3 – Características do serviço GATT Finalidade Sufixo UUID Operação Estado/telemetria e5c1f4a1 Leitu",
+      "last": "s três amostras candidatas antes de confirmar uma transição. Uma lacuna superior a 2,5 s reinicia o tratamento",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 30,
+      "characters": 2371,
+      "first": "30 das leituras; tempo sem amostra não é contado como evidência de afastamento contínuo. A política final de l",
+      "last": "aixa de recuperação pelo tempo necessário, o estado de atenção pode retornar automaticamente a protegido. Esse",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 31,
+      "characters": 2489,
+      "first": "31 comportamento é diferente do pânico: depois de iniciada uma emergência, a melhora do sinal não basta para e",
+      "last": "uída por um estado verde com informação antiga. Foram incluídos limites de tempo nas operações, recuperação de",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 32,
+      "characters": 2461,
+      "first": "32 sessão e isolamento de callbacks para reduzir condições em que uma conexão antiga continuava interferindo e",
+      "last": " do conjunto soldado. A base nominal possui 61 × 46 mm e altura de 28 mm, conforme o CAD atual; a face externa",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 33,
+      "characters": 2390,
+      "first": "33 da tampa tem 2,4 mm de espessura. Essas são dimensões de projeto, e não medições certificadas de cada peça ",
+      "last": "acompanhar os resultados, pois parâmetros de uma variante não podem ser atribuídos retrospectivamente a outra.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.8960000000001
+    },
+    {
+      "page": 34,
+      "characters": 2255,
+      "first": "34 5 TESTES E RESULTADOS Os resultados foram organizados em três grupos de evidência: medições exportadas ou r",
+      "last": "tes e novos dados durante cada janela. Os valores do Quadro 5 não devem ser atribuídos ao filtro Kalman final.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 35,
+      "characters": 1455,
+      "first": "35 Quadro 5 – Resultados da campanha D1 de 17/10/2026 Real (m) Média (m) Mín. – máx. (m) Erro abs. médio (m) 1",
+      "last": "a em outros. Não foi demonstrada precisão métrica universal nem separação exata das faixas por distância real.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 36,
+      "characters": 2308,
+      "first": "36 Uma análise retrospectiva comparou filtros e limiares usando campanhas anteriores, sem eliminar séries desf",
+      "last": " da emergência sem vínculo e o encerramento somente após reconexão e resposta válida, nas condições ensaiadas.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 37,
+      "characters": 2412,
+      "first": "37 Outra falha ocorreu ao remover o aplicativo dos Recentes: o vínculo retornava apenas ao reabrir a interface",
+      "last": " 10 min entre as indicações de 90% e 5%. O vestível estava alimentado pela bateria e conectado ao celular, com",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 38,
+      "characters": 2307,
+      "first": "38 saídas automáticas de alerta temporariamente bloqueadas. Essa configuração é anterior à variante de rádio e",
+      "last": "s componentes dentro. O prolongador e a trava final foram mantidos após aprovação do encaixe, enquanto a tampa",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 39,
+      "characters": 1598,
+      "first": "39 recebeu abas de apoio para o botão eletrônico. O funcionamento relatado após o reparo confirma o acionament",
+      "last": " resultados, e não deve ser substituído por uma promessa de segurança baseada apenas em uma cor do aplicativo.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 40,
+      "characters": 2548,
+      "first": "40 6 CONCLUSÃO O trabalho atingiu o objetivo de desenvolver e avaliar uma implementação integrada de vestível ",
+      "last": "mplementar à supervisão de um responsável e sem certificação para uso comercial como equipamento de segurança.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    },
+    {
+      "page": 41,
+      "characters": 2458,
+      "first": "41 REFERÊNCIAS ANDROID DEVELOPERS. Communicate in the background. [S. l.], 2026a. Disponível em: https://devel",
+      "last": "52840 Series. [S. l.], [s. d.]. Disponível em: https://wiki.seeedstudio.com/XIAO_BLE/. Acesso em: 4 nov. 2026.",
+      "outsidePage": [],
+      "minY": 47.304,
+      "maxX": 538.86
+    }
+  ]
+}

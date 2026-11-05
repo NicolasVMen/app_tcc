@@ -47,6 +47,8 @@ script K2-W1 e seus opt-ins, não simplesmente compilar o padrão na Arduino IDE
 
 [Registro da W1](../docs/testes/ENSAIO_WATCHDOG_W1_2026-10-17.md) e
 [aceite da oficial](../docs/auditoria/PREPARACAO_OFICIAL_VALIDADA_2026-10-17.md).
-Botão físico aguarda reparo/reteste diretamente na oficial; autonomia completa
-e bateria baixa real ainda não aprovadas. Nenhuma mudança de firmware é
+Atualização documental de 04/11/2026: o usuário confirmou o reparo e a aprovação
+do botão físico diretamente na oficial, sem informar a data exata do ensaio ou
+anexar novo registro instrumental. Autonomia na configuração atual e bateria
+baixa real continuam pendentes. Nenhuma mudança de firmware é
 necessária apenas para publicar o estado atual no GitHub.
