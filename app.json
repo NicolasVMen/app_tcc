@@ -3,7 +3,7 @@
     "name": "Escolta UNITAU",
     "slug": "escolta-unitau",
     "scheme": "escolta",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -47,7 +47,7 @@
       ]
     ],
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "allowBackup": false,
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO",

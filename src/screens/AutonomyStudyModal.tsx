@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useSyncExternalStore } from 'react';
-import { ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { getAutonomyRecorder } from '../services/autonomyRegistry';
@@ -10,18 +10,19 @@ import type { StudyPhase } from '../utils/autonomyStudy';
 export default function AutonomyStudyModal({ visible,onClose }: {visible:boolean;onClose:()=>void}) {
   const { colors,accountUid,preferences }=useAppPreferences();
   const insets=useSafeAreaInsets();
+  const { height: windowHeight }=useWindowDimensions();
   const recorder=useMemo(()=>BATTERY_STUDY_ENABLED&&accountUid?getAutonomyRecorder(accountUid,preferences):null,[accountUid,preferences]);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
   if (!BATTERY_STUDY_ENABLED || !recorder || !visible) return null;
   return <StudyContent recorder={recorder} busy={busy} setBusy={setBusy} message={message} setMessage={setMessage}
-    onClose={onClose} colors={colors} top={insets.top} bottom={insets.bottom}/>;
+    onClose={onClose} colors={colors} top={insets.top} bottom={insets.bottom} windowHeight={windowHeight}/>;
 }
 
-function StudyContent({recorder,busy,setBusy,message,setMessage,onClose,colors,top,bottom}: {
+function StudyContent({recorder,busy,setBusy,message,setMessage,onClose,colors,top,bottom,windowHeight}: {
   recorder:NonNullable<ReturnType<typeof getAutonomyRecorder>>; busy:boolean;setBusy:(v:boolean)=>void;
   message:string;setMessage:(v:string)=>void;onClose:()=>void;
-  colors:ReturnType<typeof useAppPreferences>['colors'];top:number;bottom:number;
+  colors:ReturnType<typeof useAppPreferences>['colors'];top:number;bottom:number;windowHeight:number;
 }) {
   const state=useSyncExternalStore(recorder.subscribe,recorder.getSnapshot,recorder.getSnapshot);
   const current=state.runs[state.runs.length-1];
@@ -40,10 +41,15 @@ function StudyContent({recorder,busy,setBusy,message,setMessage,onClose,colors,t
     <Text style={styles.buttonText}>{label}</Text></TouchableOpacity>;
   const phases:Array<[StudyPhase,string]>=[['uso_normal','Uso normal'],['protegido','Protegido'],['atencao','Atenção'],['emergencia','Emergência'],['espera','Espera']];
   return <Modal visible animationType="slide" onRequestClose={onClose}>
-    <View style={[styles.container,{backgroundColor:colors.background,paddingTop:top+12}]}>
+    <View testID="autonomy-study-viewport" style={[styles.container,{
+      backgroundColor:colors.background,height:windowHeight,maxHeight:windowHeight,
+      paddingTop:top+12,paddingBottom:bottom,
+    }]}>
       <View style={styles.header}><Text style={[styles.title,{color:colors.textPrimary}]}>Registro de autonomia</Text>
         <TouchableOpacity accessibilityRole="button" onPress={onClose}><Text style={{color:colors.primaryBlue,padding:12}}>Fechar</Text></TouchableOpacity></View>
-      <ScrollView style={{flex:1}} contentContainerStyle={{padding:18,paddingBottom:bottom+30,gap:12}}>
+      <ScrollView testID="autonomy-study-scroll" style={styles.scroll}
+        contentContainerStyle={{padding:18,paddingBottom:30,gap:12}}
+        nestedScrollEnabled removeClippedSubviews={false} showsVerticalScrollIndicator scrollEnabled>
         <Text style={{color:colors.warningYellow}}>Instrumentação A1. Observa o vestível; não mede corrente em mA ou capacidade em mAh.</Text>
         <Text style={{color:colors.textSecondary}}>O registro não dispara, silencia ou encerra alarmes. Marcar uma etapa só acrescenta uma anotação. USB, perda de dados e reinício são registrados separadamente.</Text>
         <Text style={{color:colors.textPrimary,fontWeight:'700'}}>{!state.ready?'Histórico indisponível/carregando…':state.active?'Coleta em andamento':'Coleta parada'}</Text>
@@ -78,7 +84,8 @@ function StudyContent({recorder,busy,setBusy,message,setMessage,onClose,colors,t
   </Modal>;
 }
 const styles=StyleSheet.create({
-  container:{flex:1},header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:18},
+  container:{flex:1,minHeight:0},scroll:{flex:1,minHeight:0},
+  header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:18},
   title:{fontSize:21,fontWeight:'700',flex:1},button:{padding:13,borderRadius:10,minHeight:45},
   buttonText:{color:'#fff',fontWeight:'700',textAlign:'center'},
 });

@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const ts = require('typescript');
 const vm = require('node:vm');
 const read = file => fs.readFileSync(file, 'utf8');
+const appVersion = JSON.parse(read('app.json')).expo.version;
 
 // Executa o SettingsScreen real em árvore JSX simples; sem telefone, conta ou rede.
 function settingsTree(internalTools, staleInternalState = false) {
@@ -29,6 +30,7 @@ function settingsTree(internalTools, staleInternalState = false) {
     '../services/emergencyEmail': { canSendEmergencyEmail: () => false },
     '../services/googleAuth': {},
     '../services/nativeIdentity': { INTERNAL_TOOLS_ENABLED: internalTools, APP_DISPLAY_NAME: 'Escolta UNITAU' },
+    '../../app.json': { expo: { version: appVersion } },
     './SystemDiagnosticsModal': { default: 'SystemDiagnosticsModal', __esModule: true },
   };
   const context = { exports: {}, require: name => {
@@ -61,6 +63,7 @@ test('tela Sistema em uso normal não mostra ensaios, sirene, e-mail de teste ne
       assert.ok(ui.texts.toLowerCase().includes(text.toLowerCase()), text);
     }
     assert.ok(!ui.nodes.some(node => node.type === 'SystemDiagnosticsModal'));
+    assert.ok(ui.texts.includes(`Escolta UNITAU v${appVersion}`));
   }
 });
 

@@ -64,7 +64,10 @@ test('autonomia: perfil separado não ativa ferramentas internas na oficial norm
   assert.equal(profiles['autonomia-instrumentada'].env.EXPO_PUBLIC_ENABLE_BATTERY_STUDY,'true');
   assert.equal(profiles['oficial-validada'].env.EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS,'false');
   const ui=fs.readFileSync('src/screens/AutonomyStudyModal.tsx','utf8');
-  assert.match(ui,/flex:1/);assert.match(ui,/ScrollView style=\{\{flex:1\}\}/);
+  assert.match(ui,/height:windowHeight,maxHeight:windowHeight/);
+  assert.match(ui,/paddingTop:top\+12,paddingBottom:bottom/);
+  assert.match(ui,/nestedScrollEnabled removeClippedSubviews=\{false\} showsVerticalScrollIndicator scrollEnabled/);
+  assert.match(ui,/scroll:\{flex:1,minHeight:0\}/);
   assert.match(ui,/if \(!BATTERY_STUDY_ENABLED \|\| !recorder \|\| !visible\) return null/);
   assert.doesNotMatch(ui,/toggleSomBle|resetarAlarmeBle|startRssiWatchdogExperiment/);
 });

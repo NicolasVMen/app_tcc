@@ -40,6 +40,8 @@ const EMPTY_PROFILE: UserProfile = {
   emailAlertsEnabled: false,
 };
 
+const APP_VERSION: string = require('../../app.json').expo.version;
+
 export default function SettingsScreen({
   onProfileUpdated,
   onBeforeLogout,
@@ -525,7 +527,7 @@ export default function SettingsScreen({
         </View>
 
         <TouchableOpacity style={styles.versionArea} disabled={!INTERNAL_TOOLS_ENABLED} onPress={handleVersionTap} activeOpacity={0.65}>
-          <Text style={styles.version}>{APP_DISPLAY_NAME} v1.0.0</Text>
+          <Text style={styles.version}>{`${APP_DISPLAY_NAME} v${APP_VERSION}`}</Text>
           <Text style={styles.prototype}>MONITORAMENTO DE PROXIMIDADE</Text>
         </TouchableOpacity>
       </ScrollView>
