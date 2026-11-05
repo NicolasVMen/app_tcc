@@ -4,8 +4,8 @@ const fs = require('node:fs');
 const ts = require('typescript');
 const vm = require('node:vm');
 const plugin = require('./plugins/with-test-build.cjs');
-function identity(native, development = false, internalTools) {
-  const context = { exports: {}, __DEV__: development, process: { env: { EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS: internalTools } }, require: name => {
+function identity(native, development = false, internalTools, batteryStudy) {
+  const context = { exports: {}, __DEV__: development, process: { env: { EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS: internalTools, EXPO_PUBLIC_ENABLE_BATTERY_STUDY:batteryStudy } }, require: name => {
     assert.equal(name, 'expo-modules-core');
     return { requireOptionalNativeModule: () => native };
   } };
@@ -62,6 +62,14 @@ test('identidade: futura oficial opt-in usa monitor corrigido sem trocar identid
     assert.match(source, /VALIDATED_MONITOR_ENABLED/);
     assert.doesNotMatch(source, /IS_TEST_BUILD/);
   }
+});
+
+test('identidade: coleta de autonomia é opt-in separado e não libera testes de alarme em release',()=>{
+  for(const flag of [undefined,'false','1','TRUE']) assert.equal(identity({validatedMonitorEnabled:true},false,'true',flag).BATTERY_STUDY_ENABLED,false);
+  const release=identity({validatedMonitorEnabled:true},false,'true','true');
+  assert.equal(release.BATTERY_STUDY_ENABLED,true);assert.equal(release.INTERNAL_TOOLS_ENABLED,false);
+  assert.equal(release.DEV_RSSI_WATCHDOG_EXPERIMENT_ENABLED,false);
+  assert.equal(identity(null,false,'true','true').BATTERY_STUDY_ENABLED,false);
 });
 
 test('identidade: opt-in nativo persistente no plugin e sem duplicar metadata', () => {

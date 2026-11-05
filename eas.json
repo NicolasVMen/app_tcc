@@ -25,10 +25,17 @@
       "env": {
         "ORG_GRADLE_PROJECT_escoltaValidatedMonitor": "true",
         "EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS": "false",
+        "EXPO_PUBLIC_ENABLE_BATTERY_STUDY": "false",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "247729429884-0s65s8enkb44l71nmvj8uq8c0u2cn1ir.apps.googleusercontent.com"
       },
       "android": {
         "buildType": "apk"
+      }
+    },
+    "autonomia-instrumentada": {
+      "extends": "oficial-validada",
+      "env": {
+        "EXPO_PUBLIC_ENABLE_BATTERY_STUDY": "true"
       }
     }
   },

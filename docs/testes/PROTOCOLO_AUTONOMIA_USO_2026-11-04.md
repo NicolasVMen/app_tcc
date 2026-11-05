@@ -2,6 +2,11 @@
 
 Data: 04/11/2026. **Planejamento, não teste executado nem coletor implementado.**
 
+Atualização posterior (05/11): o coletor A1 foi implementado e testado no código,
+mas ainda depende de build, instalação e validação física. Ver
+[implementação A1 e roteiro de validação](COLETOR_AUTONOMIA_A1_2026-11-05.md).
+Esta nota não representa ensaio de autonomia executado.
+
 ## Objetivo e alcance
 
 Medir o tempo observado de funcionamento do vestível alimentado pela bateria,

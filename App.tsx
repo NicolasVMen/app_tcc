@@ -15,7 +15,9 @@ import {
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loadAsync, useFonts } from 'expo-font';
-import { APP_DISPLAY_NAME, APP_SCHEME, INTERNAL_TOOLS_ENABLED, VALIDATED_MONITOR_ENABLED } from './src/services/nativeIdentity';
+import { APP_DISPLAY_NAME, APP_SCHEME, INTERNAL_TOOLS_ENABLED, VALIDATED_MONITOR_ENABLED, BATTERY_STUDY_ENABLED } from './src/services/nativeIdentity';
+import { getAutonomyRecorder } from './src/services/autonomyRegistry';
+import AutonomyStudyModal from './src/screens/AutonomyStudyModal';
 import AsyncStorage, { subscribeAccountStorage } from './src/services/accountStorage';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
@@ -105,10 +107,13 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [activeTab, setActiveTab] = useState<Tab>('CENTRAL');
   const [showProximityTrial, setShowProximityTrial] = useState(false);
+  const [showAutonomyStudy, setShowAutonomyStudy] = useState(false);
   const [userInitials, setUserInitials] = useState('?');
   const activeTabRef = useRef<Tab>('CENTRAL');
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const monitor = VALIDATED_MONITOR_ENABLED ? usePersistentEsp32Monitor() : useEsp32Monitor();
+  // O observador pertence à conta/controlador; fechar uma tela não encerra o registro.
+  useEffect(() => { if (BATTERY_STUDY_ENABLED) getAutonomyRecorder(user.uid, preferences); }, [user.uid, preferences]);
   const deviceBatteryAvailable = monitor.conectado
     && monitor.bateriaPercentual != null
     && Number.isFinite(monitor.bateriaPercentual);
@@ -206,6 +211,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
           }}
           onTestLocalAlert={monitor.testarAlertaLocal}
           onOpenProximityTrial={() => { if (INTERNAL_TOOLS_ENABLED) setShowProximityTrial(true); }}
+          onOpenAutonomyStudy={() => { if (BATTERY_STUDY_ENABLED) setShowAutonomyStudy(true); }}
         />
       );
     }
@@ -246,6 +252,7 @@ function AuthenticatedShell({ user, topPadding, bottomPadding }: {
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {renderScreen()}
       </Animated.View>
+      {BATTERY_STUDY_ENABLED && <AutonomyStudyModal visible={showAutonomyStudy} onClose={() => setShowAutonomyStudy(false)} />}
       {INTERNAL_TOOLS_ENABLED && <ProximityTrialModal
         visible={showProximityTrial}
         onClose={() => setShowProximityTrial(false)}

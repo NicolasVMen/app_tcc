@@ -22,7 +22,7 @@ import { AppColors, colorWithAlpha, ThemeMode } from '../theme';
 import { isValidEmail, normalizeEmail } from '../utils/authValidation';
 import { canSendEmergencyEmail, sendExperimentalEmail } from '../services/emergencyEmail';
 import { clearGoogleCredentialState } from '../services/googleAuth';
-import { APP_DISPLAY_NAME, INTERNAL_TOOLS_ENABLED } from '../services/nativeIdentity';
+import { APP_DISPLAY_NAME, INTERNAL_TOOLS_ENABLED, BATTERY_STUDY_ENABLED } from '../services/nativeIdentity';
 import SystemDiagnosticsModal, { DiagnosticsMonitorSnapshot } from './SystemDiagnosticsModal';
 
 interface UserProfile {
@@ -52,6 +52,7 @@ export default function SettingsScreen({
   diagnosticsMonitor,
   onTestLocalAlert,
   onOpenProximityTrial,
+  onOpenAutonomyStudy,
 }: {
   onProfileUpdated?: (profile: UserProfile) => void;
   onBeforeLogout?: () => Promise<void>;
@@ -64,6 +65,7 @@ export default function SettingsScreen({
   diagnosticsMonitor: DiagnosticsMonitorSnapshot;
   onTestLocalAlert: () => Promise<void>;
   onOpenProximityTrial: () => void;
+  onOpenAutonomyStudy?: () => void;
 }) {
   const { colors, preferences, setPreference, resetPreferences } = useAppPreferences();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -431,6 +433,13 @@ export default function SettingsScreen({
           />
         </View>
 
+        {BATTERY_STUDY_ENABLED && <>
+          <SectionTitle colors={colors} title="Instrumentação de autonomia" />
+          <View style={styles.card}>
+            <SettingsRow colors={colors} styles={styles} icon="battery-half" title="Registro de autonomia"
+              detail="Coleta opcional de tensão e estados, sem alterar alarmes" onPress={() => onOpenAutonomyStudy?.()} />
+          </View>
+        </>}
         {INTERNAL_TOOLS_ENABLED && <>
         <SectionTitle colors={colors} title="Diagnóstico e confiabilidade" />
         <View style={styles.card}>

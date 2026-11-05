@@ -10,7 +10,7 @@ import { validTelemetry } from '../utils/telemetry';
 import { withTimeout } from '../utils/asyncTimeout';
 import { ensureBlePermissions } from './blePermissions';
 import { subscribeBackgroundProtectionTick } from './backgroundSentinel';
-import { DEV_RSSI_WATCHDOG_EXPERIMENT_ENABLED, VALIDATED_MONITOR_ENABLED } from './nativeIdentity';
+import { DEV_RSSI_WATCHDOG_EXPERIMENT_ENABLED, VALIDATED_MONITOR_ENABLED, BATTERY_STUDY_ENABLED } from './nativeIdentity';
 import { isSafeResetAcknowledgement } from '../utils/safetyConfirmation';
 
 export type EstadoEsp32 = 'seguro' | 'atencao' | 'perigo' | 'panico';
@@ -61,6 +61,13 @@ let pendingDevice: Device | null = null;
 let rssiSampleId = 0;
 let lastRssiRead: { id: number; at: number; value: number } | null = null;
 const telemetryObservers = new Set<(packet: TrialPacket) => void>();
+type BatteryTelemetry = Pick<Esp32Status,'fw'|'estado'|'panico_ativo'|'monitoramento_ativo'|'bateria_v'|'bateria_pct'|'som_on'|'usb_conectado'|'carregando'>;
+let autonomyTelemetry: {status:BatteryTelemetry;at:number;generation:number} | null = null;
+/** Cópia passiva do pacote existente. Nunca lê/escreve característica adicional. */
+export function getAutonomyTelemetry() {
+  if (!BATTERY_STUDY_ENABLED || !connectedDevice || autonomyTelemetry?.generation!==session) return null;
+  return {status:{...autonomyTelemetry.status},at:autonomyTelemetry.at};
+}
 
 // Injeção manual, limitada e exclusivamente no cliente de desenvolvimento Teste.
 // __DEV__ é false no APK release, inclusive no candidato paralelo .teste.
@@ -274,6 +281,11 @@ async function startConnection(): Promise<void> {
                     clearTimeout(pending.timeout);
                     pending.resolve(status);
                   }
+                  if (BATTERY_STUDY_ENABLED) autonomyTelemetry={generation:session,at:Date.now(),status:{
+                    fw:status.fw,estado:status.estado,panico_ativo:status.panico_ativo,
+                    monitoramento_ativo:status.monitoramento_ativo,bateria_v:status.bateria_v,bateria_pct:status.bateria_pct,
+                    som_on:status.som_on,usb_conectado:status.usb_conectado,carregando:status.carregando,
+                  }};
                   if (onStatusUpdate) onStatusUpdate(status);
                   if (lastRssiRead && validRssi(status.rssi)) {
                     const packet: TrialPacket = {
@@ -356,6 +368,7 @@ async function startConnection(): Promise<void> {
             if (generation !== session || connectedDevice !== connected) return;
             interruptWatchdogExperiment('Vínculo GATT interrompido: este ensaio não comprova o watchdog W1.');
             session++;
+            autonomyTelemetry=null;
             connectedDevice = null;
             lastRssiRead = null;
             experimentStatus = null;
@@ -405,6 +418,7 @@ export async function connectBle(): Promise<void> {
 
 /** Desconecta do dispositivo atual */
 export async function disconnectBle(): Promise<void> {
+  autonomyTelemetry=null;
   interruptWatchdogExperiment('Conexão encerrada: este ensaio não comprova o watchdog W1.');
   experimentStatus = null;
   session++;

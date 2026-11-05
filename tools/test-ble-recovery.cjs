@@ -39,6 +39,7 @@ async function setup(options = {}) {
     'react-native-ble-plx': { BleManager: Manager },
     'react-native': { AppState: appState, Platform: { OS: 'ios', Version: 19 }, PermissionsAndroid: {} },
     './nativeIdentity': { IS_TEST_BUILD: options.testBuild === true,
+      BATTERY_STUDY_ENABLED: options.batteryStudy === true,
       DEV_RSSI_WATCHDOG_EXPERIMENT_ENABLED: options.development === true && options.testBuild === true,
       VALIDATED_MONITOR_ENABLED: options.validatedMonitor ?? options.testBuild === true },
     './backgroundSentinel': { subscribeBackgroundProtectionTick: fn => {
@@ -71,6 +72,25 @@ async function setup(options = {}) {
   };
 }
 const status = { rssi: -62, estado: 'seguro', panico_ativo: false, monitoramento_ativo: true };
+
+test('autonomia BLE: cache é opt-in, copia somente telemetria e não cria operações adicionais',async()=>{
+  const off=await setup();off.emit({...status,bateria_v:4.1});
+  assert.equal(off.api.getAutonomyTelemetry(),null);await off.api.disconnectBle();
+  const m=await setup({batteryStudy:true});
+  assert.equal(m.api.getAutonomyTelemetry(),null);
+  const reads=m.reads(),writes=m.writes(),timers=m.intervals.length;
+  m.emit({...status,fw:'xiao-p5-r4-d1-k2-w1',bateria_v:4.1,bateria_pct:100,usb_conectado:false,carregando:false,segredo:'não copiar'});
+  const packet=m.api.getAutonomyTelemetry();
+  assert.equal(packet.at,100000);assert.equal(packet.status.bateria_v,4.1);
+  assert.equal(packet.status.segredo,undefined);packet.status.bateria_v=0;
+  assert.equal(m.api.getAutonomyTelemetry().status.bateria_v,4.1);
+  assert.equal(m.reads(),reads);assert.equal(m.writes(),writes);assert.equal(m.intervals.length,timers);
+  m.emit({...status,bateria_v:4.09});
+  assert.equal(m.api.getAutonomyTelemetry().status.usb_conectado,undefined);
+  await m.api.disconnectBle();assert.equal(m.api.getAutonomyTelemetry(),null);
+  await m.api.connectBle();assert.equal(m.api.getAutonomyTelemetry(),null);
+  m.emit(status);m.oldDisconnect();assert.equal(m.api.getAutonomyTelemetry(),null);
+});
 
 test('JSON incompleto não chega ao monitor; freshness só existe depois de leitura real', async () => {
   const m = await setup();

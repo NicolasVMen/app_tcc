@@ -13,7 +13,8 @@ const result = spawnSync(process.execPath, ['--test', '--test-reporter=tap',
   'tools/test-ble-permissions.cjs', 'tools/test-app-contracts.cjs', 'tools/test-safety-confirmation.cjs',
   'tools/test-persistent-monitor.cjs', 'tools/test-radio-diagnostics.cjs',
   'tools/test-battery-acquisition.cjs', 'tools/test-standalone-build.cjs', 'tools/test-native-identity.cjs',
-  'tools/test-user-release.cjs', 'tools/test-metro-config.cjs', 'tools/test-apk-resources.cjs'], {
+  'tools/test-user-release.cjs', 'tools/test-metro-config.cjs', 'tools/test-apk-resources.cjs',
+  'tools/test-autonomy-study.cjs', 'tools/test-autonomy-export.cjs'], {
   cwd: root, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024,
 });
 process.stdout.write(result.stdout || '');
