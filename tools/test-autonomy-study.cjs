@@ -228,3 +228,57 @@ test('autonomia: integração acompanha telemetria existente e encerra na conta 
   const b=registry.getAutonomyRecorder('b',preferences);await flush();
   assert.notEqual(a,b);assert.equal(b.getSnapshot().active,false);assert.equal(b.getSnapshot().runs.length,0);
 });
+
+test('autonomia: 12 horas virtuais preservam intervalos e exportam a passagem USB, atenção e emergência',()=>{
+  const s=session();
+  for(let sec=0;sec<=43200;sec++) {
+    const ms=sec*1000,usb=sec<=60,panic=sec>=7215&&sec<7245;
+    const signal=panic?'panico':sec>=7200&&sec<7215?'aviso':'seguro';
+    s.observe(obs(ms,{usb,charging:usb,signal,panic,voltage:4.10-sec/200000,percent:100-sec/600}),clock(ms));
+  }
+  s.finish('ensaio_simulado',clock(43200000));
+  const {run}=s;
+  assert.equal(run.observedUsbMs,60000);
+  assert.equal(run.unobservedMs,1000);
+  assert.equal(run.observedBatteryMs.protegido,43094000);
+  assert.equal(run.observedBatteryMs.atencao,15000);
+  assert.equal(run.observedBatteryMs.emergencia,30000);
+  assert.ok(run.rows.length>700&&run.rows.length<740,`quantidade de linhas: ${run.rows.length}`);
+  const csv=buildAutonomyCsv([run]);
+  assert.equal(csv.split('\r\n').length,run.rows.length+1);
+  assert.match(csv,/"inicio_atencao"/);assert.match(csv,/"inicio_emergencia"/);
+  assert.match(csv,/"saida_emergencia_observada"/);
+  assert.equal(run.rows.at(-1).elapsedMs,43200000);
+});
+
+test('autonomia: oscilação BLE durante emergência mantém pânico do app separado de dados ausentes',()=>{
+  const s=session();
+  s.observe(obs(0),clock(0));
+  s.observe(obs(1000,{signal:'panico',panic:true}),clock(1000));
+  for(let i=2;i<=21;i++) {
+    const ms=i*1000,connected=i%2===1;
+    s.observe(obs(ms,{connected,signal:'panico',panic:true,telemetryAt:connected?epoch+ms:epoch}),clock(ms));
+  }
+  s.observe(obs(22000),clock(22000));
+  assert.equal(s.run.unobservedMs,20000);
+  assert.equal(s.run.observedBatteryMs.emergencia,1000);
+  const offline=s.run.rows.filter(row=>!row.connected);
+  assert.equal(offline.length,10);
+  assert.ok(offline.every(row=>row.appEmergency&&row.state==='emergencia_sem_vinculo'&&row.voltage===null&&row.boardPanic===null));
+  assert.equal(s.run.rows.at(-1).state,'protegido');
+});
+
+test('autonomia: reinício durante coleta realista preserva CSV interrompido e permite segunda coleta',async()=>{
+  const first=recorderFixture();await first.r.load();first.r.start();
+  for(let i=1;i<=65;i++){first.at(i*1000);first.r.observe();}
+  await first.r.flush();
+  const second=recorderFixture(first.stored());second.at(300000);await second.r.load();
+  assert.equal(second.r.getSnapshot().active,false);
+  const old=second.r.getSnapshot().runs[0];
+  assert.equal(old.endedAt,epoch+60000);assert.equal(old.observedBatteryMs.protegido,60000);
+  second.r.start();second.at(301000);second.r.observe();second.r.stop();await second.r.flush();
+  const runs=second.r.getSnapshot().runs;
+  assert.equal(runs.length,2);assert.equal(runs[0].reason,'registro_interrompido_entre_execucoes');
+  assert.equal(runs[1].observedBatteryMs.protegido,1000);assert.notEqual(runs[0].id,runs[1].id);
+  assert.match(second.r.export(true),/encerrado_pelo_responsavel/);
+});

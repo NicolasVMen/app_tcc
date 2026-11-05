@@ -1,8 +1,9 @@
 # Registro de autonomia A1 — implementação de 05/11/2026
 
-Situação: implementado no código e verificado por testes automatizados. **Ainda
-não compilado, instalado ou validado no Samsung; não há resultado de autonomia
-desta implementação.** A oficial 1.0.1 instalada e o firmware não foram alterados.
+Situação inicial: implementação e testes automatizados, sem medição de autonomia.
+A candidata 1.0.2 A1 foi depois compilada e instalada no Samsung em bancada.
+Consulte o [registro da candidata](../auditoria/PREPARACAO_AUTONOMIA_A1_2026-11-05.md)
+para os resultados físicos e pendências. Nenhum firmware foi alterado.
 
 Complementa o [planejamento de 04/11](PROTOCOLO_AUTONOMIA_USO_2026-11-04.md).
 A descrição histórica de planejamento naquela data permanece válida.
@@ -75,11 +76,13 @@ ainda não representa instalação ou aprovação física do coletor.
 
 1. Em espera, abrir o registro e confirmar que ele está parado e sem coleta
    automática. Confirmar que a tela rola e abre/fecha normalmente.
-2. Com placa conectada, iniciar a coleta. Manter USB por cerca de 1 minuto e
-   retirar **somente o USB da placa**. Verificar no CSV a separação entre USB,
-   transição e tempo em bateria; o telefone pode permanecer no carregador.
-3. Retomar a proteção pelo fluxo normal e manter perto por cerca de 2 minutos.
-   Marcar “Protegido” não deve alterar alarmes ou gerar comandos à placa.
+2. Ainda em espera, tentar iniciar: o aplicativo deve recusar sem telemetria,
+   pois a espera desarma a placa e encerra o BLE. O cabo USB não é o vínculo BLE.
+3. Retomar a proteção pelo fluxo normal, em bancada, e aguardar telemetria
+   recente. Iniciar a coleta e manter USB por cerca de 1 minuto. Retirar
+   **somente o USB da placa** para testar a separação de USB e bateria no CSV.
+   Manter placa e telefone próximos por cerca de 2 minutos. Marcar “Protegido”
+   não deve alterar alarmes ou gerar comandos à placa.
 4. Provocar brevemente atenção e emergência por afastamento supervisionado,
    sem usar criança. Voltar, confirmar segurança pelo fluxo normal e verificar
    eventos/estados, sem expectativa de medir o consumo instantâneo desses bipes.

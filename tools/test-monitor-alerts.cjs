@@ -8,7 +8,7 @@ const vm = require('node:vm');
 
 async function createMonitor(options = {}) {
   const effects = [], states = [], refs = [], callbacks = [], timers = new Map(), intervals = [], nativeTicks = [], appStateListeners = new Set();
-  const calls = { vibration: 0, audio: 0, arms: [], cancel: 0, notifications: 0, resets: 0, disconnects: 0, sequence: [] };
+  const calls = { vibration: 0, audio: 0, arms: [], cancel: 0, notifications: 0, resets: 0, disconnects: 0, sequence: [], email: [] };
   let clock = 100000;
   class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [clock])); } static now() { return clock; } }
   let onStatus, onConnection, connected = true, stateIndex = 0, refIndex = 0, effectIndex = 0, callbackIndex = 0, nativeActive = false;
@@ -33,7 +33,10 @@ async function createMonitor(options = {}) {
     '../utils/telemetry': loadUtility('telemetry'),
     '../utils/safetyConfirmation': loadUtility('safetyConfirmation'),
     '../utils/asyncTimeout': { withTimeout: async operation => operation },
-    '../services/emergencyEmail': {
+    '../services/emergencyEmail': options.emailTransport ? loadEmailService(async (url, request) => {
+      calls.email.push({ url, method:request.method, payload:JSON.parse(request.body) });
+      return options.emailTransport(request);
+    }) : {
       canSendEmergencyEmail: () => false,
       sendExperimentalEmail: async () => { throw new Error('Este teste não envia e-mail'); },
     },
@@ -64,11 +67,12 @@ async function createMonitor(options = {}) {
     'expo-av': { Audio: { Sound: { createAsync: async () => ({ sound }) }, setAudioModeAsync: async () => {} } },
     '../services/accountStorage': {
       getItem: async key => key === '@escolta_monitoring_intent' && options.initialStandby ? 'standby'
-        : key === '@escolta_alerts_history' && options.historyPending ? options.historyPending : null,
+        : key === '@escolta_alerts_history' && options.historyPending ? options.historyPending
+        : key === '@escolta_user_profile' && options.profile ? JSON.stringify(options.profile) : null,
       setItem: async () => {}, removeItem: async () => {},
       subscribeAccountStorage: () => () => {},
     },
-    'expo-location': {},
+    'expo-location': options.location ?? {},
     '../services/bleApi': {
       deferRssiRecoveryForWatchdogExperiment: () => options.rssiExperiment === true,
       connectBle: async () => { calls.sequence.push('connect'); }, disconnectBle: async () => { calls.disconnects++; connected = false; onConnection?.(false); }, isBleConnected: () => connected,
@@ -169,6 +173,15 @@ function loadUtility(name) {
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, `../src/utils/${name}.ts`), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText, context);
+  return context.exports;
+}
+
+function loadEmailService(fetch) {
+  const context={exports:{},fetch,AbortController,setTimeout:()=>1,clearTimeout:()=>{},
+    require:name=>{assert.equal(name,'../utils/authValidation');return loadUtility('authValidation');}};
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname,'../src/services/emergencyEmail.ts'),'utf8'),{
+    compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020},
+  }).outputText,context);
   return context.exports;
 }
 
@@ -620,4 +633,114 @@ test('monitor persistente: perda e alerta sao processados mesmo sem tela', async
   assert.equal(m.snapshot().modoPanico, true);
   assert.ok(m.calls.arms.length > 0);
   m.disposeScope();
+});
+
+test('oficial A1: percurso completo de uma placa simulada mantém alerta retido e exporta estados reais', async () => {
+  const fw='xiao-p5-r4-d1-k2-w1';
+  const m=await createMonitor({testBuild:false,validatedMonitor:true,persistent:true,nativeTicks:true,resetResponse:{fw}});
+  const {AutonomySession,buildAutonomyCsv}=loadUtility('autonomyStudy');
+  const epoch=100000;
+  let elapsed=0,packet=null,telemetryAt=null;
+  const clock=()=>({wall:epoch+elapsed,mono:elapsed});
+  const study=new AutonomySession(clock(),{app:'1.0.2 / autonomia-a1',phone:'simulado',platform:'android simulado'},'integracao');
+  const observe=()=>{
+    const s=m.snapshot();
+    study.observe({connected:s.conectado,standby:s.emEspera,panic:s.modoPanico,signal:s.nivelSinal,
+      telemetryAt,firmware:packet?.fw??null,voltage:packet?.bateria_v??null,percent:packet?.bateria_pct??null,
+      usb:packet?.usb_conectado??null,charging:packet?.carregando??null,soundEnabled:packet?.som_on??null,
+      boardState:packet?.estado??null,boardPanic:packet?.panico_ativo??null,
+      boardActive:packet?.monitoramento_ativo??null,vibration:true,notifications:true},clock());
+  };
+  const detach=m.attachView(observe);
+  const advance=()=>{elapsed+=1000;m.moveClock(1000);};
+  const emit=async (overrides={})=>{
+    packet={fw,estado:'seguro',panico_ativo:false,monitoramento_ativo:true,som_on:true,
+      bateria_v:4.03,bateria_pct:90,usb_conectado:false,carregando:false,...overrides};
+    telemetryAt=clock().wall;m.emit(packet);await m.flush();
+  };
+  try {
+    m.connection(true);await emit({usb_conectado:true,carregando:true});
+    advance();await emit();
+    advance();await emit({estado:'atencao',rssi:-79,rssi_raw:-79});
+    assert.equal(m.snapshot().modoPanico,false);
+    advance();await emit({estado:'panico',panico_ativo:true});
+    assert.equal(m.snapshot().modoPanico,true);
+    assert.equal(m.calls.arms.length,1);
+    advance();packet=null;telemetryAt=null;m.connection(false);await m.flush();
+    await assert.rejects(m.render().confirmarSeguranca());
+    assert.equal(m.calls.resets,0);
+    assert.equal(m.snapshot().modoPanico,true);
+    advance();m.connection(true);await emit({estado:'panico',panico_ativo:true});
+    await m.render().confirmarSeguranca();await m.flush();
+    advance();await emit();
+    assert.equal(m.calls.resets,1);assert.equal(m.snapshot().modoPanico,false);
+    study.finish('fim_do_ensaio',clock());
+    const csv=buildAutonomyCsv([study.run]);
+    for(const state of ['protegido','atencao','emergencia','emergencia_sem_vinculo']) assert.ok(study.run.rows.some(row=>row.state===state),state);
+    assert.ok(study.run.rows.some(row=>!row.connected&&row.appEmergency&&row.voltage===null));
+    assert.equal(study.run.rows.at(-1).state,'protegido');
+    assert.match(csv,/"1\.0\.2 \/ autonomia-a1"/);
+  } finally {detach();m.disposeScope();}
+});
+
+test('oficial A1: pânico repetido dispara uma solicitação de e-mail simulada, sem localização não autorizada',async()=>{
+  const m=await createMonitor({testBuild:false,validatedMonitor:true,persistent:true,
+    profile:{emailAlertsEnabled:true,emailEmergencia:' CONTATO@EXAMPLE.INVALID '},
+    emailTransport:async()=>({ok:true})});
+  try {
+    m.connection(true);m.emit();await m.flush();assert.equal(m.calls.email.length,0);
+    m.emit({estado:'atencao'});await m.flush();assert.equal(m.calls.email.length,0);
+    for(let i=0;i<4;i++){m.emit({estado:'panico',panico_ativo:true});await m.flush();}
+    assert.equal(m.calls.email.length,1);assert.equal(m.snapshot().modoPanico,true);
+    const request=m.calls.email[0];
+    assert.equal(request.method,'POST');
+    assert.equal(request.payload.template_params.to_email,'contato@example.invalid');
+    assert.match(request.payload.template_params.message,/Compartilhamento de localização desativado/);
+    assert.doesNotMatch(request.payload.template_params.message,/https?:\/\//);
+    assert.equal(m.calls.arms.length,1);
+  }finally{m.disposeScope();}
+});
+
+test('oficial A1: e-mail desativado, serviço recusado e rede ausente não alteram o alarme local',async()=>{
+  for(const [enabled,transport,expectedRequests] of [
+    [false,async()=>{throw Error('Não deveria chamar');},0],
+    [true,async()=>({ok:false}),1],
+    [true,async()=>{throw Error('Sem rede simulada');},1],
+  ]){
+    const m=await createMonitor({testBuild:false,validatedMonitor:true,persistent:true,
+      profile:{emailAlertsEnabled:enabled,emailEmergencia:'contato@example.invalid'},emailTransport:transport});
+    try{
+      m.connection(true);m.emit({estado:'panico',panico_ativo:true});await m.flush();
+      assert.equal(m.calls.email.length,expectedRequests);
+      assert.equal(m.calls.arms.length,1);assert.equal(m.calls.cancel,0);
+      assert.equal(m.snapshot().modoPanico,true);
+      assert.equal(m.snapshot().alertas.some(item=>item.title==='Aviso externo não confirmado'),enabled);
+    }finally{m.disposeScope();}
+  }
+});
+
+test('oficial A1: e-mail simulado inclui só a localização fictícia do celular quando autorizada',async()=>{
+  for(const permission of ['denied','granted','unavailable']){
+    let reads=0;
+    const m=await createMonitor({testBuild:false,validatedMonitor:true,persistent:true,
+      preferences:{shareLocation:true},
+      profile:{emailAlertsEnabled:true,emailEmergencia:'contato@example.invalid'},
+      emailTransport:async()=>({ok:true}),
+      location:{Accuracy:{High:1},requestForegroundPermissionsAsync:async()=>({status:permission==='denied'?'denied':'granted'}),
+        getCurrentPositionAsync:async()=>{reads++;if(permission==='unavailable')throw Error('GPS simulado indisponível');
+          return {coords:{latitude:12.34,longitude:56.78}};}},
+    });
+    try{
+      m.connection(true);m.emit({estado:'panico',panico_ativo:true});await m.flush();
+      assert.equal(m.calls.email.length,1);
+      const text=m.calls.email[0].payload.template_params.message;
+      if(permission==='granted')assert.match(text,/Localização do celular responsável.+q=12\.34,56\.78/);
+      else {
+        assert.doesNotMatch(text,/maps\.google/);
+        assert.match(text,permission==='denied'?/não autorizada/:/indisponível/);
+      }
+      assert.equal(reads,permission==='denied'?0:1);
+      assert.equal(m.snapshot().modoPanico,true);
+    }finally{m.disposeScope();}
+  }
 });
