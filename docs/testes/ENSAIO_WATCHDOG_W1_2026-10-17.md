@@ -1,6 +1,6 @@
 # Ensaio controlado W1 — sem perda intencional do GATT
 
-Nota posterior à execução: as ferramentas internas passaram a ser opt-in e desligadas por padrão, conforme solicitação do usuário. Para repetir este procedimento, consultar `docs/auditoria/INTERFACE_DE_USO_APK_2026-10-17.md`. O registro abaixo preserva a rodada já executada; o painel não fica disponível no uso normal nem em APK release.
+Nota posterior à execução: as ferramentas internas passaram a ser opt-in e desligadas por padrão, conforme solicitação do usuário. Para repetir este procedimento, consultar `tools/README.md`. O registro abaixo preserva a rodada já executada; o painel não fica disponível no uso normal nem em APK release.
 
 ## Escopo e segurança
 

@@ -7,10 +7,9 @@ Execute comandos a partir da raiz do projeto. Não executar geradores em lote.
 Ensaios, diagnóstico, simulação W1 e disparos manuais de teste ficam desligados por padrão.
 Para reativar, somente no cliente de desenvolvimento Escolta Teste, definir
 `EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS=true` na configuração local e reiniciar o Expo
-com a Sentinela em espera. Remover/voltar a false ao terminar. A opção é ignorada
+com a Sentinela em espera. Remover/voltar a `false` ao terminar. A opção é ignorada
 em qualquer APK release e na identidade oficial; não existe menu secreto na versão
-de uso. Procedimento e limites em
-`docs/auditoria/INTERFACE_DE_USO_APK_2026-10-17.md`.
+de uso. Não atualizar código nem recarregar o app durante proteção ativa.
 
 ## Verificações sem acionar hardware
 
@@ -31,10 +30,6 @@ já tenha essas bibliotecas.
 `auditoria/verificar_cad.py` regenera cópias em `.expo/auditoria-cad`, compara
 geometrias com o kit atual e verifica interferência do fechamento. Não altera
 os STL entregáveis. Exige o OpenSCAD portátil já existente.
-
-`auditoria/organizar_documentacao.cjs` descreve cinco movimentos fixos de
-relatórios/imagens. `--apply` move somente esses alvos, valida SHA-256 e não
-sobrescreve destinos. Foi executado uma vez nesta auditoria e é idempotente.
 
 ## Outros utilitários
 
@@ -72,11 +67,7 @@ sobrescreve destinos. Foi executado uma vez nesta auditoria e é idempotente.
   O teste já ativa as correções; o padrão oficial permanece inalterado.
 - `test-auth-email.cjs`: validação de cadastro, ponte Google simulada, consentimento
   do canal de e-mail, resposta HTTP e plugin de build paralela. Não acessa contas reais.
-- `cicted/`: geração, revisão e anonimização de documentos; podem sobrescrever saídas.
 - `diagramas/`: geração de imagens do circuito, não código eletrônico executável.
 
-Os scripts de banner permanecem junto aos artefatos para preservar seus
-caminhos relativos; ver `docs/cicted/banner/README.md`.
-
-Para registrar nova consulta de dependências sem sobrescrever a evidência de
-07/10: `node tools/auditoria/verificar_dependencias.cjs --save-as=dependencias_2026-10-09.json`.
+Ferramentas de geração das versões antigas do TCC, resumo e banner foram
+retiradas do GitHub; as cópias locais e o histórico do Git foram mantidos.

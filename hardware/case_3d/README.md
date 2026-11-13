@@ -26,14 +26,14 @@ validação física própria.
 
 ## Organização
 
-- `documentacao/revisoes/`: registros de ajustes e auditoria dimensional histórica.
-- `documentacao/imagens/`: imagens de revisão preservadas, sem alterar pixels.
-- `documentacao/README_V2.md` e demais instruções V1/V2.2/V2.3: **históricos**,
-  podem citar peças, pontes e medidas que não são mais atuais.
+- `documentacao/revisoes/REVISAO_APOIOS_BOTAO_2026-10-02.md`: registro do
+  suporte do botão incluído na tampa atual.
 - `ferramentas/`: validadores e gerador da revisão dos apoios.
 - `verificacoes/scripts/`: testes e visualizações auxiliares.
-- `historico/`: modelos anteriores; não enviar para nova impressão.
+- Modelos e instruções anteriores foram retirados do GitHub; continuam
+  disponíveis no histórico do Git e na cópia local. Não enviar à impressão.
 
 Registro de apoio atual:
 [revisão dos apoios do botão](documentacao/revisoes/REVISAO_APOIOS_BOTAO_2026-10-02.md).
-Auditoria geral: [relatório](../../docs/auditoria/RELATORIO_2026-10-07.md).
+O kit de impressão atual é a referência para a montagem, não as revisões
+históricas da documentação.

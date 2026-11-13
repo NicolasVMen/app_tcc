@@ -1,22 +1,20 @@
 # Documentação
 
-- `cicted/`: arquivos identificados, anônimos, revisões e versão final do evento.
+- `cicted/Revisao/`: resumo identificado e versão sem identificação do CICTED.
 - `produto/`: especificação funcional, fluxos e diagramas de montagem.
 - `prototipo/`: fotografias originais usadas nas medições do hardware.
-- `tcc/`: capítulos, projeto de pesquisa e modelos acadêmicos.
+- `tcc/`: versão atual para aprovação, projeto de pesquisa e modelo acadêmico.
 - `testes/`: relatórios de celular, autonomia e demais ensaios.
-- `auditoria/`: mapa da arquitetura, catálogo por arquivo, evidências e pendências.
+- `auditoria/`: verificação da versão oficial atual.
 
 Texto acadêmico: [cópia atual para aprovação do orientador](tcc/README.md).
 Autonomia: [dois ciclos observados e fontes CSV](testes/AUTONOMIA_DOIS_CICLOS_2026-11-12.md).
 Distribuição: [oficial Android 1.0.5, validada em 12/11](auditoria/OFICIAL_1_0_5_2026-11-12.md).
-Fechamento histórico: [critérios e situação em 04/11/2026](tcc/FECHAMENTO_TCC_2026-11-04.md).
-Referência histórica: [auditoria de 07/10/2026](auditoria/RELATORIO_2026-10-07.md).
-Implementações posteriores: [correções de 09/10/2026](auditoria/CORRECOES_2026-10-09.md).
 CICTED e TCC são entregas diferentes; manter seus documentos separados.
 
-Arquivos intermediários permanecem em suas respectivas subpastas para manter
-o histórico acadêmico separado do código do aplicativo.
+Versões intermediárias e relatórios de auditoria superados foram retirados do
+versionamento em 12/11/2026. As cópias locais foram preservadas e os arquivos
+publicados anteriormente podem ser recuperados pelo histórico do Git.
 
 Capturas do console autenticado, credenciais, dependências locais e backups
 permanecem somente no computador; não integram o versionamento público.

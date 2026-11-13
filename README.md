@@ -10,7 +10,7 @@ O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel 
 
 ## Estado atual
 
-_Estado documental atualizado em 12 de novembro de 2026; versões anteriores preservadas como histórico._
+_Estado documental atualizado em 12 de novembro de 2026; versões anteriores podem ser consultadas no histórico do Git._
 
 **Escolta UNITAU 1.0.5 (Android, código 6) é a versão oficial instalada e
 validada nesta rodada do protótipo acadêmico.** O APK release tem JavaScript
@@ -39,8 +39,8 @@ para avaliação do orientador; consultar [a revisão atual](docs/tcc/README.md)
 Dois ciclos de autonomia posteriores foram acompanhados até a parada observada,
 mas o indicador chegou a 0% mais de duas horas antes da última telemetria válida.
 **Pendências:** aprovação do texto pelo orientador, correção da estimativa de
-carga e validação em mais aparelhos e condições. Relatórios antigos em
-`docs/auditoria` e `docs/testes` registram etapas históricas, não o estado atual.
+carga e validação em mais aparelhos e condições. Relatórios em `docs/testes`
+registram os ensaios e seus limites, não certificação do sistema.
 
 - Aplicativo React Native com Expo SDK 54 e TypeScript.
 - Autenticação de acesso com Firebase.
@@ -103,7 +103,7 @@ A caixa foi impressa, montada e parafusada pelo usuário. O kit digital atual es
 
 Ferramenta interna oculta na oficial e em qualquer APK release. Para desenvolvimento,
 exige cliente Teste, `__DEV__` e `EXPO_PUBLIC_ENABLE_INTERNAL_TOOLS=true`; consultar
-[ativação e limites](docs/auditoria/INTERFACE_DE_USO_APK_2026-10-17.md).
+[ativação e limites](tools/README.md).
 No cliente de desenvolvimento habilitado, selecionar
 a distância real medida com trena (1 a 15 m, de metro em metro). A tela aguarda 10 s e registra 30
 notificações com leituras novas de RSSI, estimativa e estado; guarda até 100 ensaios
@@ -131,12 +131,10 @@ O Telegram não integra mais o fluxo ativo porque um token dentro do aplicativo 
 ├── src/                         # Aplicativo React Native/Expo
 ├── modules/escolta-sentinela/   # Serviço Android de primeiro plano e alarme
 ├── modules/escolta-auth/        # Ponte nativa Android para login Google
-├── firmware/                    # Firmwares atual e legado
-│   ├── xiao_escolta_ble/
-│   └── esp32_escolta_ble/
+├── firmware/xiao_escolta_ble/   # Firmware da placa usada no protótipo
 ├── hardware/case_3d/            # Fonte OpenSCAD e STL atuais
 ├── docs/
-│   ├── cicted/                  # Resumos e revisões do evento
+│   ├── cicted/Revisao/          # Resumo identificado e sem identificação
 │   ├── produto/                 # Especificação, fluxos e diagramas
 │   ├── prototipo/               # Fotografias do hardware
 │   ├── tcc/                     # Texto acadêmico e modelos
