@@ -5,6 +5,7 @@ import AsyncStorage, { subscribeAccountStorage } from '../services/accountStorag
 import * as Location from 'expo-location';
 import { validTelemetry } from '../utils/telemetry';
 import { withTimeout } from '../utils/asyncTimeout';
+import { isTransientResumeDisconnect, resumeErrorMessage } from '../utils/bleResume';
 import { canSendEmergencyEmail, sendExperimentalEmail } from '../services/emergencyEmail';
 import { ensureBlePermissions } from '../services/blePermissions';
 import { INTERNAL_TOOLS_ENABLED, VALIDATED_MONITOR_ENABLED } from '../services/nativeIdentity';
@@ -28,7 +29,10 @@ import {
   cancelBackgroundEmergency,
   isBackgroundEmergencyActive,
   isBackgroundEmergencyLatched,
+  isBackgroundEmergencySilenced,
   notifyBackgroundConnectionRestored,
+  resumeBackgroundEmergency,
+  silenceBackgroundEmergency,
   startBackgroundSentinel,
   stopBackgroundSentinel,
   updateBackgroundSentinel,
@@ -72,6 +76,8 @@ export interface Esp32MonitorState {
   bateriaCarregando: boolean;
   dispositivoUsbConectado: boolean;
   modoPanico: boolean;
+  alarmeCelularSilenciado: boolean;
+  protecaoInterrompidaSemDispositivo: boolean;
   nivelSinal: NivelSinal;
   conectado: boolean;
   reconectando: boolean;
@@ -171,6 +177,8 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     bateriaCarregando: false,
     dispositivoUsbConectado: false,
     modoPanico: false,
+    alarmeCelularSilenciado: false,
+    protecaoInterrompidaSemDispositivo: false,
     nivelSinal: 'desconectado',
     conectado: false,
     reconectando: false,
@@ -193,6 +201,9 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
   const isConnectedRef = useRef(false);
   const wasConnectedRef = useRef(false);
   const emergencyRef = useRef(false);
+  const emergencySilencedRef = useRef(false);
+  const emergencyOutputPromiseRef = useRef<Promise<void> | null>(null);
+  const nativeEmergencyNotificationCleanRef = useRef(false);
   const reconnectingRef = useRef(false);
   const previousNivelRef = useRef<NivelSinal>('desconectado');
   const childNameRef = useRef('A criança');
@@ -233,11 +244,12 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
   const stopLocalAlarm = useCallback(() => {
     localAlarmStartedRef.current = false;
     Vibration.cancel();
-    soundRef.current?.stopAsync().catch(() => {});
+    return soundRef.current?.stopAsync().catch(() => {}) ?? Promise.resolve();
   }, []);
 
   const startLocalAlarm = useCallback(() => {
     if (!ALERT_OUTPUTS_ENABLED) return;
+    if (emergencySilencedRef.current) return;
     if (localAlarmStartedRef.current) return;
     if (preferencesRef.current.vibrationEnabled) {
       Vibration.vibrate([0, 500, 200, 500, 200, 500], true);
@@ -253,6 +265,58 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     }
   }, []);
 
+  // O serviço Android é o dono preferencial da sirene e da notificação. Só
+  // liberar o fallback Expo depois de cancelar a tentativa nativa pendente.
+  const ensureSingleEmergencyOutput = useCallback((reason: string, generation: number): Promise<void> => {
+    if (emergencyOutputPromiseRef.current) return emergencyOutputPromiseRef.current;
+    const current = () => generation === alarmGenerationRef.current && emergencyRef.current
+      && mountedRef.current && !shuttingDownRef.current && !emergencySilencedRef.current;
+    const pending = (async () => {
+      if (!current()) return;
+      const playing = await isBackgroundEmergencyActive().catch(() => false);
+      if (!current()) return;
+      if (playing) {
+        if (localAlarmStartedRef.current) await stopLocalAlarm();
+        if (!nativeEmergencyNotificationCleanRef.current) {
+          await dismissEmergencyNotification().catch(() => {});
+          nativeEmergencyNotificationCleanRef.current = true;
+        }
+        return;
+      }
+
+      nativeEmergencyNotificationCleanRef.current = false;
+      if (localAlarmStartedRef.current) {
+        await cancelBackgroundEmergency().catch(() => false);
+        return;
+      }
+      const started = await armBackgroundEmergency(
+        childNameRef.current, 0, preferencesRef.current.notificationsEnabled,
+        preferencesRef.current.vibrationEnabled, reason
+      ).catch(() => false);
+      if (!current()) return;
+      if (started) {
+        await stopLocalAlarm();
+        await dismissEmergencyNotification().catch(() => {});
+        nativeEmergencyNotificationCleanRef.current = true;
+        return;
+      }
+
+      await cancelBackgroundEmergency().catch(() => false);
+      if (!current()) return;
+      startLocalAlarm();
+      updateBackgroundSentinel('Sentinela ativa', 'Alerta no celular: verifique a criança.').catch(() => {});
+      if (preferencesRef.current.notificationsEnabled) {
+        showEmergencyNotification(childNameRef.current, reason).catch(() => {});
+      }
+    })();
+    emergencyOutputPromiseRef.current = pending;
+    void pending.then(
+      () => { if (emergencyOutputPromiseRef.current === pending) emergencyOutputPromiseRef.current = null; },
+      () => { if (emergencyOutputPromiseRef.current === pending) emergencyOutputPromiseRef.current = null; }
+    );
+    return pending;
+  }, [startLocalAlarm, stopLocalAlarm]);
+
   const restoreBackgroundEmergencyState = useCallback(async () => {
     if (!ALERT_OUTPUTS_ENABLED) {
       await cancelBackgroundEmergency().catch(() => false);
@@ -261,15 +325,25 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     const generation = alarmGenerationRef.current;
     const latched = await isBackgroundEmergencyLatched().catch(() => false);
     if ((!latched && !emergencyRef.current) || !mountedRef.current || shuttingDownRef.current || generation !== alarmGenerationRef.current) return false;
+    const silenced = latched
+      ? await isBackgroundEmergencySilenced().catch(() => emergencySilencedRef.current)
+      : emergencySilencedRef.current;
+    if (!mountedRef.current || shuttingDownRef.current || generation !== alarmGenerationRef.current) return false;
     emergencyRef.current = true;
+    emergencySilencedRef.current = silenced;
     reconnectingRef.current = false;
     previousNivelRef.current = 'panico';
     setState(previous => ({ ...previous, modoPanico: true, nivelSinal: 'panico',
-      reconectando: false, aguardandoConfirmacao: true, segurancaConfirmadaSemVinculo: false }));
-    const playing = await isBackgroundEmergencyActive().catch(() => false);
-    if (!playing && mountedRef.current && emergencyRef.current && generation === alarmGenerationRef.current) startLocalAlarm();
+      reconectando: false, aguardandoConfirmacao: true, segurancaConfirmadaSemVinculo: false,
+      alarmeCelularSilenciado: silenced }));
+    if (!silenced && mountedRef.current && emergencyRef.current && generation === alarmGenerationRef.current) {
+      void ensureSingleEmergencyOutput('Emergência ativa; verifique a criança.', generation);
+    } else if (silenced && latched && !nativeEmergencyNotificationCleanRef.current) {
+      await dismissEmergencyNotification().catch(() => {});
+      nativeEmergencyNotificationCleanRef.current = true;
+    }
     return true;
-  }, [startLocalAlarm]);
+  }, [ensureSingleEmergencyOutput]);
 
   const notifyEmergencyContact = useCallback(async (reason: string) => {
     if (!ALERT_OUTPUTS_ENABLED) return;
@@ -307,11 +381,14 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
   const activateEmergency = useCallback((reason: string, notificationHandledNatively = false) => {
     if (emergencyRef.current) return;
     emergencyRef.current = true;
+    emergencySilencedRef.current = false;
+    nativeEmergencyNotificationCleanRef.current = false;
     reconnectingRef.current = false;
     if (!notificationHandledNatively) startLocalAlarm();
     setState(previous => ({
       ...previous,
       modoPanico: true,
+      alarmeCelularSilenciado: false,
       nivelSinal: 'panico',
       reconectando: false,
       aguardandoConfirmacao: true,
@@ -386,6 +463,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     isConnectedRef.current = false;
     reconnectingRef.current = false;
     emergencyRef.current = false;
+    emergencySilencedRef.current = false;
     previousNivelRef.current = 'desconectado';
     if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
     graceTimerRef.current = null;
@@ -402,6 +480,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
       setState(previous => ({
         ...previous,
         modoPanico: false,
+        alarmeCelularSilenciado: false,
         nivelSinal: 'desconectado',
         conectado: false,
         reconectando: false,
@@ -430,6 +509,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
       isConnectedRef.current = false;
       reconnectingRef.current = false;
       emergencyRef.current = false;
+      emergencySilencedRef.current = false;
       previousNivelRef.current = 'desconectado';
       if (graceTimerRef.current) clearTimeout(graceTimerRef.current);
       graceTimerRef.current = null;
@@ -449,9 +529,11 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
         setState(previous => ({
           ...previous,
           emEspera: true,
+          protecaoInterrompidaSemDispositivo: false,
           alterandoEspera: false,
           sincronizandoProtecao: false,
           modoPanico: false,
+          alarmeCelularSilenciado: false,
           nivelSinal: 'desconectado',
           conectado: false,
           reconectando: false,
@@ -482,8 +564,20 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
       }));
     }
     try {
-      await connectBle();
-      await setMonitoringModeBle(true);
+      for (let tentativa = 0; tentativa < 2; tentativa++) {
+        try {
+          await connectBle();
+          // Nunca tratar a conexão GATT, sozinha, como proteção retomada.
+          await setMonitoringModeBle(true);
+          break;
+        } catch (error) {
+          if (tentativa !== 0 || !isTransientResumeDisconnect(error)) throw error;
+          await disconnectBle().catch(() => {});
+          // Dá tempo para o Android liberar a sessão GATT antes da única repetição.
+          await new Promise<void>(resolve => setTimeout(resolve, 500));
+          if (shuttingDownRef.current || !mountedRef.current) throw new Error('Tentativa de conexão cancelada.');
+        }
+      }
       standbyRef.current = false;
       desiredMonitoringActiveRef.current = true;
       await AsyncStorage.setItem(MONITORING_INTENT_STORAGE_KEY, 'active').catch(() => {});
@@ -502,6 +596,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
         setState(previous => ({
           ...previous,
           emEspera: false,
+          protecaoInterrompidaSemDispositivo: false,
           alterandoEspera: false,
           sincronizandoProtecao: false,
           conectado: true,
@@ -523,7 +618,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
           sincronizandoProtecao: false,
           conectado: false,
           isScanning: false,
-          scanError: error instanceof Error ? error.message : 'Não foi possível retomar a proteção.',
+          scanError: resumeErrorMessage(error),
         }));
       }
       throw error;
@@ -568,10 +663,11 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     releasedResourcesRef.current = null;
     AsyncStorage.getItem(MONITORING_INTENT_STORAGE_KEY).then(value => {
       if (!mountedRef.current) return;
-      const intentionalStandby = value === 'standby';
+      const intentionalStandby = value === 'standby' || value === 'device_unavailable';
       desiredMonitoringActiveRef.current = !intentionalStandby;
       standbyRef.current = intentionalStandby;
-      setState(previous => ({ ...previous, emEspera: intentionalStandby }));
+      setState(previous => ({ ...previous, emEspera: intentionalStandby,
+        protecaoInterrompidaSemDispositivo: value === 'device_unavailable' }));
       setMonitoringIntentReady(true);
     }).catch(() => {
       if (mountedRef.current) setMonitoringIntentReady(true);
@@ -603,9 +699,8 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
       setState(previous => ({ ...previous, somCarregado: true }));
       // Uma emergência pode começar antes de o arquivo de áudio terminar de carregar.
       const generation = alarmGenerationRef.current;
-      if (emergencyRef.current) {
-        const active = await withTimeout(isBackgroundEmergencyActive(), 1000, 'Sirene sem resposta.').catch(() => false);
-        if (!active && mountedRef.current && emergencyRef.current && generation === alarmGenerationRef.current) startLocalAlarm();
+      if (emergencyRef.current && !emergencySilencedRef.current) {
+        await ensureSingleEmergencyOutput('Emergência ativa; verifique a criança.', generation);
       }
     }).catch(() => {
       if (mountedRef.current) setState(previous => ({ ...previous, somCarregado: false }));
@@ -614,7 +709,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     return () => {
       void liberarRecursosDoMonitor();
     };
-  }, [restoreBackgroundEmergencyState, liberarRecursosDoMonitor]);
+  }, [restoreBackgroundEmergencyState, liberarRecursosDoMonitor, ensureSingleEmergencyOutput]);
 
   useEffect(() => subscribeAccountStorage((key, raw) => {
     if (key !== PROFILE_STORAGE_KEY || !mountedRef.current) return;
@@ -702,26 +797,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
         activateEmergency(reason, true);
         const alarmGeneration = ++alarmGenerationRef.current;
         if (ALERT_OUTPUTS_ENABLED) {
-          armBackgroundEmergency(
-            childNameRef.current,
-            0,
-            preferencesRef.current.notificationsEnabled,
-            preferencesRef.current.vibrationEnabled,
-            reason
-          ).then(started => {
-            if (alarmGeneration !== alarmGenerationRef.current || !emergencyRef.current || !mountedRef.current) return;
-            if (started) return;
-            startLocalAlarm();
-            if (preferencesRef.current.notificationsEnabled) {
-              showEmergencyNotification(childNameRef.current, reason).catch(() => {});
-            }
-          }).catch(() => {
-            if (alarmGeneration !== alarmGenerationRef.current || !emergencyRef.current || !mountedRef.current) return;
-            startLocalAlarm();
-            if (preferencesRef.current.notificationsEnabled) {
-              showEmergencyNotification(childNameRef.current, reason).catch(() => {});
-            }
-          });
+          void ensureSingleEmergencyOutput(reason, alarmGeneration);
         } else {
           cancelBackgroundEmergency().catch(() => {});
           dismissEmergencyNotification().catch(() => {});
@@ -783,6 +859,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
         bateriaCarregando: data.carregando === true,
         dispositivoUsbConectado: data.usb_conectado === true,
         modoPanico: deviceStandby ? false : emergencyRef.current,
+        alarmeCelularSilenciado: deviceStandby ? false : emergencySilencedRef.current,
         nivelSinal: deviceStandby ? 'desconectado' : emergencyRef.current ? 'panico' : measuredLevel,
         emEspera: deviceStandby && !shouldResumeAutomatically,
         sincronizandoProtecao: shouldResumeAutomatically,
@@ -804,6 +881,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
       }
       if (deviceStandby && !standbyTransitionRef.current) {
         emergencyRef.current = false;
+        emergencySilencedRef.current = false;
         wasConnectedRef.current = false;
         stopLocalAlarm();
         cancelBackgroundEmergency().catch(() => {});
@@ -897,18 +975,16 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
         graceTimerRef.current = null;
         const generation = alarmGenerationRef.current;
         if (!isConnectedRef.current || !telemetryReceivedRef.current || Date.now() - lastFreshSignalRef.current > 3000) {
-          const nativeActive = await withTimeout(isBackgroundEmergencyActive(), 1000, 'Serviço sem resposta.').catch(() => false);
           if (generation !== alarmGenerationRef.current || shuttingDownRef.current || standbyRef.current || !mountedRef.current) return;
-          activateEmergency(
-            'Não foi possível recuperar o vínculo com dados válidos após a tentativa automática.',
-            nativeActive
-          );
+          const reason = 'Não foi possível recuperar o vínculo com dados válidos após a tentativa automática.';
+          activateEmergency(reason, true);
+          if (ALERT_OUTPUTS_ENABLED) void ensureSingleEmergencyOutput(reason, generation);
         }
       }, EMERGENCY_GRACE_MS);
     };
 
     return setBleCallbacks(onStatusUpdate, onConnectionChange);
-  }, [activateEmergency, addAlert, conectar, retomarProtecao, stopLocalAlarm]);
+  }, [activateEmergency, addAlert, conectar, ensureSingleEmergencyOutput, retomarProtecao, stopLocalAlarm]);
 
   useEffect(() => {
     const checkTelemetry = () => {
@@ -993,6 +1069,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     }
     if (VALIDATED_MONITOR_ENABLED) stopLocalAlarm();
     emergencyRef.current = false;
+    emergencySilencedRef.current = false;
     const confirmedLevel = VALIDATED_MONITOR_ENABLED && acknowledgedStatus
       ? nivelDoEstado(acknowledgedStatus.estado, acknowledgedStatus.rssi)
       : isConnectedRef.current ? 'seguro' : 'desconectado';
@@ -1000,6 +1077,7 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     setState(previous => ({
       ...previous,
       modoPanico: false,
+      alarmeCelularSilenciado: false,
       aguardandoConfirmacao: false,
       nivelSinal: confirmedLevel,
       reconectando: false,
@@ -1020,18 +1098,92 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     ).catch(() => {});
   }, [addAlert, startLocalAlarm, stopLocalAlarm]);
 
+  const silenciarAlarmeDoCelular = useCallback(async () => {
+    if (!emergencyRef.current) throw new Error('Não há emergência ativa para silenciar.');
+    // A escolha entre sirene Android e fallback pode estar terminando neste
+    // instante. Aguarde-a antes de silenciar para não deixar um início tardio.
+    await emergencyOutputPromiseRef.current?.catch(() => {});
+    // O serviço Android guarda o silêncio deste incidente para não rearmar a
+    // sirene quando a interface for reaberta. O fallback Expo é parado abaixo.
+    const nativeSilenced = await silenceBackgroundEmergency();
+    if (!nativeSilenced && await isBackgroundEmergencyLatched()) {
+      throw new Error('O serviço Android não confirmou o silêncio. O alerta foi mantido.');
+    }
+    alarmGenerationRef.current++;
+    emergencySilencedRef.current = true;
+    await stopLocalAlarm();
+    if (mountedRef.current) setState(previous => ({ ...previous, alarmeCelularSilenciado: true }));
+    addAlert({
+      type: 'aviso',
+      title: 'Som do celular silenciado',
+      desc: 'A emergência continua ativa e a Sentinela continua buscando a placa. A segurança da criança não foi confirmada.',
+    });
+  }, [addAlert, stopLocalAlarm]);
+
+  const retomarSireneDoCelular = useCallback(async () => {
+    if (!emergencyRef.current || standbyRef.current || !emergencySilencedRef.current) {
+      throw new Error('A sirene só pode ser retomada durante uma emergência silenciada.');
+    }
+    const generation = alarmGenerationRef.current;
+    const nativeLatched = await isBackgroundEmergencyLatched().catch(() => false);
+    if (nativeLatched) {
+      const nativeSilenced = await isBackgroundEmergencySilenced().catch(() => true);
+      if (nativeSilenced) {
+        const resumed = await resumeBackgroundEmergency();
+        if (!resumed) throw new Error('O Android não confirmou a retomada da sirene. Tente novamente.');
+      } else if (!await isBackgroundEmergencyActive().catch(() => false)) {
+        throw new Error('O estado da sirene não foi confirmado. Tente novamente.');
+      }
+      await stopLocalAlarm();
+    } else {
+      // Somente o fallback local é reativado quando não há alarme Android retido.
+      if (!soundRef.current) throw new Error('O áudio do celular ainda não está pronto. Tente novamente.');
+      emergencySilencedRef.current = false;
+      startLocalAlarm();
+    }
+    if (generation !== alarmGenerationRef.current || !emergencyRef.current || standbyRef.current) return;
+    emergencySilencedRef.current = false;
+    if (mountedRef.current) setState(previous => ({ ...previous, alarmeCelularSilenciado: false }));
+    addAlert({
+      type: 'aviso',
+      title: 'Sirene do celular retomada',
+      desc: 'A emergência permanece ativa até confirmação da segurança com resposta da placa.',
+    });
+  }, [addAlert, startLocalAlarm, stopLocalAlarm]);
+
+  const encerrarProtecaoSemDispositivo = useCallback(async () => {
+    if (!emergencyRef.current || isBleConnected()) {
+      throw new Error('Esta saída só está disponível durante uma emergência sem conexão com a placa.');
+    }
+    // Nunca converter uma perda de energia em confirmação de segurança.
+    // A saída manual encerra a sessão de monitoramento e exige retomada explícita.
+    await cancelBackgroundEmergency();
+    await stopBackgroundSentinel();
+    for (let attempt = 0; attempt < 10; attempt++) {
+      if (!await isBackgroundEmergencyLatched()) break;
+      if (attempt === 9) throw new Error('O Android ainda mantém a emergência. Tente novamente.');
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    await AsyncStorage.setItem(MONITORING_INTENT_STORAGE_KEY, 'device_unavailable');
+    standbyRef.current = true;
+    desiredMonitoringActiveRef.current = false;
+    await encerrarMonitoramento();
+    if (mountedRef.current) setState(previous => ({ ...previous,
+      emEspera: true, protecaoInterrompidaSemDispositivo: true,
+      falhaTecnica: 'Monitoramento interrompido sem confirmação da placa.' }));
+    addAlert({
+      type: 'aviso',
+      title: 'Proteção interrompida manualmente',
+      desc: 'A placa estava indisponível. O som foi encerrado, mas a segurança da criança não foi confirmada. Reconecte a placa para retomar.',
+    });
+  }, [addAlert, encerrarMonitoramento]);
+
   const continuarEmAlerta = useCallback(() => {
     if (!ALERT_OUTPUTS_ENABLED) return;
     if (!emergencyRef.current) return;
-    // Se o serviço nativo já mantém a sirene, iniciar também o áudio do Expo
-    // sobreporia dois sons. O fallback local só é usado quando ele não está ativo.
-    const generation = alarmGenerationRef.current;
-    withTimeout(isBackgroundEmergencyActive(), 1000, 'Sirene sem resposta.')
-      .catch(() => false)
-      .then(active => {
-        if (!active && mountedRef.current && emergencyRef.current && generation === alarmGenerationRef.current) startLocalAlarm();
-      });
-  }, [startLocalAlarm]);
+    if (emergencySilencedRef.current) return;
+    void ensureSingleEmergencyOutput('Emergência ativa; verifique a criança.', alarmGenerationRef.current);
+  }, [ensureSingleEmergencyOutput]);
 
   const limparAlertas = useCallback(async () => {
     historyGenerationRef.current++;
@@ -1090,6 +1242,9 @@ export function runEsp32Monitor(hooks: MonitorHooks, preferences: AppPreferences
     ...state,
     conectar,
     confirmarSeguranca,
+    silenciarAlarmeDoCelular,
+    retomarSireneDoCelular,
+    encerrarProtecaoSemDispositivo,
     continuarEmAlerta,
     limparAlertas,
     encerrarMonitoramento,

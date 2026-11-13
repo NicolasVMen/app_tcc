@@ -7,9 +7,10 @@
 - `testes/`: relatórios de celular, autonomia e demais ensaios.
 - `auditoria/`: mapa da arquitetura, catálogo por arquivo, evidências e pendências.
 
-Fechamento acadêmico: [plano e critérios de atualização de 04/11/2026](tcc/FECHAMENTO_TCC_2026-11-04.md).
-Próximo ensaio: [protocolo de autonomia com registro proposto](testes/PROTOCOLO_AUTONOMIA_USO_2026-11-04.md).
-Distribuição: [oficial Android 1.0.1, aceite de 17/10 e atualização do botão em 04/11](auditoria/PREPARACAO_OFICIAL_VALIDADA_2026-10-17.md).
+Texto acadêmico: [cópia atual para aprovação do orientador](tcc/README.md).
+Autonomia: [dois ciclos observados e fontes CSV](testes/AUTONOMIA_DOIS_CICLOS_2026-11-12.md).
+Distribuição: [oficial Android 1.0.5, validada em 12/11](auditoria/OFICIAL_1_0_5_2026-11-12.md).
+Fechamento histórico: [critérios e situação em 04/11/2026](tcc/FECHAMENTO_TCC_2026-11-04.md).
 Referência histórica: [auditoria de 07/10/2026](auditoria/RELATORIO_2026-10-07.md).
 Implementações posteriores: [correções de 09/10/2026](auditoria/CORRECOES_2026-10-09.md).
 CICTED e TCC são entregas diferentes; manter seus documentos separados.

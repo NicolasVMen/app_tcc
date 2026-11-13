@@ -82,12 +82,13 @@ class EscoltaSentinelaService : Service() {
     // A permissão pode ser revogada entre a ponte JS e a execução no Android.
     // Encerrar sem reinício automático evita um ciclo de falhas no primeiro acesso.
     if (intent?.action != ACTION_STOP && intent?.action != ACTION_CANCEL_EMERGENCY
+        && intent?.action != ACTION_SILENCE_EMERGENCY
         && !hasBluetoothPermissions(this)) {
       isRunning = false
       stopSelf()
       return START_NOT_STICKY
     }
-    if (intent == null) {
+    if (intent == null || (intent?.action == ACTION_START && !emergencyActive)) {
       val saved = getSharedPreferences("escolta_alarm", MODE_PRIVATE)
       if (saved.contains("deadline")) {
         // Recupera o alarme já armado, não uma suposta conexão GATT.
@@ -95,7 +96,8 @@ class EscoltaSentinelaService : Service() {
         if (!promoteSafely(buildNotification("Sentinela retomando", "Restaurando alerta pendente"))) return START_NOT_STICKY
         armEmergency(saved.getString("child", "a criança") ?: "a criança", remaining,
           saved.getBoolean("notifications", true), saved.getBoolean("vibration", true),
-          saved.getString("reason", "Monitoramento interrompido.") ?: "Monitoramento interrompido.")
+          saved.getString("reason", "Monitoramento interrompido.") ?: "Monitoramento interrompido.",
+          saved.getBoolean("silenced", false))
         return START_STICKY
       }
     }
@@ -115,6 +117,16 @@ class EscoltaSentinelaService : Service() {
 
     if (intent?.action == ACTION_CANCEL_EMERGENCY) {
       cancelEmergency()
+      return START_STICKY
+    }
+
+    if (intent?.action == ACTION_SILENCE_EMERGENCY) {
+      silenceEmergency()
+      return START_STICKY
+    }
+
+    if (intent?.action == ACTION_RESUME_EMERGENCY) {
+      resumeEmergency()
       return START_STICKY
     }
 
@@ -254,15 +266,22 @@ class EscoltaSentinelaService : Service() {
     delayMs: Long,
     alertsEnabled: Boolean,
     vibrationEnabled: Boolean,
-    reason: String
+    reason: String,
+    restoreSilenced: Boolean = false
   ) {
+    val keepSilenced = restoreSilenced || alarmSilenced ||
+      getSharedPreferences("escolta_alarm", MODE_PRIVATE).getBoolean("silenced", false)
     cancelEmergency()
+    alarmSilenced = keepSilenced
     getSharedPreferences("escolta_alarm", MODE_PRIVATE).edit()
       .putLong("deadline", System.currentTimeMillis() + delayMs.coerceAtLeast(0))
       .putString("child", childName).putString("reason", reason)
-      .putBoolean("notifications", alertsEnabled).putBoolean("vibration", vibrationEnabled).apply()
+      .putBoolean("notifications", alertsEnabled).putBoolean("vibration", vibrationEnabled)
+      .putBoolean("silenced", keepSilenced).apply()
     emergencyRunnable = Runnable {
-      val body = "$reason Verifique $childName imediatamente."
+      val body = if (alarmSilenced)
+        "Som do celular silenciado. Emergência ativa: $reason Verifique $childName."
+      else "$reason Verifique $childName imediatamente."
       val manager = getSystemService(NotificationManager::class.java)
       if (alertsEnabled) {
         val notification = buildEmergencyNotification(body)
@@ -274,10 +293,47 @@ class EscoltaSentinelaService : Service() {
         )
       }
       // A preferência de notificações não desliga a sirene de emergência.
-      alarmPlaying = startNativeAlarm(vibrationEnabled)
+      alarmPlaying = if (alarmSilenced) false else startNativeAlarm(vibrationEnabled)
       emergencyActive = true
       emergencyRunnable = null
     }.also { handler.postDelayed(it, delayMs.coerceAtLeast(0)) }
+  }
+
+  private fun silenceEmergency() {
+    if (!emergencyActive && emergencyRunnable == null) return
+    alarmSilenced = true
+    getSharedPreferences("escolta_alarm", MODE_PRIVATE).edit().putBoolean("silenced", true).apply()
+    alarmPlaying = false
+    runCatching { emergencyPlayer?.stop() }
+    runCatching { emergencyPlayer?.release() }
+    emergencyPlayer = null
+    emergencyVibrator?.cancel()
+    emergencyVibrator = null
+    if (emergencyActive) {
+      val saved = getSharedPreferences("escolta_alarm", MODE_PRIVATE)
+      val body = "Som do celular silenciado. Emergência ativa: ${saved.getString("reason", "verifique a criança")}."
+      val manager = getSystemService(NotificationManager::class.java)
+      manager.notify(NOTIFICATION_ID, buildEmergencyNotification(body))
+    }
+  }
+
+  private fun resumeEmergency() {
+    if ((!emergencyActive && emergencyRunnable == null) || !alarmSilenced) return
+    val saved = getSharedPreferences("escolta_alarm", MODE_PRIVATE)
+    if (!saved.contains("deadline") || !saved.edit().putBoolean("silenced", false).commit()) return
+    alarmSilenced = false
+    // Se o temporizador ainda estiver pendente, ele iniciará a sirene uma vez.
+    if (!emergencyActive) return
+    alarmPlaying = startNativeAlarm(saved.getBoolean("vibration", true))
+    if (!alarmPlaying) {
+      silenceEmergency()
+      return
+    }
+    val reason = saved.getString("reason", "verifique a criança")
+    getSystemService(NotificationManager::class.java).notify(
+      NOTIFICATION_ID,
+      buildEmergencyNotification("Emergência ativa: $reason")
+    )
   }
 
   private fun cancelEmergency(preserve: Boolean = false) {
@@ -286,6 +342,7 @@ class EscoltaSentinelaService : Service() {
     emergencyRunnable = null
     emergencyActive = false
     alarmPlaying = false
+    alarmSilenced = false
     runCatching { emergencyPlayer?.stop() }
     runCatching { emergencyPlayer?.release() }
     emergencyPlayer = null
@@ -371,6 +428,8 @@ class EscoltaSentinelaService : Service() {
     private const val ACTION_STOP = "expo.modules.escoltasentinela.PARAR"
     private const val ACTION_ARM_EMERGENCY = "expo.modules.escoltasentinela.ARMAR_EMERGENCIA"
     private const val ACTION_CANCEL_EMERGENCY = "expo.modules.escoltasentinela.CANCELAR_EMERGENCIA"
+    private const val ACTION_SILENCE_EMERGENCY = "expo.modules.escoltasentinela.SILENCIAR_EMERGENCIA"
+    private const val ACTION_RESUME_EMERGENCY = "expo.modules.escoltasentinela.RETOMAR_SIRENE"
     private const val ACTION_CONNECTION_RESTORED = "expo.modules.escoltasentinela.VINCULO_RESTABELECIDO"
     private const val EXTRA_TITLE = "titulo"
     private const val EXTRA_BODY = "mensagem"
@@ -393,6 +452,9 @@ class EscoltaSentinelaService : Service() {
     @Volatile
     var alarmPlaying: Boolean = false
       private set
+
+    @Volatile
+    private var alarmSilenced: Boolean = false
 
     private fun hasBluetoothPermissions(context: Context): Boolean =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
@@ -448,6 +510,34 @@ class EscoltaSentinelaService : Service() {
       context.getSharedPreferences("escolta_alarm", Context.MODE_PRIVATE).edit().clear().apply()
       if (!isRunning) return
       context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_CANCEL_EMERGENCY))
+    }
+
+    fun silenceEmergency(context: Context): Boolean {
+      val saved = context.getSharedPreferences("escolta_alarm", Context.MODE_PRIVATE)
+      if (!saved.contains("deadline")) return false
+      if (!saved.edit().putBoolean("silenced", true).commit()) return false
+      if (isRunning) {
+        context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_SILENCE_EMERGENCY))
+      }
+      return true
+    }
+
+    fun resumeEmergency(context: Context): Boolean {
+      val saved = context.getSharedPreferences("escolta_alarm", Context.MODE_PRIVATE)
+      if (!saved.contains("deadline") || !saved.getBoolean("silenced", false)) return false
+      requireBluetoothPermissions(context)
+      if (!isRunning) start(context, DEFAULT_TITLE, DEFAULT_BODY)
+      context.startService(Intent(context, EscoltaSentinelaService::class.java).setAction(ACTION_RESUME_EMERGENCY))
+      return true
+    }
+
+    fun isEmergencySilenced(context: Context): Boolean =
+      context.getSharedPreferences("escolta_alarm", Context.MODE_PRIVATE).getBoolean("silenced", false)
+
+    fun isEmergencyLatched(context: Context): Boolean {
+      if (emergencyActive) return true
+      val saved = context.getSharedPreferences("escolta_alarm", Context.MODE_PRIVATE)
+      return saved.contains("deadline") && saved.getLong("deadline", Long.MAX_VALUE) <= System.currentTimeMillis()
     }
 
     fun connectionRestored(context: Context) {

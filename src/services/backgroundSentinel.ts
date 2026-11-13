@@ -18,6 +18,9 @@ type EscoltaSentinelaNativeModule = {
     reason: string
   ) => Promise<void>;
   cancelEmergencyAsync: () => Promise<void>;
+  silenceEmergencyAsync?: () => Promise<boolean>;
+  resumeEmergencyAsync?: () => Promise<boolean>;
+  isEmergencySilencedAsync?: () => Promise<boolean>;
   connectionRestoredAsync: () => Promise<void>;
   isRunningAsync: () => Promise<boolean>;
   isEmergencyActiveAsync: () => Promise<boolean>;
@@ -100,6 +103,42 @@ export async function cancelBackgroundEmergency() {
   if (!nativeModule) return false;
   await withTimeout(nativeModule.cancelEmergencyAsync(), 1500, 'O Android não confirmou o cancelamento.');
   return true;
+}
+
+/** Para som/vibração do telefone sem cancelar a emergência retida. */
+export async function silenceBackgroundEmergency() {
+  if (!nativeModule?.silenceEmergencyAsync || !nativeModule.isEmergencySilencedAsync) return false;
+  const accepted = await withTimeout(nativeModule.silenceEmergencyAsync(), 1500, 'O Android não confirmou o silêncio.');
+  if (!accepted) return false;
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const silenced = await withTimeout(nativeModule.isEmergencySilencedAsync(), 500, 'Estado do silêncio indisponível.');
+    const playing = nativeModule.isAlarmPlayingAsync
+      ? await withTimeout(nativeModule.isAlarmPlayingAsync(), 500, 'Estado da sirene indisponível.')
+      : false;
+    if (silenced && !playing) return true;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error('A sirene do Android não confirmou o silêncio. Tente novamente.');
+}
+
+export async function isBackgroundEmergencySilenced() {
+  if (!nativeModule?.isEmergencySilencedAsync) return false;
+  return withTimeout(nativeModule.isEmergencySilencedAsync(), 500, 'Estado do silêncio indisponível.');
+}
+
+/** Religa a sirene do mesmo incidente, sem criar um novo alerta. */
+export async function resumeBackgroundEmergency() {
+  if (!nativeModule?.resumeEmergencyAsync || !nativeModule.isEmergencySilencedAsync || !nativeModule.isAlarmPlayingAsync) return false;
+  const accepted = await withTimeout(nativeModule.resumeEmergencyAsync(), 1500, 'O Android não confirmou a retomada da sirene.');
+  if (!accepted) return false;
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const silenced = await withTimeout(nativeModule.isEmergencySilencedAsync(), 500, 'Estado do silêncio indisponível.');
+    const playing = await withTimeout(nativeModule.isAlarmPlayingAsync(), 500, 'Estado da sirene indisponível.');
+    const latched = await withTimeout(nativeModule.isEmergencyActiveAsync(), 500, 'Estado da emergência indisponível.');
+    if (!silenced && playing && latched) return true;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error('A sirene do Android não confirmou a retomada. Tente novamente.');
 }
 
 export async function notifyBackgroundConnectionRestored() {

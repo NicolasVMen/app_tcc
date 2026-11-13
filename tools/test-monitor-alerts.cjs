@@ -8,10 +8,13 @@ const vm = require('node:vm');
 
 async function createMonitor(options = {}) {
   const effects = [], states = [], refs = [], callbacks = [], timers = new Map(), intervals = [], nativeTicks = [], appStateListeners = new Set();
-  const calls = { vibration: 0, audio: 0, arms: [], cancel: 0, notifications: 0, resets: 0, disconnects: 0, sequence: [], email: [] };
+  const calls = { vibration: 0, audio: 0, arms: [], cancel: 0, silence: 0, resume: 0, stopSentinel: 0,
+    notifications: 0, resets: 0, disconnects: 0, sequence: [], email: [], storage: [] };
   let clock = 100000;
   class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [clock])); } static now() { return clock; } }
-  let onStatus, onConnection, connected = true, stateIndex = 0, refIndex = 0, effectIndex = 0, callbackIndex = 0, nativeActive = false;
+  let onStatus, onConnection, connected = true, stateIndex = 0, refIndex = 0, effectIndex = 0,
+    callbackIndex = 0, nativeActive = options.initialNativeActive === true,
+    nativeSilenced = options.initialNativeSilenced === true;
   const safeStatus = { rssi: -69, rssi_raw: -69, rssiFresh: true, fw: 'xiao-p5-teste', distancia_m: 1,
     estado: 'seguro', som_on: true, monitoramento_ativo: true, panico_ativo: false };
   const sameDependencies = (a, b) => a && b && a.length === b.length && a.every((v, i) => Object.is(v, b[i]));
@@ -33,6 +36,7 @@ async function createMonitor(options = {}) {
     '../utils/telemetry': loadUtility('telemetry'),
     '../utils/safetyConfirmation': loadUtility('safetyConfirmation'),
     '../utils/asyncTimeout': { withTimeout: async operation => operation },
+    '../utils/bleResume': loadUtility('bleResume'),
     '../services/emergencyEmail': options.emailTransport ? loadEmailService(async (url, request) => {
       calls.email.push({ url, method:request.method, payload:JSON.parse(request.body) });
       return options.emailTransport(request);
@@ -64,25 +68,40 @@ async function createMonitor(options = {}) {
       AppState: appState,
       Vibration: { vibrate: () => { calls.vibration++; }, cancel() {} },
     },
-    'expo-av': { Audio: { Sound: { createAsync: async () => ({ sound }) }, setAudioModeAsync: async () => {} } },
+    'expo-av': { Audio: { Sound: { createAsync: async () => {
+      if (options.soundLoadGate) await options.soundLoadGate;
+      return { sound };
+    } }, setAudioModeAsync: async () => {} } },
     '../services/accountStorage': {
       getItem: async key => key === '@escolta_monitoring_intent' && options.initialStandby ? 'standby'
         : key === '@escolta_alerts_history' && options.historyPending ? options.historyPending
         : key === '@escolta_user_profile' && options.profile ? JSON.stringify(options.profile) : null,
-      setItem: async () => {}, removeItem: async () => {},
+      setItem: async (key, value) => { calls.storage.push([key, value]); }, removeItem: async () => {},
       subscribeAccountStorage: () => () => {},
     },
     'expo-location': options.location ?? {},
     '../services/bleApi': {
       deferRssiRecoveryForWatchdogExperiment: () => options.rssiExperiment === true,
-      connectBle: async () => { calls.sequence.push('connect'); }, disconnectBle: async () => { calls.disconnects++; connected = false; onConnection?.(false); }, isBleConnected: () => connected,
+      connectBle: async () => {
+        calls.sequence.push('connect');
+        const attempt = calls.sequence.filter(step => step === 'connect').length;
+        if (options.resumeConnectError && attempt <= (options.resumeConnectFailures ?? 1)) {
+          throw options.resumeConnectError;
+        }
+      }, disconnectBle: async () => { calls.disconnects++; connected = false; onConnection?.(false); }, isBleConnected: () => connected,
       resetarAlarmeBle: async () => {
         calls.resets++;
         if (options.resetFails) throw new Error('Sem confirmação');
         const response = { ...safeStatus, ...options.resetResponse };
         onStatus?.(response);
         return response;
-      }, setMonitoringModeBle: async () => {},
+      }, setMonitoringModeBle: async active => {
+        calls.sequence.push(active ? 'resume-command' : 'standby-command');
+        const attempt = calls.sequence.filter(step => step === 'resume-command').length;
+        if (active && options.resumeCommandError && attempt <= (options.resumeCommandFailures ?? 1)) {
+          throw options.resumeCommandError;
+        }
+      },
       setBleCallbacks: (status, connection) => { onStatus = status; onConnection = connection; },
     },
     '../context/AppPreferencesContext': {
@@ -99,20 +118,37 @@ async function createMonitor(options = {}) {
       },
       armBackgroundEmergency: async (...args) => {
         calls.arms.push(args);
+        if (args[1] === 0 && options.nativeImmediatePending) return options.nativeImmediatePending;
         if (options.nativePending) return options.nativePending;
         if (options.nativeAvailable === false) return false;
         nativeActive = args[1] === 0;
+        nativeSilenced = false;
         return true;
       },
       cancelBackgroundEmergency: async () => {
-        calls.cancel++; nativeActive = false;
+        calls.cancel++; nativeActive = false; nativeSilenced = false;
         if (options.signalChangesDuringCancel) onStatus?.({ ...safeStatus, rssi: -95, rssi_raw: -95, estado: 'panico', panico_ativo: true });
         return true;
       },
-      isBackgroundEmergencyActive: async () => nativeActive,
+      silenceBackgroundEmergency: async () => {
+        calls.silence++;
+        if (options.nativeSilenceFails) return false;
+        if (!nativeActive) return false;
+        nativeSilenced = true;
+        return true;
+      },
+      resumeBackgroundEmergency: async () => {
+        calls.resume++;
+        if (options.nativeResumeFails || !nativeActive || !nativeSilenced) return false;
+        nativeSilenced = false;
+        return true;
+      },
+      isBackgroundEmergencySilenced: async () => nativeSilenced,
+      isBackgroundEmergencyActive: async () => nativeActive && !nativeSilenced,
       isBackgroundEmergencyLatched: async () => nativeActive,
       notifyBackgroundConnectionRestored: async () => true,
-      startBackgroundSentinel: async () => { calls.sequence.push('sentinel'); return true; }, stopBackgroundSentinel: async () => true,
+      startBackgroundSentinel: async () => { calls.sequence.push('sentinel'); return true; },
+      stopBackgroundSentinel: async () => { calls.stopSentinel++; nativeActive = false; return true; },
       updateBackgroundSentinel: async () => true,
     },
     '../services/notificationService': {
@@ -193,7 +229,7 @@ test('AUDITORIA: desativar notificações não deve silenciar sirene crítica', 
   assert.ok(nativeAlarmRequested || m.calls.audio > 0, 'Nem áudio local nem sirene nativa foram solicitados');
   // A preferência continua falsa para notificações, mas o Kotlin inicia áudio fora do if.
   const native = fs.readFileSync(path.join(__dirname, '../modules/escolta-sentinela/android/src/main/java/expo/modules/escoltasentinela/EscoltaSentinelaService.kt'), 'utf8');
-  assert.match(native, /alarmPlaying = startNativeAlarm\(vibrationEnabled\)/);
+  assert.match(native, /alarmPlaying = if \(alarmSilenced\) false else startNativeAlarm\(vibrationEnabled\)/);
   assert.equal(m.calls.arms[0][2], false);
 });
 
@@ -301,6 +337,67 @@ test('AUDITORIA: perda de enlace deve ter áudio quando módulo nativo não inic
   grace.callback();
   await m.flush();
   assert.ok(m.calls.audio > 0, 'Fallback de áudio não foi acionado');
+  assert.equal(m.calls.notifications, 1);
+});
+
+test('perda de vínculo não sobrepõe fallback à sirene nativa que iniciou no prazo', async () => {
+  const m = await createMonitor();
+  m.connection(true); m.emit(); m.connection(false);
+  const grace = [...m.timers.values()].find(timer => timer.delay === 5000);
+  assert.ok(grace);
+  grace.callback(); await m.flush();
+  assert.deepEqual(m.calls.arms.map(args => args[1]), [5000, 0]);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.calls.audio, 0);
+  assert.equal(m.calls.notifications, 0);
+});
+
+test('fallback aguarda falha nativa confirmada e então mostra só um aviso', async () => {
+  let resolveNative;
+  const m = await createMonitor({ nativeImmediatePending: new Promise(resolve => { resolveNative = resolve; }) });
+  m.connection(true); m.emit(); m.connection(false);
+  const grace = [...m.timers.values()].find(timer => timer.delay === 5000);
+  assert.ok(grace);
+  grace.callback(); await m.flush();
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.calls.audio, 0);
+  assert.equal(m.calls.notifications, 0);
+  resolveNative(false); await m.flush();
+  assert.equal(m.calls.audio, 1);
+  assert.equal(m.calls.notifications, 1);
+  assert.ok(m.calls.cancel >= 1);
+});
+
+test('continuar alerta não inicia áudio local durante ativação nativa pendente', async () => {
+  let resolveNative;
+  const m = await createMonitor({ nativeImmediatePending: new Promise(resolve => { resolveNative = resolve; }) });
+  m.emit({ estado: 'panico', panico_ativo: true });
+  await m.flush();
+  m.controller.continuarEmAlerta();
+  await m.flush();
+  assert.equal(m.calls.audio, 0);
+  assert.equal(m.calls.notifications, 0);
+  resolveNative(true);
+  await m.flush();
+  assert.equal(m.calls.audio, 0);
+  assert.equal(m.calls.notifications, 0);
+});
+
+test('carregamento tardio do som não sobrepõe sirene nativa pendente', async () => {
+  let resolveNative, resolveSound;
+  const m = await createMonitor({
+    nativeImmediatePending: new Promise(resolve => { resolveNative = resolve; }),
+    soundLoadGate: new Promise(resolve => { resolveSound = resolve; }),
+  });
+  m.emit({ estado: 'panico', panico_ativo: true });
+  await m.flush();
+  resolveSound();
+  await m.flush();
+  assert.equal(m.calls.audio, 0);
+  resolveNative(true);
+  await m.flush();
+  assert.equal(m.calls.audio, 0);
+  assert.equal(m.calls.notifications, 0);
 });
 
 test('AUDITORIA: telemetria incompleta não deve ser interpretada como pânico', async () => {
@@ -429,6 +526,102 @@ test('teste: sem vínculo não encerra sirene, notificação nem emergência ret
   assert.equal(m.snapshot().alertas.filter(a => a.title === 'Segurança confirmada').length, 0);
 });
 
+test('silenciar o celular mantém emergência e não inventa segurança sem placa', async () => {
+  const m = await createMonitor();
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  m.connection(false);
+  await m.controller.silenciarAlarmeDoCelular();
+  assert.equal(m.calls.silence, 1);
+  assert.equal(m.calls.cancel, 0);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, true);
+  assert.equal(m.snapshot().nivelSinal, 'panico');
+  await assert.rejects(m.controller.confirmarSeguranca(), /reconecte a placa/);
+  const audioBefore = m.calls.audio;
+  m.appState('active'); await m.flush();
+  assert.equal(m.calls.audio, audioBefore, 'Retorno à tela rearmou o som silenciado');
+  assert.equal(m.snapshot().modoPanico, true);
+});
+
+test('retomar sirene desfez apenas o silêncio, sem novo aviso nem confirmação de segurança', async () => {
+  const m = await createMonitor();
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  m.connection(false);
+  await m.controller.silenciarAlarmeDoCelular();
+  const arms = m.calls.arms.length, notifications = m.calls.notifications, emails = m.calls.email.length;
+  await m.controller.retomarSireneDoCelular();
+  assert.equal(m.calls.resume, 1);
+  assert.equal(m.calls.arms.length, arms);
+  assert.equal(m.calls.notifications, notifications);
+  assert.equal(m.calls.email.length, emails);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, false);
+  assert.equal(m.snapshot().segurancaConfirmadaSemVinculo, false);
+  await assert.rejects(m.controller.confirmarSeguranca(), /reconecte a placa/);
+});
+
+test('falha ao retomar sirene conserva emergência silenciada', async () => {
+  const m = await createMonitor({ nativeResumeFails: true });
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  await m.controller.silenciarAlarmeDoCelular();
+  await assert.rejects(m.controller.retomarSireneDoCelular(), /não confirmou/);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, true);
+});
+
+test('fallback local pode ser retomado sem recriar notificação ou e-mail', async () => {
+  const m = await createMonitor({ nativeAvailable: false });
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  await m.controller.silenciarAlarmeDoCelular();
+  const audio = m.calls.audio, notifications = m.calls.notifications;
+  await m.controller.retomarSireneDoCelular();
+  await m.flush();
+  assert.equal(m.calls.resume, 0);
+  assert.equal(m.calls.audio, audio + 1);
+  assert.equal(m.calls.notifications, notifications);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, false);
+});
+
+test('silêncio não confirmado pelo Android mantém o alerta ativo', async () => {
+  const m = await createMonitor({ nativeSilenceFails: true });
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  await assert.rejects(m.controller.silenciarAlarmeDoCelular(), /não confirmou/);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, false);
+  assert.equal(m.snapshot().modoPanico, true);
+});
+
+test('emergência silenciada sobrevive à reabertura sem reiniciar áudio local', async () => {
+  const m = await createMonitor({ initialNativeActive: true, initialNativeSilenced: true });
+  await m.flush();
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, true);
+  assert.equal(m.calls.audio, 0);
+});
+
+test('sem placa, saída manual para som mas mantém proteção interrompida, nunca verde', async () => {
+  const m = await createMonitor();
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  m.connection(false);
+  await m.controller.encerrarProtecaoSemDispositivo();
+  assert.equal(m.snapshot().modoPanico, false);
+  assert.equal(m.snapshot().emEspera, true);
+  assert.equal(m.snapshot().protecaoInterrompidaSemDispositivo, true);
+  assert.equal(m.snapshot().nivelSinal, 'desconectado');
+  assert.equal(m.snapshot().segurancaConfirmadaSemVinculo, false);
+  assert.ok(m.calls.cancel >= 1);
+  assert.ok(m.calls.storage.some(([key, value]) => key === '@escolta_monitoring_intent' && value === 'device_unavailable'));
+  assert.equal(m.snapshot().alertas.filter(a => a.title === 'Segurança confirmada').length, 0);
+});
+
+test('saída sem dispositivo é recusada enquanto a placa está conectada', async () => {
+  const m = await createMonitor();
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  await assert.rejects(m.controller.encerrarProtecaoSemDispositivo(), /sem conexão/);
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.calls.cancel, 0);
+});
+
 test('oficial opt-in: confirmar sem vínculo preserva emergência como no teste validado', async () => {
   const m = await createMonitor({ testBuild: false, validatedMonitor: true });
   m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
@@ -438,6 +631,21 @@ test('oficial opt-in: confirmar sem vínculo preserva emergência como no teste 
   assert.equal(m.calls.cancel, 0);
   assert.equal(m.snapshot().modoPanico, true);
   assert.equal(m.snapshot().segurancaConfirmadaSemVinculo, false);
+});
+
+test('oficial validada: silêncio e interrupção sem placa não confirmam segurança', async () => {
+  const m = await createMonitor({ testBuild: false, validatedMonitor: true });
+  m.emit({ estado: 'panico', panico_ativo: true }); await m.flush();
+  m.connection(false);
+  await m.controller.silenciarAlarmeDoCelular();
+  assert.equal(m.snapshot().modoPanico, true);
+  assert.equal(m.snapshot().alarmeCelularSilenciado, true);
+  assert.equal(m.calls.cancel, 0);
+  await m.controller.encerrarProtecaoSemDispositivo();
+  assert.equal(m.snapshot().emEspera, true);
+  assert.equal(m.snapshot().protecaoInterrompidaSemDispositivo, true);
+  assert.equal(m.snapshot().segurancaConfirmadaSemVinculo, false);
+  assert.equal(m.snapshot().alertas.filter(a => a.title === 'Segurança confirmada').length, 0);
 });
 
 test('teste: desconexão em emergência tenta reconectar sem apagar o alerta', async () => {
@@ -459,6 +667,63 @@ test('teste: abrir em espera e retomar instala novamente a busca periódica', as
   m.calls.sequence.length = 0;
   m.moveClock(8000); m.tickReconnect(); await m.flush();
   assert.ok(m.calls.sequence.includes('connect'), 'Retomar não reativou a busca automática');
+});
+
+test('retomada repete uma desconexão transitória e só então declara proteção ativa', async () => {
+  const m = await createMonitor({ initialStandby: true,
+    resumeConnectError: new Error('Device AA:BB:CC:DD disconnected') });
+  const resume = m.controller.retomarProtecao();
+  await m.flush();
+  assert.equal(m.snapshot().emEspera, true);
+  assert.equal(m.snapshot().conectado, false);
+  const retry = [...m.timers.values()].find(timer => timer.delay === 500);
+  assert.ok(retry, 'A repetição deve ser limitada e aguardar limpeza GATT');
+  retry.callback();
+  await resume; await m.flush();
+  assert.equal(m.calls.sequence.filter(step => step === 'connect').length, 2);
+  assert.equal(m.calls.sequence.filter(step => step === 'resume-command').length, 1);
+  assert.equal(m.snapshot().emEspera, false);
+  assert.equal(m.snapshot().conectado, true);
+});
+
+test('comando de retomada desconectado também tem apenas uma nova tentativa', async () => {
+  const m = await createMonitor({ initialStandby: true,
+    resumeCommandError: Object.assign(new Error('Device disconnected'), { errorCode: 201 }) });
+  const resume = m.controller.retomarProtecao();
+  await m.flush();
+  assert.equal(m.snapshot().emEspera, true);
+  const retry = [...m.timers.values()].find(timer => timer.delay === 500);
+  assert.ok(retry);
+  retry.callback();
+  await resume; await m.flush();
+  assert.equal(m.calls.sequence.filter(step => step === 'resume-command').length, 2);
+  assert.equal(m.snapshot().emEspera, false);
+  assert.equal(m.snapshot().conectado, true);
+});
+
+test('duas falhas de conexão deixam em espera e não mostram MAC ao responsável', async () => {
+  const m = await createMonitor({ initialStandby: true,
+    resumeConnectError: new Error('Device AA:BB:CC:DD disconnected'), resumeConnectFailures: 2 });
+  const resume = m.controller.retomarProtecao();
+  await m.flush();
+  const retry = [...m.timers.values()].find(timer => timer.delay === 500);
+  assert.ok(retry);
+  retry.callback();
+  await assert.rejects(resume, /disconnected/); await m.flush();
+  assert.equal(m.calls.sequence.filter(step => step === 'connect').length, 2);
+  assert.equal(m.snapshot().emEspera, true);
+  assert.equal(m.snapshot().conectado, false);
+  assert.match(m.snapshot().scanError, /A caixinha não confirmou/);
+  assert.doesNotMatch(m.snapshot().scanError, /AA:BB|Device/);
+});
+
+test('Bluetooth desligado não provoca repetição inútil da retomada', async () => {
+  const m = await createMonitor({ initialStandby: true,
+    resumeConnectError: new Error('Bluetooth não está ativado no celular.') });
+  await assert.rejects(m.controller.retomarProtecao(), /Bluetooth não está ativado/);
+  assert.equal(m.calls.sequence.filter(step => step === 'connect').length, 1);
+  assert.equal(m.snapshot().emEspera, true);
+  assert.match(m.snapshot().scanError, /Ative o Bluetooth/);
 });
 
 test('oficial: rotina anterior de retomada não é alterada pelo experimento', async () => {

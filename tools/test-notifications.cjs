@@ -5,8 +5,8 @@ const path = require('node:path');
 const ts = require('typescript');
 const vm = require('node:vm');
 
-function setup(internalTools = false) {
-  const channels = new Map(), scheduled = [];
+function setup(internalTools = false, initialPresented = []) {
+  const channels = new Map(), scheduled = [], dismissed = [], presented = initialPresented;
   const notification = {
     AndroidImportance: { LOW: 1, DEFAULT: 3, HIGH: 4, MAX: 5 },
     AndroidNotificationVisibility: { PRIVATE: 0, PUBLIC: 1 },
@@ -14,7 +14,19 @@ function setup(internalTools = false) {
     setNotificationHandler() {},
     setNotificationChannelAsync: async (id, channel) => channels.set(id, channel),
     getPermissionsAsync: async () => ({ granted: true }),
-    scheduleNotificationAsync: async request => { scheduled.push(request); return 'test'; },
+    scheduleNotificationAsync: async request => {
+      scheduled.push(request);
+      const identifier = `expo-${scheduled.length}`;
+      presented.push({ request: { identifier, content: request.content } });
+      return identifier;
+    },
+    getPresentedNotificationsAsync: async () => presented,
+    dismissNotificationAsync: async identifier => {
+      dismissed.push(identifier);
+      const index = presented.findIndex(item => item.request.identifier === identifier);
+      if (index >= 0) presented.splice(index, 1);
+    },
+    setBadgeCountAsync: async () => true,
   };
   const context = { exports: {}, require: name => {
     if (name === 'react-native') return { Platform: { OS: 'android' } };
@@ -25,7 +37,7 @@ function setup(internalTools = false) {
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, '../src/services/notificationService.ts'), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText, context);
-  return { api: context.exports, channels, scheduled };
+  return { api: context.exports, channels, scheduled, dismissed, presented };
 }
 
 test('bateria usa canal silencioso sem vibração quando preferência está desligada', async () => {
@@ -61,4 +73,27 @@ test('bateria usa canal com vibração sem alterar canal silencioso existente', 
   assert.notEqual(m.scheduled[0].trigger.channelId, m.scheduled[1].trigger.channelId);
   assert.equal(m.channels.get(m.scheduled[0].trigger.channelId).enableVibrate, true);
   assert.equal(m.channels.get(m.scheduled[1].trigger.channelId).enableVibrate, false);
+});
+
+test('após reabrir, remove avisos de emergência Expo sem apagar bateria ou serviço', async () => {
+  const presented = [
+    { request: { identifier: 'emergencia-antiga', content: { data: { tipo: 'emergencia' } } } },
+    { request: { identifier: 'bateria', content: { data: { tipo: 'bateria_baixa' } } } },
+    { request: { identifier: 'servico', content: { data: {} } } },
+  ];
+  const m = setup(false, presented);
+  await m.api.dismissEmergencyNotification();
+  assert.deepEqual(m.dismissed, ['emergencia-antiga']);
+  assert.deepEqual(m.presented.map(item => item.request.identifier), ['bateria', 'servico']);
+});
+
+test('dois avisos concorrentes resultam em uma única notificação de emergência', async () => {
+  const m = setup();
+  await Promise.all([
+    m.api.showEmergencyNotification('Criança', 'Vínculo interrompido.'),
+    m.api.showEmergencyNotification('Criança', 'Pânico da placa.'),
+  ]);
+  assert.equal(m.presented.filter(item => item.request.content.data?.tipo === 'emergencia').length, 1);
+  assert.equal(m.presented[0].request.content.body.includes('Pânico da placa.'), true);
+  assert.equal(m.dismissed.length, 1);
 });

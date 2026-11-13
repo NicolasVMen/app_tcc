@@ -8,6 +8,7 @@ const DIAGNOSTIC_CHANNEL = 'escolta_diagnosticos';
 const BATTERY_CHANNEL = 'escolta_bateria_v2';
 const BATTERY_VIBRATION_CHANNEL = 'escolta_bateria_vibracao_v2';
 let emergencyNotificationId: string | null = null;
+let emergencyNotificationMutation: Promise<void> = Promise.resolve();
 let channelsPrepared = false;
 let permissionRequestedThisSession = false;
 
@@ -107,21 +108,23 @@ export async function showBatteryNotification(percent: number, critical: boolean
 }
 
 export async function showEmergencyNotification(childName: string, reason: string) {
-  await dismissEmergencyNotification();
-  emergencyNotificationId = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Emergência — Escolta UNITAU',
-      body: `${reason} Verifique ${childName} imediatamente.`,
-      sound: 'default',
-      priority: Notifications.AndroidNotificationPriority.MAX,
-      color: '#EF4444',
-      sticky: true,
-      autoDismiss: false,
-      data: { destino: 'CENTRAL', tipo: 'emergencia' },
-    },
-    trigger: Platform.OS === 'android' ? { channelId: EMERGENCY_CHANNEL } : null,
+  return queueEmergencyNotification(async () => {
+    await dismissPresentedEmergencyNotifications();
+    emergencyNotificationId = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Emergência — Escolta UNITAU',
+        body: `${reason} Verifique ${childName} imediatamente.`,
+        sound: 'default',
+        priority: Notifications.AndroidNotificationPriority.MAX,
+        color: '#EF4444',
+        sticky: true,
+        autoDismiss: false,
+        data: { destino: 'CENTRAL', tipo: 'emergencia' },
+      },
+      trigger: Platform.OS === 'android' ? { channelId: EMERGENCY_CHANNEL } : null,
+    });
+    return emergencyNotificationId;
   });
-  return emergencyNotificationId;
 }
 
 /** Exibe uma notificação não emergencial para validar permissão e apresentação visual. */
@@ -142,10 +145,34 @@ export async function showDiagnosticNotification() {
 }
 
 export async function dismissEmergencyNotification() {
-  if (!emergencyNotificationId) return;
-  await Notifications.dismissNotificationAsync(emergencyNotificationId).catch(() => {});
+  return queueEmergencyNotification(async () => {
+    await dismissPresentedEmergencyNotifications();
+    await Notifications.setBadgeCountAsync(0).catch(() => {});
+  });
+}
+
+/** Serializa agendamento e remoção para não deixar duas notificações Expo. */
+function queueEmergencyNotification<T>(action: () => Promise<T>): Promise<T> {
+  const result = emergencyNotificationMutation.then(action, action);
+  emergencyNotificationMutation = result.then(() => {}, () => {});
+  return result;
+}
+
+async function dismissPresentedEmergencyNotifications() {
+  const identifiers = new Set<string>();
+  if (emergencyNotificationId) identifiers.add(emergencyNotificationId);
+  // O identificador em memória desaparece quando o processo é fechado. Nunca
+  // remover todas as notificações: bateria e serviço de proteção são distintos.
+  const presented = await Notifications.getPresentedNotificationsAsync().catch(() => []);
+  for (const notification of presented) {
+    if (notification.request.content.data?.tipo === 'emergencia') {
+      identifiers.add(notification.request.identifier);
+    }
+  }
+  await Promise.all([...identifiers].map(identifier =>
+    Notifications.dismissNotificationAsync(identifier).catch(() => {})
+  ));
   emergencyNotificationId = null;
-  await Notifications.setBadgeCountAsync(0).catch(() => {});
 }
 
 export function addNotificationResponseListener(onOpenCentral: () => void) {

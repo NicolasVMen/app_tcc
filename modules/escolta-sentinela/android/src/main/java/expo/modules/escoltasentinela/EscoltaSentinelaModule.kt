@@ -60,6 +60,24 @@ class EscoltaSentinelaModule : Module() {
       EscoltaSentinelaService.cancelEmergency(context)
     }
 
+    AsyncFunction<Boolean>("silenceEmergencyAsync") {
+      val context = appContext.reactContext
+        ?: throw IllegalStateException("Contexto Android indisponível")
+      return@AsyncFunction EscoltaSentinelaService.silenceEmergency(context)
+    }
+
+    AsyncFunction<Boolean>("resumeEmergencyAsync") {
+      val context = appContext.reactContext
+        ?: throw IllegalStateException("Contexto Android indisponível")
+      return@AsyncFunction EscoltaSentinelaService.resumeEmergency(context)
+    }
+
+    AsyncFunction<Boolean>("isEmergencySilencedAsync") {
+      val context = appContext.reactContext
+        ?: throw IllegalStateException("Contexto Android indisponível")
+      return@AsyncFunction EscoltaSentinelaService.isEmergencySilenced(context)
+    }
+
     AsyncFunction("connectionRestoredAsync") {
       val context = appContext.reactContext
         ?: throw IllegalStateException("Contexto Android indisponível")
@@ -71,7 +89,9 @@ class EscoltaSentinelaModule : Module() {
     }
 
     AsyncFunction<Boolean>("isEmergencyActiveAsync") {
-      return@AsyncFunction EscoltaSentinelaService.emergencyActive
+      val context = appContext.reactContext
+        ?: throw IllegalStateException("Contexto Android indisponível")
+      return@AsyncFunction EscoltaSentinelaService.isEmergencyLatched(context)
     }
 
     AsyncFunction<Boolean>("isAlarmPlayingAsync") {

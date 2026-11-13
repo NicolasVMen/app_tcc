@@ -17,10 +17,11 @@ import AsyncStorage, { subscribeAccountStorage } from '../services/accountStorag
 import { Esp32MonitorState } from '../hooks/useEsp32Monitor';
 import { resetarAlarmeBle } from '../services/bleApi';
 import { VALIDATED_MONITOR_ENABLED } from '../services/nativeIdentity';
+import { resumeErrorMessage } from '../utils/bleResume';
 import { useAppPreferences } from '../context/AppPreferencesContext';
 import { AppColors, colorWithAlpha } from '../theme';
 
-type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency' | 'standby' | 'synchronizing';
+type VisualState = 'protected' | 'attention' | 'searching' | 'reconnecting' | 'uncovered' | 'emergency' | 'standby' | 'interrupted' | 'synchronizing';
 
 type MonitorController = Esp32MonitorState & {
   conectar: () => Promise<void>;
@@ -28,6 +29,9 @@ type MonitorController = Esp32MonitorState & {
   reconectando?: boolean;
   aguardandoConfirmacao?: boolean;
   confirmarSeguranca?: () => Promise<void>;
+  silenciarAlarmeDoCelular?: () => Promise<void>;
+  retomarSireneDoCelular?: () => Promise<void>;
+  encerrarProtecaoSemDispositivo?: () => Promise<void>;
   continuarEmAlerta?: () => void;
   retomarProtecao?: () => Promise<void>;
 };
@@ -73,6 +77,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
     ? 'emergency'
     : monitor.sincronizandoProtecao
       ? 'synchronizing'
+    : monitor.protecaoInterrompidaSemDispositivo
+      ? 'interrupted'
     : monitor.emEspera
       ? 'standby'
     : monitor.segurancaConfirmadaSemVinculo
@@ -107,7 +113,14 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       };
       case 'emergency': return {
         title: 'EMERGÊNCIA', childMessage: 'Alerta crítico ativo',
-        description: `Verifique ${childName} imediatamente.`, icon: 'alert-circle', color: colors.dangerRed,
+        description: monitor.alarmeCelularSilenciado
+          ? `O som do celular foi silenciado, mas a emergência continua ativa. Verifique ${childName}.`
+          : `Verifique ${childName} imediatamente.`, icon: 'alert-circle', color: colors.dangerRed,
+      };
+      case 'interrupted': return {
+        title: 'PROTEÇÃO INTERROMPIDA', childMessage: 'Monitoramento encerrado sem a placa',
+        description: 'O som parou, mas a segurança da criança não foi confirmada. Reconecte a caixinha para retomar.',
+        icon: 'shield-outline', color: colors.dangerRed,
       };
       case 'standby': return {
         title: 'EM ESPERA', childMessage: 'Monitoramento pausado',
@@ -119,12 +132,12 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
       };
       default: return {
         title: monitor.isScanning ? 'PROCURANDO' : 'AGUARDANDO VÍNCULO',
-        childMessage: monitor.isScanning ? 'Localizando o Escolta próximo' : 'O dispositivo ainda não está conectado',
-        description: monitor.scanError || 'A Sentinela iniciará a busca automaticamente.',
+        childMessage: 'Aguardando vínculo com a caixinha',
+        description: monitor.scanError || 'A Sentinela está procurando o dispositivo Escolta.',
         icon: monitor.isScanning ? 'scan' : 'bluetooth-outline', color: colors.primaryBlue,
       };
     }
-  }, [visualState, childName, colors, monitor.isScanning, monitor.scanError, monitor.falhaTecnica]);
+  }, [visualState, childName, colors, monitor.isScanning, monitor.scanError, monitor.falhaTecnica, monitor.alarmeCelularSilenciado]);
 
   useEffect(() => {
     pulse.stopAnimation();
@@ -164,6 +177,8 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
 
   const readiness = monitor.modoPanico
     ? { label: 'Emergência ativa', color: colors.dangerRed, icon: 'alert-circle' as const }
+    : monitor.protecaoInterrompidaSemDispositivo
+      ? { label: 'Sem proteção ativa', color: colors.dangerRed, icon: 'shield-outline' as const }
     : monitor.sincronizandoProtecao
       ? { label: 'Sincronizando proteção', color: colors.primaryBlue, icon: 'sync' as const }
     : monitor.emEspera
@@ -201,8 +216,41 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
     try {
       await monitor.retomarProtecao?.();
     } catch (error) {
-      Alert.alert('Não foi possível retomar', error instanceof Error ? error.message : 'Verifique a placa e tente novamente.');
+      Alert.alert('Não foi possível retomar', resumeErrorMessage(error));
     }
+  };
+
+  const handleSilencePhone = () => {
+    Alert.alert('Silenciar o celular?',
+      'O som e a vibração param, mas a emergência permanece ativa e a Sentinela continua procurando a caixinha. Isso não confirma a segurança da criança.', [
+        { text: 'Manter som', style: 'cancel' },
+        { text: 'Silenciar', onPress: async () => {
+          try { await monitor.silenciarAlarmeDoCelular?.(); }
+          catch (error) { Alert.alert('Não foi possível silenciar', error instanceof Error ? error.message : 'Tente novamente.'); }
+        } },
+      ]);
+  };
+
+  const handleResumePhoneAlarm = () => {
+    Alert.alert('Retomar a sirene do celular?',
+      'O som e a vibração voltam enquanto a emergência permanece ativa. Isso não confirma a segurança da criança.', [
+        { text: 'Manter silencioso', style: 'cancel' },
+        { text: 'Retomar sirene', onPress: async () => {
+          try { await monitor.retomarSireneDoCelular?.(); }
+          catch (error) { Alert.alert('Não foi possível retomar a sirene', error instanceof Error ? error.message : 'Tente novamente.'); }
+        } },
+      ]);
+  };
+
+  const handleStopWithoutDevice = () => {
+    Alert.alert('Interromper a proteção?',
+      'Use esta opção somente se a caixinha estiver indisponível. O celular deixará de apitar e não haverá monitoramento até você reconectar a placa e retomar. Verifique a criança pessoalmente; esta ação não confirma que ela está segura.', [
+        { text: 'Continuar em emergência', style: 'cancel' },
+        { text: 'Interromper proteção', style: 'destructive', onPress: async () => {
+          try { await monitor.encerrarProtecaoSemDispositivo?.(); }
+          catch (error) { Alert.alert('Não foi possível interromper', error instanceof Error ? error.message : 'Tente novamente.'); }
+        } },
+      ]);
   };
 
   return (
@@ -239,7 +287,7 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
             <Text style={[styles.stateBadgeText, { color: copy.color }]}>{copy.title}</Text>
           </View>
           <Text style={styles.heroTitle}>{copy.childMessage}</Text>
-          <Text style={styles.heroDescription}>{copy.description}</Text>
+          <Text style={[styles.heroDescription, visualState === 'searching' && styles.searchingDescription]}>{copy.description}</Text>
 
           <View style={styles.distanceBlock}>
             <Text style={styles.distanceLabel}>DISTÂNCIA ESTIMADA</Text>
@@ -248,9 +296,12 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
             <Text style={styles.updatedText}>{updatedLabel}</Text>
           </View>
 
-          {!monitor.emEspera && !monitor.conectado && !monitor.isScanning && (
-            <TouchableOpacity style={styles.primaryButton} onPress={monitor.conectar} activeOpacity={0.82}>
-              <Ionicons name="bluetooth" size={19} color={colors.white} />
+          {!monitor.emEspera && !monitor.conectado && (
+            <TouchableOpacity style={[styles.primaryButton, monitor.isScanning && { opacity: 0.7 }]}
+              onPress={monitor.conectar} disabled={monitor.isScanning} activeOpacity={0.82} accessibilityRole="button">
+              {monitor.isScanning
+                ? <ActivityIndicator size="small" color={colors.white} />
+                : <Ionicons name="bluetooth" size={19} color={colors.white} />}
               <Text style={styles.primaryButtonText}>PROCURAR AGORA</Text>
             </TouchableOpacity>
           )}
@@ -268,6 +319,24 @@ export default function DashboardScreen({ monitor }: { monitor: MonitorControlle
             <TouchableOpacity style={[styles.primaryButton, { backgroundColor: colors.dangerRed }]} onPress={handleConfirmSafety} activeOpacity={0.82}>
               <Ionicons name="shield-checkmark" size={19} color={colors.white} />
               <Text style={styles.primaryButtonText}>CONFIRMAR SEGURANÇA</Text>
+            </TouchableOpacity>
+          )}
+          {monitor.modoPanico && !monitor.alarmeCelularSilenciado && (
+            <TouchableOpacity style={styles.secondaryButton} onPress={handleSilencePhone} activeOpacity={0.82} accessibilityRole="button">
+              <Ionicons name="volume-mute" size={19} color={colors.textPrimary} />
+              <Text style={styles.secondaryButtonText}>SILENCIAR CELULAR</Text>
+            </TouchableOpacity>
+          )}
+          {monitor.modoPanico && monitor.alarmeCelularSilenciado && (
+            <TouchableOpacity style={styles.secondaryButton} onPress={handleResumePhoneAlarm} activeOpacity={0.82} accessibilityRole="button">
+              <Ionicons name="volume-high" size={19} color={colors.textPrimary} />
+              <Text style={styles.secondaryButtonText}>RETOMAR SIRENE NO CELULAR</Text>
+            </TouchableOpacity>
+          )}
+          {monitor.modoPanico && !monitor.conectado && (
+            <TouchableOpacity style={styles.secondaryButton} onPress={handleStopWithoutDevice} activeOpacity={0.82} accessibilityRole="button">
+              <Ionicons name="power" size={19} color={colors.textPrimary} />
+              <Text style={styles.secondaryButtonText}>INTERROMPER SEM A CAIXINHA</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -382,6 +451,7 @@ function createStyles(colors: AppColors) {
     stateBadgeText: { fontSize: 11, fontWeight: '900', letterSpacing: 1.1 },
     heroTitle: { color: colors.textPrimary, fontSize: 22, lineHeight: 28, fontWeight: '800', textAlign: 'center', maxWidth: 350 },
     heroDescription: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, textAlign: 'center', maxWidth: 330, marginTop: 5 },
+    searchingDescription: { minHeight: 40 },
     distanceBlock: { alignItems: 'center', marginTop: 20, marginBottom: 18 },
     distanceLabel: { color: colors.textMuted, fontSize: 10, fontWeight: '800', letterSpacing: 1.25 },
     distanceValue: { color: colors.textPrimary, fontSize: 38, fontWeight: '300', marginTop: 3 },
@@ -392,6 +462,12 @@ function createStyles(colors: AppColors) {
       paddingHorizontal: 20, borderRadius: 14, backgroundColor: colors.primaryBlue, marginBottom: 18,
     },
     primaryButtonText: { color: colors.white, fontSize: 13, fontWeight: '900', letterSpacing: 0.7 },
+    secondaryButton: {
+      minHeight: 48, minWidth: 220, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9,
+      paddingHorizontal: 20, borderRadius: 14, borderWidth: 1, borderColor: colors.cardBorder,
+      backgroundColor: colors.cardBg, marginBottom: 12,
+    },
+    secondaryButtonText: { color: colors.textPrimary, fontSize: 12, fontWeight: '800', letterSpacing: 0.4 },
     readinessCard: {
       backgroundColor: colors.cardBg, borderRadius: 18, borderWidth: 1, borderColor: colors.cardBorder,
       padding: 15, marginTop: 7,

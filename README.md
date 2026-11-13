@@ -10,41 +10,46 @@ O protótipo investiga como um dispositivo vestível BLE e um aplicativo móvel 
 
 ## Estado atual
 
-_Estado documental atualizado em 4 de novembro de 2026; distribuição do APK de 17/10 preservada._
+_Estado documental atualizado em 12 de novembro de 2026; versões anteriores preservadas como histórico._
 
-**Escolta UNITAU 1.0.1 (Android, código 2) é a versão oficial desta rodada do protótipo acadêmico.**
-APK release com JavaScript incorporado, assinatura original e Firebase/Google
-configurados; funciona sem Expo/Metro. Atualizado no Samsung Galaxy S24 Ultra
-sem desinstalar a oficial nem limpar seus dados. O aplicativo Teste foi removido
-do celular; fontes e backups de desenvolvimento foram preservados.
+**Escolta UNITAU 1.0.5 (Android, código 6) é a versão oficial instalada e
+validada nesta rodada do protótipo acadêmico.** O APK release tem JavaScript
+incorporado, assinatura original e Firebase/Google configurados; funciona sem
+Expo/Metro. A atualização no Samsung Galaxy S24 Ultra preservou login, dados e
+modo de espera. O aplicativo paralelo Escolta Teste continua disponível para
+ensaios; não deve disputar a mesma placa com a oficial.
 
-A checagem instalada sem servidor aprovou, por relato do usuário, login Google,
-continuidade ao remover de Recentes/bloquear a tela e perda de conexão com
-reconexão, emergência retida e confirmação de segurança aceita pela placa.
-O candidato com o mesmo bundle já havia passado pelos roteiros de amarelo,
-vermelho, retorno, relatório e login. **211 testes automatizados e tipagem
-aprovados** na preparação. Isso não certifica o produto ou outros aparelhos.
+A checagem instalada sem servidor aprovou, por relato do usuário, retomada da
+proteção, emergência por perda de vínculo, uma sirene e um aviso de emergência
+no celular, silêncio e retomada da sirene, busca manual sem sobreposição dos
+botões, reconexão e confirmação de segurança aceita pela placa. **280 testes
+automatizados e a verificação de tipos foram aprovados.** Isso não certifica o
+produto nem demonstra o mesmo comportamento em outros aparelhos.
 
-Registro de assinatura, APK, hashes, instalação, testes e limitações:
-[oficial 1.0.1](docs/auditoria/PREPARACAO_OFICIAL_VALIDADA_2026-10-17.md).
-[Compilação EAS](https://expo.dev/accounts/nicolas_venciguerra_men/projects/escolta-unitau/builds/622eb96d-11d7-4f0e-81bf-f26d546ffb7c).
-APK e backups são artefatos de distribuição locais, não arquivos do histórico Git.
+Registro da build, assinatura, hash, instalação, testes e limites:
+[oficial 1.0.5](docs/auditoria/OFICIAL_1_0_5_2026-11-12.md).
+[Compilação EAS](https://expo.dev/accounts/nicolas_venciguerra_men/projects/escolta-unitau/builds/8ab5f9e7-d6c6-4110-8695-3fa2bcba4b24).
+APKs e backups permanecem locais, fora do histórico Git.
 
 **Atualização de 04/11/2026:** o usuário confirmou o reparo e a aprovação do
 botão físico na oficial. A data exata do ensaio não foi informada; trata-se de
 aceite relatado, sem novo registro instrumental anexado.
-O texto acadêmico foi atualizado e salvo no Drive em Word e PDF de 41 páginas
-em 04/11; consultar [a revisão e os links](docs/tcc/README.md).
-**Pendências:** revisão final dos autores/orientador; medir autonomia na
-configuração atual e comportamento de bateria baixa. Não haverá nova alteração
-de comportamento sem falha observada ou nova solicitação. Relatórios antigos em
+O texto acadêmico recebeu uma nova cópia editável, com alterações destacadas,
+para avaliação do orientador; consultar [a revisão atual](docs/tcc/README.md).
+Dois ciclos de autonomia posteriores foram acompanhados até a parada observada,
+mas o indicador chegou a 0% mais de duas horas antes da última telemetria válida.
+**Pendências:** aprovação do texto pelo orientador, correção da estimativa de
+carga e validação em mais aparelhos e condições. Relatórios antigos em
 `docs/auditoria` e `docs/testes` registram etapas históricas, não o estado atual.
 
 - Aplicativo React Native com Expo SDK 54 e TypeScript.
 - Autenticação de acesso com Firebase.
 - Conexão automática ao dispositivo `ESCOLTA_BLE`.
 - Sentinela com tentativa imediata de reconexão e janela de tolerância antes da emergência.
-- Sirene e vibração locais, com confirmação humana para encerrar a emergência.
+- Sirene e vibração locais; o retorno ao estado protegido exige confirmação
+  aceita pela placa. Na emergência, o celular pode ser silenciado e sua sirene
+  retomada. Sem vínculo, o responsável também pode interromper explicitamente
+  a proteção, sem indicar que a criança está segura.
 - Distância estimada na Central; RSSI restrito ao código técnico/Telemetria.
 - Histórico de ocorrências persistido localmente.
 - Preferências de tema, reconexão, alertas, vibração, animações e localização opcional.
@@ -55,7 +60,15 @@ de comportamento sem falha observada ou nova solicitação. Relatórios antigos 
 
 O hardware vestível já utiliza a **Seeed Studio XIAO nRF52840 Sense**. O circuito foi montado, soldado e validado com buzzer funcional, transistor P2N2222A, resistores de 1 kΩ e 10 kΩ, diodo 1N4007 e botão físico de emergência.
 
-A bateria LiPo 3,7 V/180 mAh com proteção PCM/BMS já está ligada por conector, alimenta a XIAO e pode ser recarregada pela USB-C da placa. A leitura interna foi comparada com multímetro e apresentou diferença de apenas 0,01 V naquele ensaio. O primeiro ciclo registrou 11 h 10 min entre 90% e 5% estimados, com alertas automáticos bloqueados. Isso não comprova autonomia total nem autonomia sob alarmes/reconexões; é necessário repetir os ensaios.
+A bateria LiPo 3,7 V/180 mAh com proteção PCM/BMS está ligada por conector,
+alimenta a XIAO e pode ser recarregada pela USB-C da placa. Um ensaio histórico
+registrou 11 h 10 min entre 90% e 5% estimados, com alertas automáticos
+bloqueados. Em dois ciclos posteriores, com a caixa fechada, os intervalos até
+a última telemetria válida foram de aproximadamente 18 h 24 min e 18 h 17 min.
+Esses resultados descrevem as condições observadas, não uma autonomia mínima
+garantida. A porcentagem estimada antecipou o fim da bateria em mais de duas
+horas nos dois ciclos; a indicação de carga precisa ser revista.
+Dados e limites: [dois ciclos de autonomia](docs/testes/AUTONOMIA_DOIS_CICLOS_2026-11-12.md).
 
 A caixa foi impressa, montada e parafusada pelo usuário. O kit digital atual está em `hardware/case_3d/PARA_IMPRIMIR_AGORA`. A XIAO ensaiada usa a variante `xiao-p5-r4-d1-k2-w1`, com rádio solicitado +4 dBm, filtro Kalman e watchdog de comunicação; sua compilação exige os opt-ins descritos em `firmware/README.md`. A calibração foi aprovada no ambiente ensaiado, não como fronteira métrica universal. O motor de vibração foi retirado do vestível; a vibração é do celular.
 
@@ -71,7 +84,8 @@ A caixa foi impressa, montada e parafusada pelo usuário. O kit digital atual es
 - [x] Validar alimentação e recarga pela XIAO.
 - [x] Exibir percentual, tensão e estado de carga no aplicativo.
 - [x] Executar o primeiro ensaio alimentado somente pela bateria.
-- [ ] Repetir o ensaio de autonomia para calcular média e variação.
+- [x] Repetir a observação de autonomia em dois ciclos com a caixa fechada.
+- [ ] Ampliar os ensaios para outros cenários e revisar o indicador de carga.
 - [ ] Medir separadamente a autonomia em espera.
 - [x] Definir dimensões e encaixes da estrutura vestível.
 - [x] Realizar a primeira impressão e registrar as correções necessárias.
@@ -166,8 +180,9 @@ powershell -File tools/build-android.ps1 -Target Apk -TestApp -Online
 npx expo start --dev-client --scheme escolta-teste
 ```
 
-A futura compilação oficial usa o perfil EAS `oficial-validada` e a credencial
-original existente; não criar outra chave para contornar falha de assinatura.
+A compilação oficial usa o perfil EAS `autonomia-instrumentada`, derivado de
+`oficial-validada`, e a credencial original existente; não criar outra chave
+para contornar falha de assinatura.
 Não recarregar/gravar/atualizar durante proteção ativa. iOS não foi validado;
 o serviço nativo de monitoramento deste projeto é Android.
 

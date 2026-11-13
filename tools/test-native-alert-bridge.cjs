@@ -7,12 +7,16 @@ const ts = require('typescript');
 const vm = require('node:vm');
 
 function loadBridge(overrides = {}, permissions = true) {
-  const calls = { arm: [], cancel: 0, start: 0, update: 0 };
+  const calls = { arm: [], cancel: 0, silence: 0, resume: 0, start: 0, update: 0 };
+  let silenced = false;
   const native = {
     startAsync: async () => { calls.start++; },
     updateAsync: async () => { calls.update++; },
     armEmergencyAsync: async (...args) => { calls.arm.push(args); },
     cancelEmergencyAsync: async () => { calls.cancel++; },
+    silenceEmergencyAsync: async () => { calls.silence++; silenced = true; return true; },
+    resumeEmergencyAsync: async () => { calls.resume++; silenced = false; return true; },
+    isEmergencySilencedAsync: async () => silenced,
     isEmergencyActiveAsync: async () => true,
     isAlarmPlayingAsync: async () => true,
     ...overrides,
@@ -74,6 +78,52 @@ test('estado de emergência sem reprodução não silencia fallback', async () =
   const m = loadBridge({ isAlarmPlayingAsync: async () => false });
   assert.equal(await m.api.isBackgroundEmergencyActive(), false);
   assert.equal(await m.api.isBackgroundEmergencyLatched(), true);
+});
+
+test('silêncio explícito para a sirene nativa sem cancelar a emergência', async () => {
+  const m = loadBridge({ isAlarmPlayingAsync: async () => false });
+  assert.equal(await m.api.silenceBackgroundEmergency(), true);
+  assert.equal(await m.api.isBackgroundEmergencySilenced(), true);
+  assert.equal(m.calls.silence, 1);
+  assert.equal(m.calls.cancel, 0);
+  assert.equal(await m.api.isBackgroundEmergencyLatched(), true);
+});
+
+test('APK sem API nativa de silêncio não declara a sirene parada', async () => {
+  const m = loadBridge({ silenceEmergencyAsync: undefined });
+  assert.equal(await m.api.silenceBackgroundEmergency(), false);
+  assert.equal(m.calls.cancel, 0);
+});
+
+test('som nativo ainda tocando impede confirmação falsa do silêncio', async () => {
+  const m = loadBridge();
+  await assert.rejects(m.api.silenceBackgroundEmergency(), /não confirmou/);
+  assert.equal(m.calls.cancel, 0);
+});
+
+test('retomar sirene nativa exige áudio confirmado e preserva a emergência', async () => {
+  let muted = true, playing = false;
+  const m = loadBridge({
+    isEmergencySilencedAsync: async () => muted,
+    isAlarmPlayingAsync: async () => playing,
+    resumeEmergencyAsync: async () => { m.calls.resume++; muted = false; playing = true; return true; },
+  });
+  assert.equal(await m.api.resumeBackgroundEmergency(), true);
+  assert.equal(m.calls.resume, 1);
+  assert.equal(m.calls.arm.length, 0);
+  assert.equal(m.calls.cancel, 0);
+  assert.equal(await m.api.isBackgroundEmergencyLatched(), true);
+});
+
+test('retomar sirene não declara sucesso sem confirmação do áudio Android', async () => {
+  const m = loadBridge({ isEmergencySilencedAsync: async () => false, isAlarmPlayingAsync: async () => false });
+  await assert.rejects(m.api.resumeBackgroundEmergency(), /não confirmou/);
+  assert.equal(m.calls.cancel, 0);
+});
+
+test('build nativa anterior sem API de retomada não finge que religou a sirene', async () => {
+  const m = loadBridge({ resumeEmergencyAsync: undefined });
+  assert.equal(await m.api.resumeBackgroundEmergency(), false);
 });
 
 test('sem autorização BLE a ponte não chama nenhum início nativo, inclusive build antiga', async () => {
